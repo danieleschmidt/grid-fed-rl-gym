@@ -6,6 +6,11 @@ from .base import Box
 import warnings
 import logging
 
+from ..utils import (
+    validate_action, validate_network_parameters, sanitize_config,
+    PowerFlowError, InvalidActionError, SafetyLimitExceededError
+)
+
 from .base import BaseGridEnvironment, Bus, Line, Load
 from .power_flow import PowerFlowSolver, NewtonRaphsonSolver, PowerFlowSolution
 from .dynamics import GridDynamics, WeatherData, TimeVaryingLoadModel, SolarPVModel, WindTurbineModel, BatteryModel
@@ -52,8 +57,9 @@ class GridEnvironment(BaseGridEnvironment):
         
         # Initialize power flow solver
         if power_flow_solver is None:
-            # Use simplified solver for initial testing
-            self.solver = NewtonRaphsonSolver(tolerance=1e-4, max_iterations=10)
+            # Use robust solver with fallback mechanism
+            from .robust_power_flow import RobustPowerFlowSolver
+            self.solver = RobustPowerFlowSolver(tolerance=1e-4, max_iterations=20)
         else:
             self.solver = power_flow_solver
             
@@ -261,8 +267,25 @@ class GridEnvironment(BaseGridEnvironment):
         
     def step(self, action: np.ndarray) -> Tuple[np.ndarray, float, bool, bool, Dict[str, Any]]:
         """Execute one environment step."""
-        # Apply actions
-        self._apply_actions(action)
+        try:
+            # Validate and sanitize action
+            action = validate_action(action, self.action_space)
+            
+            # Apply actions
+            self._apply_actions(action)
+        except InvalidActionError as e:
+            # Return safe observation with penalty
+            obs = self.get_observation()
+            penalty = -self.safety_penalty
+            info = {'error': str(e), 'action_invalid': True}
+            return obs, penalty, False, False, info
+        except Exception as e:
+            # Log unexpected error and return safe state
+            logging.error(f"Unexpected error in step: {e}")
+            obs = self.get_observation()
+            penalty = -self.safety_penalty * 2
+            info = {'error': str(e), 'unexpected_error': True}
+            return obs, penalty, True, False, info
         
         # Update time
         self.current_time += self.timestep
