@@ -539,9 +539,9 @@ We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 ```bibtex
 @software{grid_fed_rl_gym,
   title={Grid-Fed-RL-Gym: Federated Reinforcement Learning for Power Grids},
-  author={Your Name},
+  author={Daniel Schmidt},
   year={2025},
-  url={https://github.com/yourusername/grid-fed-rl-gym}
+  url={https://github.com/danieleschmidt/grid-fed-rl-gym}
 }
 
 @article{tsinghua_fed_rl_2025,
