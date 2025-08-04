@@ -2,8 +2,12 @@
 
 from abc import ABC, abstractmethod
 from typing import Any, Dict, List, Optional, Tuple, Union
-import torch
-import torch.nn as nn
+try:
+    import torch
+    import torch.nn as nn
+except ImportError:
+    from . import torch_stub as torch
+    nn = torch.nn
 import numpy as np
 from dataclasses import dataclass
 

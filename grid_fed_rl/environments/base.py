@@ -3,11 +3,32 @@
 from abc import ABC, abstractmethod
 from typing import Any, Dict, List, Optional, Tuple, Union
 import numpy as np
-import gymnasium as gym
-from gymnasium.spaces import Box, Space
+
+# Minimal gym-like interface for testing without gymnasium
+class Space:
+    def __init__(self):
+        pass
+    def sample(self):
+        return np.array([0.0])
+        
+class Box(Space):
+    def __init__(self, low, high, shape=None, dtype=np.float32):
+        super().__init__()
+        self.low = np.array(low)
+        self.high = np.array(high)
+        self.shape = shape if shape is not None else self.low.shape
+        self.dtype = dtype
+        
+    def sample(self):
+        return np.random.uniform(self.low, self.high)
+        
+class Env:
+    def __init__(self):
+        self.observation_space = None
+        self.action_space = None
 
 
-class BaseGridEnvironment(gym.Env, ABC):
+class BaseGridEnvironment(Env, ABC):
     """Base class for all grid simulation environments.
     
     Provides common functionality for power system environments including
