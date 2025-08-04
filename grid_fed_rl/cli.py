@@ -10,8 +10,15 @@ import numpy as np
 from grid_fed_rl.version import __version__
 from grid_fed_rl.environments import GridEnvironment
 from grid_fed_rl.feeders import IEEE13Bus, IEEE34Bus, IEEE123Bus, SimpleRadialFeeder
-from grid_fed_rl.algorithms import CQL, IQL, AWR
-from grid_fed_rl.algorithms.base import GridDataset, collect_random_data
+
+# Optional ML algorithm imports (fail gracefully)
+try:
+    from grid_fed_rl.algorithms import CQL, IQL, AWR
+    from grid_fed_rl.algorithms.base import GridDataset, collect_random_data
+    ML_AVAILABLE = True
+except ImportError:
+    ML_AVAILABLE = False
+    print("Note: ML algorithms not available. Install torch for full functionality.")
 
 
 def create_environment(feeder_type: str, **kwargs) -> GridEnvironment:
