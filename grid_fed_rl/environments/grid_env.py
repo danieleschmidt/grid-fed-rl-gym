@@ -2,8 +2,7 @@
 
 from typing import Any, Dict, List, Optional, Tuple, Union
 import numpy as np
-import gymnasium as gym
-from gymnasium.spaces import Box, Discrete, MultiDiscrete
+from .base import Box
 import warnings
 import logging
 
@@ -53,7 +52,8 @@ class GridEnvironment(BaseGridEnvironment):
         
         # Initialize power flow solver
         if power_flow_solver is None:
-            self.solver = NewtonRaphsonSolver(tolerance=1e-6, max_iterations=50)
+            # Use simplified solver for initial testing
+            self.solver = NewtonRaphsonSolver(tolerance=1e-4, max_iterations=10)
         else:
             self.solver = power_flow_solver
             
@@ -314,13 +314,20 @@ class GridEnvironment(BaseGridEnvironment):
         
     def _apply_actions(self, action: np.ndarray) -> None:
         """Apply control actions to grid components."""
+        # Ensure action is a numpy array
+        if not isinstance(action, np.ndarray):
+            action = np.array([action])
+        
         action_idx = 0
         
         # Battery commands
         battery_commands = {}
         for battery_id, battery in self.batteries.items():
             # Scale action (-1, 1) to power rating
-            power_command = action[action_idx] * battery.power_rating
+            if action_idx < len(action):
+                power_command = action[action_idx] * battery.power_rating
+            else:
+                power_command = 0.0  # Default to no action
             battery_commands[battery_id] = power_command
             action_idx += 1
             

@@ -174,11 +174,13 @@ class NewtonRaphsonSolver(PowerFlowSolver):
             J = self._build_jacobian(Y, V, buses, slack_bus, pv_buses, pq_buses)
             
             # Build mismatch vector
-            mismatch = np.concatenate([
-                dP[i] for i in range(n_buses) if i != slack_bus
-            ] + [
-                dQ[i] for i in pq_buses
-            ])
+            dP_vec = np.array([dP[i] for i in range(n_buses) if i != slack_bus])
+            dQ_vec = np.array([dQ[i] for i in pq_buses])
+            
+            if len(dQ_vec) > 0:
+                mismatch = np.concatenate([dP_vec, dQ_vec])
+            else:
+                mismatch = dP_vec
             
             # Solve for corrections
             try:
