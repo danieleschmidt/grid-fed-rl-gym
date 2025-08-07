@@ -21,15 +21,21 @@ def validate_action(action: np.ndarray, action_space) -> np.ndarray:
                     f"Action shape {action.shape} doesn't match action space {action_space.shape}"
                 )
         
+        # Check for NaN or inf FIRST (before bounds checking)
+        if np.any(np.isnan(action)):
+            raise InvalidActionError("Action contains NaN values")
+        if np.any(np.isinf(action)):
+            raise InvalidActionError("Action contains infinite values")
+        
+        # Check for extremely large values that could cause numerical issues
+        if np.any(np.abs(action) > 1e6):
+            raise InvalidActionError("Action contains extremely large values")
+        
         # Check bounds
         if hasattr(action_space, 'low') and hasattr(action_space, 'high'):
             if np.any(action < action_space.low) or np.any(action > action_space.high):
                 # Clip to bounds with warning
                 action = np.clip(action, action_space.low, action_space.high)
-        
-        # Check for NaN or inf
-        if np.any(~np.isfinite(action)):
-            raise InvalidActionError("Action contains NaN or infinite values")
         
         return action
         
@@ -159,3 +165,100 @@ def sanitize_config(config: Dict[str, Any]) -> Dict[str, Any]:
             sanitized[key] = value
     
     return sanitized
+
+
+def validate_constraints(constraints: List, state_dim: int, action_dim: int) -> None:
+    """Validate safety constraints."""
+    if not isinstance(constraints, list):
+        raise DataValidationError("Constraints must be a list")
+    
+    for i, constraint in enumerate(constraints):
+        if not hasattr(constraint, 'constraint_function'):
+            raise DataValidationError(f"Constraint {i} must have constraint_function")
+        if not hasattr(constraint, 'name'):
+            raise DataValidationError(f"Constraint {i} must have name")
+        if not callable(constraint.constraint_function):
+            raise DataValidationError(f"Constraint {i} constraint_function must be callable")
+
+
+def sanitize_config(config: Union[Dict[str, Any], Any], required_fields: Optional[List[str]] = None) -> Dict[str, Any]:
+    """Sanitize configuration dictionary with required fields validation."""
+    if not isinstance(config, dict):
+        if hasattr(config, '__dict__'):
+            config = config.__dict__
+        else:
+            raise DataValidationError(f"Config must be dict or have __dict__, got {type(config)}")
+    
+    # Check required fields
+    if required_fields:
+        missing = [field for field in required_fields if field not in config]
+        if missing:
+            raise DataValidationError(f"Missing required config fields: {missing}")
+    
+    sanitized = {}
+    
+    # Define expected types and defaults  
+    expected_config = {
+        'timestep': (float, 1.0),
+        'episode_length': (int, 86400),
+        'voltage_limits': (tuple, (0.95, 1.05)),
+        'frequency_limits': (tuple, (59.5, 60.5)),
+        'safety_penalty': (float, 100.0),
+        'stochastic_loads': (bool, True),
+        'weather_variation': (bool, True),
+        'renewable_sources': (list, ['solar', 'wind']),
+        'num_clients': (int, 5),
+        'rounds': (int, 100),
+        'local_epochs': (int, 5),
+        'batch_size': (int, 256),
+        'learning_rate': (float, 1e-3),
+        'privacy_budget': (float, 1.0)
+    }
+    
+    for key, (expected_type, default_value) in expected_config.items():
+        if key in config:
+            value = config[key]
+            
+            # Type checking
+            if expected_type == tuple and isinstance(value, (list, tuple)):
+                value = tuple(value)
+            elif not isinstance(value, expected_type):
+                try:
+                    value = expected_type(value)
+                except (ValueError, TypeError):
+                    raise DataValidationError(
+                        f"Config parameter '{key}' must be {expected_type.__name__}, got {type(value).__name__}"
+                    )
+            
+            # Range validation
+            if key == 'timestep' and (value <= 0 or value > 3600):
+                raise DataValidationError("Timestep must be between 0 and 3600 seconds")
+            elif key == 'episode_length' and (value <= 0 or value > 86400 * 7):
+                raise DataValidationError("Episode length must be between 0 and 7 days")
+            elif key == 'voltage_limits' and (len(value) != 2 or value[0] >= value[1]):
+                raise DataValidationError("Voltage limits must be (min, max) with min < max")
+            elif key == 'frequency_limits' and (len(value) != 2 or value[0] >= value[1]):
+                raise DataValidationError("Frequency limits must be (min, max) with min < max")
+            elif key in ['num_clients', 'rounds', 'local_epochs'] and value <= 0:
+                raise DataValidationError(f"{key} must be positive")
+            elif key == 'learning_rate' and (value <= 0 or value > 1):
+                raise DataValidationError("Learning rate must be between 0 and 1")
+            
+            sanitized[key] = value
+        else:
+            sanitized[key] = default_value
+    
+    # Add any additional config values
+    for key, value in config.items():
+        if key not in expected_config:
+            sanitized[key] = value
+    
+    return sanitized
+
+
+def validate_privacy_parameters(epsilon: float, delta: float) -> None:
+    """Validate differential privacy parameters."""
+    if not isinstance(epsilon, (int, float)) or epsilon <= 0:
+        raise DataValidationError("Epsilon must be positive number")
+    if not isinstance(delta, (int, float)) or delta <= 0 or delta >= 1:
+        raise DataValidationError("Delta must be between 0 and 1")
