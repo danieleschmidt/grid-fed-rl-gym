@@ -39,3 +39,23 @@ class DataValidationError(GridEnvironmentError):
 class ConfigurationError(GridEnvironmentError):
     """Invalid configuration provided."""
     pass
+
+
+class FederatedLearningError(GridEnvironmentError):
+    """Federated learning process failed."""
+    pass
+
+
+class PrivacyError(GridEnvironmentError):
+    """Privacy mechanism failed."""
+    pass
+
+
+class InvalidConfigError(ConfigurationError):
+    """Invalid configuration parameters."""
+    pass
+
+
+class MultiAgentError(GridEnvironmentError):
+    """Multi-agent learning error."""
+    pass
