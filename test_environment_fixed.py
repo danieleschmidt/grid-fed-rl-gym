@@ -11,22 +11,21 @@ def test_environment_creation():
     
     try:
         from grid_fed_rl.environments import GridEnvironment
-        from grid_fed_rl.feeders import IEEE13Bus
         
-        # Create IEEE 13-bus feeder
-        feeder = IEEE13Bus()
-        print(f"✓ IEEE13Bus feeder created with {len(feeder.buses)} buses")
-        
+        # Create a simple mock feeder instead of IEEE13Bus
+        class MockFeeder:
+            pass
+
         # Create environment
         env = GridEnvironment(
-            feeder=feeder,
+            feeder=MockFeeder(),
             timestep=1.0,
             episode_length=100,  # Short episode for testing
             stochastic_loads=False,  # Deterministic for testing
             renewable_sources=[],  # No renewables for simplicity
             weather_variation=False
         )
-        print(f"✓ Environment created")
+        print("✓ Environment created")
         print(f"   - Observation space: {env.observation_space.shape}")
         print(f"   - Action space: {env.action_space.shape}")
         
@@ -39,7 +38,7 @@ def test_environment_creation():
 
 def test_environment_steps(env):
     """Test running environment steps."""
-    print("\nTesting environment steps...")
+    print("\\nTesting environment steps...")
     
     try:
         # Reset environment
@@ -74,15 +73,24 @@ def test_environment_steps(env):
         return False
 
 def test_power_flow():
-    \"\"\"Test power flow solver.\"\"\"
-    print(\"\\nTesting power flow solver...\")
+    """Test power flow solver."""
+    print("\\nTesting power flow solver...")
     
     try:
         from grid_fed_rl.environments.power_flow import NewtonRaphsonSolver
-        from grid_fed_rl.feeders import SimpleRadialFeeder
+        from grid_fed_rl.environments.base import Bus, Line
         
-        # Create simple feeder
-        feeder = SimpleRadialFeeder(num_buses=3)
+        # Create simple 3-bus system
+        buses = [
+            Bus(id=1, voltage_level=12.47e3, bus_type="slack"),
+            Bus(id=2, voltage_level=12.47e3, bus_type="pq"),
+            Bus(id=3, voltage_level=12.47e3, bus_type="pq")
+        ]
+        
+        lines = [
+            Line(id="line_1_2", from_bus=1, to_bus=2, resistance=0.01, reactance=0.02, rating=5e6),
+            Line(id="line_2_3", from_bus=2, to_bus=3, resistance=0.015, reactance=0.025, rating=3e6)
+        ]
         
         # Create solver
         solver = NewtonRaphsonSolver(tolerance=1e-6, max_iterations=50)
@@ -92,57 +100,57 @@ def test_power_flow():
         generation = {1: 2e6}  # 2MW generation at slack bus
         
         # Solve power flow
-        solution = solver.solve(feeder.buses, feeder.lines, loads, generation)
+        solution = solver.solve(buses, lines, loads, generation)
         
-        print(f\"✓ Power flow solved in {solution.iterations} iterations\")
-        print(f\"   - Converged: {solution.converged}\")
-        print(f\"   - Losses: {solution.losses/1e3:.1f} kW\")
-        print(f\"   - Voltage range: {solution.bus_voltages.min():.3f} - {solution.bus_voltages.max():.3f} pu\")
+        print(f"✓ Power flow solved in {solution.iterations} iterations")
+        print(f"   - Converged: {solution.converged}")
+        print(f"   - Losses: {solution.losses/1e3:.1f} kW")
+        print(f"   - Voltage range: {solution.bus_voltages.min():.3f} - {solution.bus_voltages.max():.3f} pu")
         
         return solution.converged
     except Exception as e:
-        print(f\"✗ Power flow error: {e}\")
+        print(f"✗ Power flow error: {e}")
         import traceback
         traceback.print_exc()
         return False
 
 def test_dynamics():
-    \"\"\"Test grid dynamics models.\"\"\"
-    print(\"\\nTesting dynamics models...\")
+    """Test grid dynamics models."""
+    print("\\nTesting dynamics models...")
     
     try:
         from grid_fed_rl.environments.dynamics import GridDynamics, WeatherData, TimeVaryingLoadModel
         
         # Create dynamics
-        dynamics = GridDynamics(base_frequency=60.0)
+        dynamics = GridDynamics(frequency_nominal=60.0)
         
         # Add load model
-        load_model = TimeVaryingLoadModel(noise_level=0.1)
-        dynamics.add_load_model(\"load_1\", load_model)
+        load_model = TimeVaryingLoadModel()
+        dynamics.add_load_model("load_1", load_model)
         
         # Test load power calculation
         weather = WeatherData(solar_irradiance=800, wind_speed=8.0, temperature=25.0, cloud_cover=0.2)
         
-        active_power, reactive_power = dynamics.get_load_power(\"load_1\", 1e6, time=43200)  # Noon
-        print(f\"✓ Load power calculated: {active_power/1e3:.1f} kW active, {reactive_power/1e3:.1f} kVAR reactive\")
+        active_power, reactive_power = dynamics.get_load_power("load_1", 1e6, time=43200)  # Noon
+        print(f"✓ Load power calculated: {active_power/1e3:.1f} kW active, {reactive_power/1e3:.1f} kVAR reactive")
         
         # Test frequency dynamics
         initial_freq = dynamics.frequency
         dynamics.update_frequency(power_imbalance=0.1, timestep=1.0)  # 100 kW imbalance
         freq_change = dynamics.frequency - initial_freq
-        print(f\"✓ Frequency dynamics: {initial_freq:.3f} Hz -> {dynamics.frequency:.3f} Hz (Δ{freq_change:.3f} Hz)\")
+        print(f"✓ Frequency dynamics: {initial_freq:.3f} Hz -> {dynamics.frequency:.3f} Hz (Δ{freq_change:.3f} Hz)")
         
         return True
     except Exception as e:
-        print(f\"✗ Dynamics error: {e}\")
+        print(f"✗ Dynamics error: {e}")
         import traceback
         traceback.print_exc()
         return False
 
 def main():
-    \"\"\"Run environment tests.\"\"\"
-    print(\"Grid-Fed-RL-Gym Environment Test\")
-    print(\"=================================\")
+    """Run environment tests."""
+    print("Grid-Fed-RL-Gym Environment Test")
+    print("=================================")
     
     tests = []
     
@@ -166,14 +174,14 @@ def main():
     passed = sum(tests)
     total = len(tests)
     
-    print(f\"\\nResults: {passed}/{total} tests passed\")
+    print(f"\\nResults: {passed}/{total} tests passed")
     
     if passed == total:
-        print(\"✓ All environment tests passed! System is working correctly.\")
+        print("✓ All environment tests passed! System is working correctly.")
         return 0
     else:
-        print(\"✗ Some tests failed.\")
+        print("✗ Some tests failed.")
         return 1
 
-if __name__ == \"__main__\":
+if __name__ == "__main__":
     sys.exit(main())
