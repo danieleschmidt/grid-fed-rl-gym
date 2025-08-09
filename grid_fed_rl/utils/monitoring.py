@@ -444,11 +444,11 @@ class GridMonitor:
                     'export_timestamp': time.time()
                 }
             
-            with open(filepath, 'w') as f:
+            with open(filepath, 'w', encoding='utf-8') as f:
                 json.dump(data, f, indent=2, default=str)
                 
         elif format.lower() == 'csv':
-            with open(filepath, 'w', newline='') as f:
+            with open(filepath, 'w', newline='', encoding='utf-8') as f:
                 if self.metrics_history:
                     writer = csv.DictWriter(f, fieldnames=self.metrics_history[0].to_dict().keys())
                     writer.writeheader()
@@ -806,7 +806,7 @@ class PerformanceMonitor:
         """Export performance report to file."""
         report = self.get_performance_report()
         
-        with open(filepath, 'w') as f:
+        with open(filepath, 'w', encoding='utf-8') as f:
             json.dump(report, f, indent=2, default=str)
             
         self.logger.info(f"Exported performance report to {filepath}")
@@ -1030,12 +1030,12 @@ def create_monitoring_dashboard(
     """.format(json.dumps(report, indent=2, default=str))
     
     dashboard_path = os.path.join(output_dir, "dashboard.html")
-    with open(dashboard_path, 'w') as f:
+    with open(dashboard_path, 'w', encoding='utf-8') as f:
         f.write(html_content)
         
     # Also save raw JSON report
     json_path = os.path.join(output_dir, "report.json")
-    with open(json_path, 'w') as f:
+    with open(json_path, 'w', encoding='utf-8') as f:
         json.dump(report, f, indent=2, default=str)
         
     return dashboard_path

@@ -3,6 +3,7 @@
 import re
 import ast
 import os
+import time
 import hashlib
 import logging
 from typing import Dict, List, Any, Optional, Tuple
@@ -295,7 +296,7 @@ class SecurityAuditor:
         """Run comprehensive security audit."""
         
         audit_report = {
-            'timestamp': __import__('time').time(),
+            'timestamp': time.time(),
             'issues': {
                 'critical': [],
                 'high': [],

@@ -1,0 +1,104 @@
+# Kubernetes Deployment for Grid-Fed-RL-Gym
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grid-fed-rl-deployment
+  labels:
+    app: grid-fed-rl
+    version: "0.1.0"
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: grid-fed-rl
+  template:
+    metadata:
+      labels:
+        app: grid-fed-rl
+        version: "0.1.0"
+    spec:
+      containers:
+      - name: grid-fed-rl
+        image: grid-fed-rl-gym:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+          name: http
+        - containerPort: 9090
+          name: grpc
+        env:
+        - name: LOG_LEVEL
+          value: "INFO"
+        - name: METRICS_ENABLED
+          value: "true"
+        - name: CACHE_SIZE
+          value: "1000"
+        - name: MAX_WORKERS
+          value: "4"
+        resources:
+          requests:
+            cpu: "500m"
+            memory: "1Gi"
+          limits:
+            cpu: "2000m"
+            memory: "4Gi"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+        volumeMounts:
+        - name: data-volume
+          mountPath: /app/data
+        - name: cache-volume
+          mountPath: /app/cache
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1000
+          allowPrivilegeEscalation: false
+      volumes:
+      - name: data-volume
+        persistentVolumeClaim:
+          claimName: grid-fed-rl-data-pvc
+      - name: cache-volume
+        emptyDir: {}
+      securityContext:
+        fsGroup: 1000
+
+---
+# Horizontal Pod Autoscaler
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: grid-fed-rl-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: grid-fed-rl-deployment
+  minReplicas: 2
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80
