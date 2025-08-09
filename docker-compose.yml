@@ -1,0 +1,124 @@
+# Docker Compose for Grid-Fed-RL-Gym Development and Production
+
+version: '3.8'
+
+services:
+  # Main application
+  grid-fed-rl:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    ports:
+      - "8080:8080"
+      - "9090:9090"
+    environment:
+      - LOG_LEVEL=INFO
+      - METRICS_ENABLED=true
+      - CACHE_SIZE=1000
+      - MAX_WORKERS=4
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - cache_volume:/app/cache
+    networks:
+      - grid_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import grid_fed_rl; print('OK')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Redis for caching and session management
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - grid_network
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+
+  # Prometheus for metrics collection
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9091:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    networks:
+      - grid_network
+    restart: unless-stopped
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--web.enable-lifecycle'
+
+  # Grafana for visualization
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana:/etc/grafana/provisioning
+    networks:
+      - grid_network
+    restart: unless-stopped
+
+  # NGINX load balancer (for multi-instance deployments)
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/certs:/etc/nginx/certs
+    networks:
+      - grid_network
+    depends_on:
+      - grid-fed-rl
+    restart: unless-stopped
+
+  # Development environment
+  dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    ports:
+      - "8081:8080"
+      - "9091:9090"
+    environment:
+      - LOG_LEVEL=DEBUG
+      - METRICS_ENABLED=true
+      - DEVELOPMENT=true
+    volumes:
+      - .:/app
+      - dev_cache:/app/cache
+    networks:
+      - grid_network
+    profiles:
+      - dev
+    command: ["python", "-m", "grid_fed_rl.cli", "serve", "--debug", "--reload"]
+
+volumes:
+  redis_data:
+  prometheus_data:
+  grafana_data:
+  cache_volume:
+  dev_cache:
+
+networks:
+  grid_network:
+    driver: bridge

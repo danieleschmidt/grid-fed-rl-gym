@@ -1,0 +1,60 @@
+# Kubernetes Service for Grid-Fed-RL-Gym
+apiVersion: v1
+kind: Service
+metadata:
+  name: grid-fed-rl-service
+  labels:
+    app: grid-fed-rl
+spec:
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 80
+    targetPort: 8080
+    protocol: TCP
+  - name: grpc
+    port: 9090
+    targetPort: 9090
+    protocol: TCP
+  selector:
+    app: grid-fed-rl
+
+---
+# Ingress for external access
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: grid-fed-rl-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  tls:
+  - hosts:
+    - grid-fed-rl.example.com
+    secretName: grid-fed-rl-tls
+  rules:
+  - host: grid-fed-rl.example.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: grid-fed-rl-service
+            port:
+              number: 80
+
+---
+# Persistent Volume Claim
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: grid-fed-rl-data-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: fast-ssd
+  resources:
+    requests:
+      storage: 10Gi

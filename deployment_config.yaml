@@ -1,0 +1,111 @@
+# Grid-Fed-RL-Gym Production Deployment Configuration
+
+metadata:
+  name: grid-fed-rl-gym
+  version: "0.1.0"
+  description: "Digital twin framework for power distribution networks with federated RL"
+  maintainer: "Daniel Schmidt <daniel@terragonlabs.com>"
+  
+deployment:
+  environment: production
+  replicas: 3
+  auto_scaling:
+    enabled: true
+    min_replicas: 2
+    max_replicas: 10
+    target_cpu_utilization: 70
+    target_memory_utilization: 80
+  
+container:
+  image: "grid-fed-rl-gym:latest"
+  pull_policy: "Always"
+  ports:
+    - name: http
+      port: 8080
+      protocol: TCP
+    - name: grpc
+      port: 9090
+      protocol: TCP
+  
+resources:
+  requests:
+    cpu: "500m"
+    memory: "1Gi"
+  limits:
+    cpu: "2000m" 
+    memory: "4Gi"
+    
+environment_variables:
+  - name: LOG_LEVEL
+    value: "INFO"
+  - name: METRICS_ENABLED
+    value: "true"
+  - name: CACHE_SIZE
+    value: "1000"
+  - name: MAX_WORKERS
+    value: "4"
+
+health_checks:
+  liveness_probe:
+    http_get:
+      path: /health
+      port: 8080
+    initial_delay_seconds: 30
+    period_seconds: 10
+    timeout_seconds: 5
+    failure_threshold: 3
+    
+  readiness_probe:
+    http_get:
+      path: /ready
+      port: 8080
+    initial_delay_seconds: 5
+    period_seconds: 5
+    timeout_seconds: 3
+    failure_threshold: 3
+
+monitoring:
+  metrics:
+    enabled: true
+    path: /metrics
+    port: 8080
+  logging:
+    level: INFO
+    format: json
+    outputs: ["stdout", "file"]
+  tracing:
+    enabled: true
+    sampling_rate: 0.1
+
+security:
+  run_as_non_root: true
+  run_as_user: 1000
+  read_only_root_filesystem: false
+  allow_privilege_escalation: false
+  
+networking:
+  service_type: ClusterIP
+  load_balancer:
+    enabled: true
+    type: "nginx"
+  ingress:
+    enabled: true
+    host: "grid-fed-rl.example.com"
+    tls_enabled: true
+    
+persistence:
+  enabled: true
+  size: "10Gi"
+  storage_class: "fast-ssd"
+  access_mode: "ReadWriteOnce"
+
+global_config:
+  multi_region: true
+  regions: ["us-east-1", "eu-west-1", "ap-southeast-1"]
+  compliance:
+    gdpr: true
+    ccpa: true
+    pdpa: true
+  i18n:
+    enabled: true
+    languages: ["en", "es", "fr", "de", "ja", "zh"]
