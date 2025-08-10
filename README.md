@@ -530,6 +530,26 @@ for scenario in scenarios:
     assert results.no_equipment_violations
 ```
 
+## Usage
+
+See [TUTORIALS.md](TUTORIALS.md) for comprehensive usage guides and [EXAMPLES.md](EXAMPLES.md) for practical examples.
+
+### Basic example
+
+```python
+import grid_fed_rl as gfrl
+
+# Create environment
+env = gfrl.GridEnvironment(feeder=gfrl.IEEE13Bus())
+
+# Run episode  
+obs = env.reset()
+for step in range(100):
+    action = env.action_space.sample()
+    obs, reward, done, info = env.step(action)
+    if done: break
+```
+
 ## Contributing
 
 We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.

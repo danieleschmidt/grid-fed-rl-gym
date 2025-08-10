@@ -447,7 +447,7 @@ class ProductionReadinessChecker:
         }
         
         # Save report
-        with open('production_readiness_report.json', 'w') as f:
+        with open('production_readiness_report.json', 'w', encoding='utf-8') as f:
             json.dump(report, f, indent=2, default=str)
         
         logger.info(f"\n📄 Detailed report saved: production_readiness_report.json")

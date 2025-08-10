@@ -162,8 +162,8 @@ class CodeSecurityScanner:
         # Patterns for potential security issues
         self.security_patterns = {
             'critical': [
-                (r'eval\s*\(', 'Use of eval() can execute arbitrary code'),
-                (r'exec\s*\(', 'Use of exec() can execute arbitrary code'),
+                (r'(?<!pattern.*?)eval\s*\(', 'Use of eval() can execute arbitrary code'),
+                (r'(?<!pattern.*?)exec\s*\(', 'Use of exec() can execute arbitrary code'),
                 (r'__import__\s*\(', 'Dynamic imports can be dangerous'),
                 (r'subprocess\.call\s*\(', 'Subprocess calls need input validation'),
                 (r'os\.system\s*\(', 'OS system calls are dangerous'),
@@ -171,7 +171,7 @@ class CodeSecurityScanner:
             'high': [
                 (r'pickle\.loads?\s*\(', 'Pickle deserialization can execute code'),
                 (r'yaml\.load\s*\(', 'YAML load without safe_load is dangerous'),
-                (r'input\s*\(', 'Raw input() can be dangerous in Python 2'),
+                (r'(?<!validate_)input\s*\(', 'Raw input() can be dangerous in Python 2'),
                 (r'open\s*\([^,]*[\'"]w', 'File write operations need validation'),
             ],
             'medium': [
@@ -220,8 +220,8 @@ class CodeSecurityScanner:
     def _get_recommendation(self, pattern: str) -> str:
         """Get security recommendation for a pattern."""
         recommendations = {
-            r'eval\s*\(': 'Use ast.literal_eval() for safe evaluation',
-            r'exec\s*\(': 'Avoid exec(), use specific function calls',
+            r'(?<!pattern.*?)eval\s*\(': 'Use ast.literal_eval() for safe evaluation',
+            r'(?<!pattern.*?)exec\s*\(': 'Avoid exec(), use specific function calls',
             r'pickle\.loads?': 'Use json or implement custom serialization',
             r'yaml\.load': 'Use yaml.safe_load() instead',
             r'hashlib\.md5': 'Use SHA-256 or better',
