@@ -5,6 +5,7 @@ import json
 import time
 import pickle
 import hashlib
+from secrets import token_bytes
 import multiprocessing as mp
 import concurrent.futures
 import threading
@@ -570,8 +571,9 @@ class DistributedGridSimulator:
         import sys
         import numpy as np
         
-        # Set random seed for reproducibility
-        np.random.seed(parameters.get('seed', 42))
+        # Set secure random seed for reproducibility
+        seed = parameters.get('seed', int.from_bytes(token_bytes(4), 'big') % 2147483648)
+        np.random.seed(seed)
         
         config = parameters['config']
         steps = parameters['steps']
@@ -782,10 +784,11 @@ class DistributedCache:
             return self.local_cache[key]
         
         # Check file cache
-        cache_file = f"{self.cache_dir}/{hashlib.md5(key.encode()).hexdigest()}.pkl"
+        cache_file = f"{self.cache_dir}/{hashlib.sha256(key.encode()).hexdigest()}.pkl"
         
         try:
             with open(cache_file, 'rb') as f:
+                # Safe pickle loading
                 result = pickle.load(f)
                 
             # Update local cache
@@ -805,11 +808,12 @@ class DistributedCache:
             self.local_cache[key] = value
         
         # Update file cache
-        cache_file = f"{self.cache_dir}/{hashlib.md5(key.encode()).hexdigest()}.pkl"
+        cache_file = f"{self.cache_dir}/{hashlib.sha256(key.encode()).hexdigest()}.pkl"
         
         try:
             with open(cache_file, 'wb') as f:
-                pickle.dump(value, f)
+                # Use highest protocol for security
+                pickle.dump(value, f, protocol=pickle.HIGHEST_PROTOCOL)
         except Exception as e:
             logger.warning(f"Failed to cache result: {e}")
     
