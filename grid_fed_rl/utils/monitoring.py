@@ -1063,4 +1063,3 @@ def create_monitoring_dashboard(
 # Global monitor instances
 global_monitor = GridMonitor()
 global_health_checker = HealthChecker()
-```
