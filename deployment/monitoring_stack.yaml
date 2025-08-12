@@ -1,0 +1,644 @@
+"""Advanced monitoring and observability stack for Grid-Fed-RL-Gym."""
+
+# Prometheus monitoring configuration
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: grid-fed-rl-monitoring
+  labels:
+    app: monitoring
+    component: observability
+
+---
+# Prometheus ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-config
+  namespace: grid-fed-rl-monitoring
+data:
+  prometheus.yml: |
+    global:
+      scrape_interval: 15s
+      evaluation_interval: 15s
+      external_labels:
+        cluster: 'grid-fed-rl-production'
+        environment: 'production'
+    
+    rule_files:
+      - "grid_fed_rl_rules.yml"
+    
+    alerting:
+      alertmanagers:
+      - static_configs:
+        - targets:
+          - alertmanager:9093
+    
+    scrape_configs:
+    - job_name: 'grid-fed-rl-coordinator'
+      kubernetes_sd_configs:
+      - role: pod
+        namespaces:
+          names:
+          - grid-fed-rl-production
+      relabel_configs:
+      - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+        action: keep
+        regex: true
+      - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
+        action: replace
+        target_label: __metrics_path__
+        regex: (.+)
+      - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
+        action: replace
+        regex: ([^:]+)(?::\d+)?;(\d+)
+        replacement: $1:$2
+        target_label: __address__
+      - action: labelmap
+        regex: __meta_kubernetes_pod_label_(.+)
+      - source_labels: [__meta_kubernetes_namespace]
+        action: replace
+        target_label: kubernetes_namespace
+      - source_labels: [__meta_kubernetes_pod_name]
+        action: replace
+        target_label: kubernetes_pod_name
+    
+    - job_name: 'kubernetes-apiservers'
+      kubernetes_sd_configs:
+      - role: endpoints
+      scheme: https
+      tls_config:
+        ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+      bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+      relabel_configs:
+      - source_labels: [__meta_kubernetes_namespace, __meta_kubernetes_service_name, __meta_kubernetes_endpoint_port_name]
+        action: keep
+        regex: default;kubernetes;https
+    
+    - job_name: 'kubernetes-nodes'
+      kubernetes_sd_configs:
+      - role: node
+      scheme: https
+      tls_config:
+        ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+      bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+      relabel_configs:
+      - action: labelmap
+        regex: __meta_kubernetes_node_label_(.+)
+      - target_label: __address__
+        replacement: kubernetes.default.svc:443
+      - source_labels: [__meta_kubernetes_node_name]
+        regex: (.+)
+        target_label: __metrics_path__
+        replacement: /api/v1/nodes/${1}/proxy/metrics
+    
+    - job_name: 'kubernetes-cadvisor'
+      kubernetes_sd_configs:
+      - role: node
+      scheme: https
+      tls_config:
+        ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+      bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+      relabel_configs:
+      - action: labelmap
+        regex: __meta_kubernetes_node_label_(.+)
+      - target_label: __address__
+        replacement: kubernetes.default.svc:443
+      - source_labels: [__meta_kubernetes_node_name]
+        regex: (.+)
+        target_label: __metrics_path__
+        replacement: /api/v1/nodes/${1}/proxy/metrics/cadvisor
+
+  grid_fed_rl_rules.yml: |
+    groups:
+    - name: grid-fed-rl-alerts
+      rules:
+      
+      # Performance Alerts
+      - alert: HighResponseTime
+        expr: histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket[5m])) by (le)) > 0.1
+        for: 2m
+        labels:
+          severity: warning
+          component: performance
+        annotations:
+          summary: "High response time detected"
+          description: "95th percentile response time is {{ $value }}s"
+      
+      - alert: HighErrorRate
+        expr: sum(rate(http_requests_total{status=~"5.."}[5m])) / sum(rate(http_requests_total[5m])) > 0.05
+        for: 1m
+        labels:
+          severity: critical
+          component: reliability
+        annotations:
+          summary: "High error rate detected"
+          description: "Error rate is {{ $value | humanizePercentage }}"
+      
+      # Resource Alerts
+      - alert: HighCPUUsage
+        expr: sum(rate(container_cpu_usage_seconds_total{container!="POD",container!="",pod=~"grid-fed-rl-coordinator-.*"}[5m])) by (pod) * 100 > 85
+        for: 5m
+        labels:
+          severity: warning
+          component: resources
+        annotations:
+          summary: "High CPU usage on {{ $labels.pod }}"
+          description: "CPU usage is {{ $value }}%"
+      
+      - alert: HighMemoryUsage
+        expr: sum(container_memory_working_set_bytes{container!="POD",container!="",pod=~"grid-fed-rl-coordinator-.*"}) by (pod) / sum(container_spec_memory_limit_bytes{container!="POD",container!="",pod=~"grid-fed-rl-coordinator-.*"}) by (pod) * 100 > 80
+        for: 3m
+        labels:
+          severity: warning
+          component: resources
+        annotations:
+          summary: "High memory usage on {{ $labels.pod }}"
+          description: "Memory usage is {{ $value }}%"
+      
+      # Grid-specific Alerts
+      - alert: SafetyViolations
+        expr: increase(grid_safety_violations_total[5m]) > 10
+        for: 1m
+        labels:
+          severity: critical
+          component: safety
+        annotations:
+          summary: "Multiple safety violations detected"
+          description: "{{ $value }} safety violations in the last 5 minutes"
+      
+      - alert: PowerFlowConvergenceFailure
+        expr: rate(power_flow_convergence_failures_total[5m]) > 0.1
+        for: 2m
+        labels:
+          severity: warning
+          component: computation
+        annotations:
+          summary: "Power flow convergence issues"
+          description: "{{ $value | humanizePercentage }} convergence failure rate"
+      
+      - alert: FederatedLearningStall
+        expr: time() - federated_learning_last_round_timestamp > 300
+        for: 1m
+        labels:
+          severity: warning
+          component: federated_learning
+        annotations:
+          summary: "Federated learning appears stalled"
+          description: "No federated learning rounds completed in 5 minutes"
+      
+      # System Health Alerts
+      - alert: PodCrashLooping
+        expr: rate(kube_pod_container_status_restarts_total{namespace="grid-fed-rl-production"}[5m]) > 0
+        for: 1m
+        labels:
+          severity: critical
+          component: stability
+        annotations:
+          summary: "Pod {{ $labels.pod }} is crash looping"
+          description: "Pod has restarted {{ $value }} times in the last 5 minutes"
+      
+      - alert: ServiceDown
+        expr: up{job="grid-fed-rl-coordinator"} == 0
+        for: 30s
+        labels:
+          severity: critical
+          component: availability
+        annotations:
+          summary: "Grid-Fed-RL service is down"
+          description: "Service {{ $labels.instance }} is not responding"
+
+---
+# Prometheus Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prometheus
+  namespace: grid-fed-rl-monitoring
+  labels:
+    app: prometheus
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prometheus
+  template:
+    metadata:
+      labels:
+        app: prometheus
+    spec:
+      serviceAccountName: prometheus-service-account
+      containers:
+      - name: prometheus
+        image: prom/prometheus:v2.45.0
+        args:
+          - '--config.file=/etc/prometheus/prometheus.yml'
+          - '--storage.tsdb.path=/prometheus/'
+          - '--web.console.libraries=/etc/prometheus/console_libraries'
+          - '--web.console.templates=/etc/prometheus/consoles'
+          - '--storage.tsdb.retention.time=30d'
+          - '--web.enable-lifecycle'
+          - '--web.enable-admin-api'
+        ports:
+        - containerPort: 9090
+        volumeMounts:
+        - name: prometheus-config-volume
+          mountPath: /etc/prometheus/
+        - name: prometheus-storage-volume
+          mountPath: /prometheus/
+        resources:
+          requests:
+            memory: "2Gi"
+            cpu: "500m"
+          limits:
+            memory: "4Gi"
+            cpu: "1000m"
+      volumes:
+      - name: prometheus-config-volume
+        configMap:
+          defaultMode: 420
+          name: prometheus-config
+      - name: prometheus-storage-volume
+        persistentVolumeClaim:
+          claimName: prometheus-pvc
+
+---
+# Prometheus Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus
+  namespace: grid-fed-rl-monitoring
+  labels:
+    app: prometheus
+spec:
+  type: ClusterIP
+  ports:
+  - port: 9090
+    targetPort: 9090
+    protocol: TCP
+  selector:
+    app: prometheus
+
+---
+# Grafana ConfigMap for dashboards
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboards
+  namespace: grid-fed-rl-monitoring
+data:
+  grid-fed-rl-dashboard.json: |
+    {
+      "dashboard": {
+        "id": null,
+        "title": "Grid-Fed-RL Production Dashboard",
+        "tags": ["grid-fed-rl", "production"],
+        "timezone": "UTC",
+        "panels": [
+          {
+            "id": 1,
+            "title": "Request Rate",
+            "type": "graph",
+            "targets": [
+              {
+                "expr": "sum(rate(http_requests_total[5m])) by (method)",
+                "legendFormat": "{{method}}"
+              }
+            ],
+            "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0}
+          },
+          {
+            "id": 2,
+            "title": "Response Time (95th percentile)",
+            "type": "graph",
+            "targets": [
+              {
+                "expr": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket[5m])) by (le))",
+                "legendFormat": "95th percentile"
+              }
+            ],
+            "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0}
+          },
+          {
+            "id": 3,
+            "title": "Safety Violations",
+            "type": "graph",
+            "targets": [
+              {
+                "expr": "sum(increase(grid_safety_violations_total[5m]))",
+                "legendFormat": "Safety Violations (5m)"
+              }
+            ],
+            "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8}
+          },
+          {
+            "id": 4,
+            "title": "Federated Learning Progress",
+            "type": "graph",
+            "targets": [
+              {
+                "expr": "federated_learning_round_number",
+                "legendFormat": "Round Number"
+              },
+              {
+                "expr": "federated_learning_active_clients",
+                "legendFormat": "Active Clients"
+              }
+            ],
+            "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8}
+          },
+          {
+            "id": 5,
+            "title": "Power Flow Convergence Rate",
+            "type": "stat",
+            "targets": [
+              {
+                "expr": "1 - rate(power_flow_convergence_failures_total[5m]) / rate(power_flow_attempts_total[5m])",
+                "legendFormat": "Convergence Rate"
+              }
+            ],
+            "gridPos": {"h": 4, "w": 6, "x": 0, "y": 16}
+          },
+          {
+            "id": 6,
+            "title": "Active Pods",
+            "type": "stat",
+            "targets": [
+              {
+                "expr": "sum(up{job=\"grid-fed-rl-coordinator\"})",
+                "legendFormat": "Active Pods"
+              }
+            ],
+            "gridPos": {"h": 4, "w": 6, "x": 6, "y": 16}
+          }
+        ],
+        "time": {
+          "from": "now-1h",
+          "to": "now"
+        },
+        "refresh": "30s"
+      }
+    }
+
+---
+# Grafana Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grafana
+  namespace: grid-fed-rl-monitoring
+  labels:
+    app: grafana
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: grafana
+  template:
+    metadata:
+      labels:
+        app: grafana
+    spec:
+      containers:
+      - name: grafana
+        image: grafana/grafana:10.0.0
+        ports:
+        - containerPort: 3000
+        env:
+        - name: GF_SECURITY_ADMIN_PASSWORD
+          value: "admin123"  # Change in production
+        - name: GF_INSTALL_PLUGINS
+          value: "grafana-piechart-panel"
+        volumeMounts:
+        - name: grafana-storage
+          mountPath: /var/lib/grafana
+        - name: grafana-dashboards
+          mountPath: /etc/grafana/provisioning/dashboards
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
+      volumes:
+      - name: grafana-storage
+        persistentVolumeClaim:
+          claimName: grafana-pvc
+      - name: grafana-dashboards
+        configMap:
+          name: grafana-dashboards
+
+---
+# Grafana Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana
+  namespace: grid-fed-rl-monitoring
+  labels:
+    app: grafana
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: 3000
+    protocol: TCP
+  selector:
+    app: grafana
+
+---
+# AlertManager ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: alertmanager-config
+  namespace: grid-fed-rl-monitoring
+data:
+  alertmanager.yml: |
+    global:
+      smtp_smarthost: 'localhost:587'
+      smtp_from: 'alerts@grid-fed-rl.com'
+    
+    route:
+      group_by: ['alertname', 'component']
+      group_wait: 30s
+      group_interval: 5m
+      repeat_interval: 12h
+      receiver: 'grid-fed-rl-alerts'
+      routes:
+      - match:
+          severity: critical
+        receiver: 'critical-alerts'
+      - match:
+          component: safety
+        receiver: 'safety-alerts'
+    
+    receivers:
+    - name: 'grid-fed-rl-alerts'
+      email_configs:
+      - to: 'ops-team@grid-fed-rl.com'
+        subject: 'Grid-Fed-RL Alert: {{ .GroupLabels.alertname }}'
+        body: |
+          {{ range .Alerts }}
+          Alert: {{ .Annotations.summary }}
+          Description: {{ .Annotations.description }}
+          Labels: {{ range .Labels.SortedPairs }}{{ .Name }}: {{ .Value }}{{ end }}
+          {{ end }}
+      slack_configs:
+      - api_url: 'YOUR_SLACK_WEBHOOK_URL'
+        channel: '#grid-fed-rl-alerts'
+        title: 'Grid-Fed-RL Alert'
+        text: '{{ .CommonAnnotations.summary }}'
+    
+    - name: 'critical-alerts'
+      email_configs:
+      - to: 'oncall@grid-fed-rl.com'
+        subject: 'CRITICAL: Grid-Fed-RL Alert'
+        body: |
+          CRITICAL ALERT TRIGGERED
+          {{ range .Alerts }}
+          Alert: {{ .Annotations.summary }}
+          Description: {{ .Annotations.description }}
+          {{ end }}
+      pagerduty_configs:
+      - routing_key: 'YOUR_PAGERDUTY_KEY'
+        description: '{{ .CommonAnnotations.summary }}'
+    
+    - name: 'safety-alerts'
+      email_configs:
+      - to: 'safety-team@grid-fed-rl.com'
+        subject: 'SAFETY ALERT: Grid-Fed-RL'
+        body: |
+          SAFETY VIOLATION DETECTED
+          {{ range .Alerts }}
+          Alert: {{ .Annotations.summary }}
+          Description: {{ .Annotations.description }}
+          {{ end }}
+
+---
+# AlertManager Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: alertmanager
+  namespace: grid-fed-rl-monitoring
+  labels:
+    app: alertmanager
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: alertmanager
+  template:
+    metadata:
+      labels:
+        app: alertmanager
+    spec:
+      containers:
+      - name: alertmanager
+        image: prom/alertmanager:v0.25.0
+        ports:
+        - containerPort: 9093
+        volumeMounts:
+        - name: alertmanager-config-volume
+          mountPath: /etc/alertmanager/
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "200m"
+      volumes:
+      - name: alertmanager-config-volume
+        configMap:
+          name: alertmanager-config
+
+---
+# AlertManager Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: alertmanager
+  namespace: grid-fed-rl-monitoring
+  labels:
+    app: alertmanager
+spec:
+  type: ClusterIP
+  ports:
+  - port: 9093
+    targetPort: 9093
+    protocol: TCP
+  selector:
+    app: alertmanager
+
+---
+# PVC for Prometheus
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: prometheus-pvc
+  namespace: grid-fed-rl-monitoring
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 50Gi
+  storageClassName: fast-ssd
+
+---
+# PVC for Grafana
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: grafana-pvc
+  namespace: grid-fed-rl-monitoring
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: fast-ssd
+
+---
+# ServiceAccount for Prometheus
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: prometheus-service-account
+  namespace: grid-fed-rl-monitoring
+
+---
+# ClusterRole for Prometheus
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: prometheus-cluster-role
+rules:
+- apiGroups: [""]
+  resources: ["nodes", "nodes/proxy", "services", "endpoints", "pods"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["extensions"]
+  resources: ["ingresses"]
+  verbs: ["get", "list", "watch"]
+- nonResourceURLs: ["/metrics"]
+  verbs: ["get"]
+
+---
+# ClusterRoleBinding for Prometheus
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: prometheus-cluster-role-binding
+subjects:
+- kind: ServiceAccount
+  name: prometheus-service-account
+  namespace: grid-fed-rl-monitoring
+roleRef:
+  kind: ClusterRole
+  name: prometheus-cluster-role
+  apiGroup: rbac.authorization.k8s.io

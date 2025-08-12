@@ -1,4 +1,3 @@
-```python
 """Monitoring, telemetry, and observability utilities for grid operations."""
 
 import time
@@ -97,7 +96,27 @@ class GridMonitor:
             'power_flow_time': 100.0,  # 100ms
             'cpu_percent': 90.0,
             'memory_percent': 85.0,
+            'safety_interventions_per_hour': 10,
+            'constraint_violations_per_episode': 5,
+            'power_flow_convergence_rate': 0.95
         }
+        
+        # Enhanced monitoring state
+        self.system_metrics = deque(maxlen=metrics_window)
+        self.grid_metrics = deque(maxlen=metrics_window)
+        self.training_metrics = deque(maxlen=metrics_window)
+        self.alerts = deque(maxlen=1000)
+        self.performance_cache = {}
+        self.anomaly_detectors = {}
+        
+        # Real-time monitoring
+        self._monitoring_active = False
+        self._monitor_thread = None
+        self._alert_callbacks = []
+        
+        # Statistical tracking
+        self._rolling_stats = defaultdict(lambda: deque(maxlen=100))
+        self._baseline_performance = None
         
         # Metrics storage
         self.metrics_history: deque = deque(maxlen=metrics_window)
