@@ -35,6 +35,26 @@ class FedLearningConfig:
     client_sampling_prob: float = 1.0
     compression_ratio: float = 1.0
     differential_privacy: bool = True
+    
+    # Advanced optimization settings
+    adaptive_learning_rate: bool = True
+    momentum: float = 0.9
+    weight_decay: float = 1e-5
+    gradient_clipping: float = 1.0
+    early_stopping_patience: int = 10
+    early_stopping_threshold: float = 1e-4
+    
+    # Scalability settings
+    async_updates: bool = False
+    max_concurrent_clients: int = 10
+    communication_rounds_budget: int = None
+    bandwidth_limit_mbps: float = 100.0
+    
+    # Security and robustness
+    byzantine_resilience: bool = True
+    secure_aggregation: bool = True
+    client_verification: bool = True
+    model_poisoning_detection: bool = True
 
 
 @dataclass

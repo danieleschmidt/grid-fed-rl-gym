@@ -1,0 +1,394 @@
+"""Enhanced production deployment configuration for Grid-Fed-RL-Gym."""
+
+# Advanced Kubernetes deployment with optimizations and monitoring
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: grid-fed-rl-production
+  labels:
+    app: grid-fed-rl
+    environment: production
+    version: v0.1.0
+
+---
+# ConfigMap for advanced configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grid-fed-rl-config
+  namespace: grid-fed-rl-production
+data:
+  config.yaml: |
+    # Enhanced production configuration
+    grid_environment:
+      solver_timeout: 10.0
+      max_episode_length: 86400
+      safety_threshold: 0.95
+      performance_monitoring: true
+      
+    federated_learning:
+      num_clients: 10
+      aggregation_strategy: "secure_fedavg"
+      byzantine_tolerance: 2
+      privacy_budget: 5.0
+      differential_privacy: true
+      secure_aggregation: true
+      
+    optimization:
+      enable_caching: true
+      cache_size: 2000
+      enable_parallel: true
+      max_workers: 8
+      compression_ratio: 0.1
+      adaptive_learning_rate: true
+      
+    monitoring:
+      metrics_collection_interval: 30
+      alert_thresholds:
+        cpu_percent: 85.0
+        memory_percent: 80.0
+        error_rate: 0.05
+        response_time_ms: 100.0
+      
+    security:
+      enable_rbac: true
+      require_authentication: true
+      encryption_at_rest: true
+      audit_logging: true
+
+---
+# Secret for production credentials
+apiVersion: v1
+kind: Secret
+metadata:
+  name: grid-fed-rl-secrets
+  namespace: grid-fed-rl-production
+type: Opaque
+data:
+  # Base64 encoded secrets (replace with actual values)
+  database_password: cGFzc3dvcmQxMjM=
+  api_key: YXBpa2V5MTIz
+  jwt_secret: and0c2VjcmV0MTIz
+
+---
+# Enhanced Deployment with advanced features
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grid-fed-rl-coordinator
+  namespace: grid-fed-rl-production
+  labels:
+    app: grid-fed-rl
+    component: coordinator
+    tier: backend
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: grid-fed-rl
+      component: coordinator
+  template:
+    metadata:
+      labels:
+        app: grid-fed-rl
+        component: coordinator
+        version: v0.1.0
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8080"
+        prometheus.io/path: "/metrics"
+    spec:
+      serviceAccountName: grid-fed-rl-service-account
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+      containers:
+      - name: coordinator
+        image: grid-fed-rl-gym:v0.1.0-production
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        - containerPort: 8443
+          name: https
+          protocol: TCP
+        - containerPort: 9090
+          name: metrics
+          protocol: TCP
+        env:
+        - name: ENVIRONMENT
+          value: "production"
+        - name: LOG_LEVEL
+          value: "INFO"
+        - name: WORKERS
+          value: "4"
+        - name: MAX_CLIENTS
+          value: "100"
+        - name: DATABASE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: grid-fed-rl-secrets
+              key: database_password
+        - name: API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: grid-fed-rl-secrets
+              key: api_key
+        volumeMounts:
+        - name: config-volume
+          mountPath: /app/config
+          readOnly: true
+        - name: data-volume
+          mountPath: /app/data
+        - name: logs-volume
+          mountPath: /app/logs
+        resources:
+          requests:
+            memory: "1Gi"
+            cpu: "500m"
+          limits:
+            memory: "4Gi"
+            cpu: "2000m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 2
+        lifecycle:
+          preStop:
+            exec:
+              command:
+              - /bin/sh
+              - -c
+              - "sleep 15"  # Graceful shutdown
+      volumes:
+      - name: config-volume
+        configMap:
+          name: grid-fed-rl-config
+      - name: data-volume
+        persistentVolumeClaim:
+          claimName: grid-fed-rl-data-pvc
+      - name: logs-volume
+        persistentVolumeClaim:
+          claimName: grid-fed-rl-logs-pvc
+      nodeSelector:
+        workload-type: compute-intensive
+      tolerations:
+      - key: "compute-intensive"
+        operator: "Equal"
+        value: "true"
+        effect: "NoSchedule"
+
+---
+# Horizontal Pod Autoscaler for auto-scaling
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: grid-fed-rl-hpa
+  namespace: grid-fed-rl-production
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: grid-fed-rl-coordinator
+  minReplicas: 3
+  maxReplicas: 20
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 60
+      policies:
+      - type: Percent
+        value: 100
+        periodSeconds: 15
+    scaleDown:
+      stabilizationWindowSeconds: 300
+      policies:
+      - type: Percent
+        value: 10
+        periodSeconds: 60
+
+---
+# LoadBalancer Service with advanced configuration
+apiVersion: v1
+kind: Service
+metadata:
+  name: grid-fed-rl-service
+  namespace: grid-fed-rl-production
+  labels:
+    app: grid-fed-rl
+    component: coordinator
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+    service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: 8080
+    protocol: TCP
+    name: http
+  - port: 443
+    targetPort: 8443
+    protocol: TCP
+    name: https
+  selector:
+    app: grid-fed-rl
+    component: coordinator
+  sessionAffinity: None
+
+---
+# PersistentVolumeClaim for data storage
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: grid-fed-rl-data-pvc
+  namespace: grid-fed-rl-production
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Gi
+  storageClassName: fast-ssd
+
+---
+# PersistentVolumeClaim for logs
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: grid-fed-rl-logs-pvc
+  namespace: grid-fed-rl-production
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 50Gi
+  storageClassName: fast-ssd
+
+---
+# ServiceAccount for RBAC
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: grid-fed-rl-service-account
+  namespace: grid-fed-rl-production
+
+---
+# ClusterRole for permissions
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: grid-fed-rl-cluster-role
+rules:
+- apiGroups: [""]
+  resources: ["pods", "services", "endpoints"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["apps"]
+  resources: ["deployments", "replicasets"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["metrics.k8s.io"]
+  resources: ["pods", "nodes"]
+  verbs: ["get", "list"]
+
+---
+# ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: grid-fed-rl-cluster-role-binding
+subjects:
+- kind: ServiceAccount
+  name: grid-fed-rl-service-account
+  namespace: grid-fed-rl-production
+roleRef:
+  kind: ClusterRole
+  name: grid-fed-rl-cluster-role
+  apiGroup: rbac.authorization.k8s.io
+
+---
+# NetworkPolicy for security
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: grid-fed-rl-network-policy
+  namespace: grid-fed-rl-production
+spec:
+  podSelector:
+    matchLabels:
+      app: grid-fed-rl
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: grid-fed-rl
+    - namespaceSelector:
+        matchLabels:
+          name: monitoring
+    ports:
+    - protocol: TCP
+      port: 8080
+    - protocol: TCP
+      port: 9090
+  egress:
+  - to: []
+    ports:
+    - protocol: TCP
+      port: 53
+    - protocol: UDP
+      port: 53
+  - to:
+    - podSelector:
+        matchLabels:
+          app: grid-fed-rl
+    ports:
+    - protocol: TCP
+      port: 8080
+
+---
+# PodDisruptionBudget for high availability
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: grid-fed-rl-pdb
+  namespace: grid-fed-rl-production
+spec:
+  minAvailable: 2
+  selector:
+    matchLabels:
+      app: grid-fed-rl
+      component: coordinator

@@ -29,24 +29,34 @@ class SafetyChecker:
         self,
         voltage_limits: Tuple[float, float] = (0.95, 1.05),
         frequency_limits: Tuple[float, float] = (59.5, 60.5),
-        line_loading_limit: float = 1.0
+        line_loading_limit: float = 1.0,
+        thermal_limits: Dict[str, float] = None,
+        rate_of_change_limits: Dict[str, float] = None
     ):
         self.voltage_limits = voltage_limits
         self.frequency_limits = frequency_limits
         self.line_loading_limit = line_loading_limit
+        self.thermal_limits = thermal_limits or {'transformer': 100.0, 'generator': 150.0}
+        self.rate_of_change_limits = rate_of_change_limits or {'voltage': 0.1, 'frequency': 0.5}
+        self._previous_state = None
+        self._violation_history = []
         
     def check_constraints(
         self,
         bus_voltages: np.ndarray,
         frequency: float,
-        line_loadings: np.ndarray
+        line_loadings: np.ndarray,
+        thermal_data: Dict[str, float] = None,
+        timestep: float = 1.0
     ) -> Dict[str, List[ConstraintViolation]]:
         """Check all safety constraints and return violations."""
         
         violations = {
             'voltage': [],
             'frequency': [],
-            'line_loading': []
+            'line_loading': [],
+            'thermal': [],
+            'rate_of_change': []
         }
         
         # Check voltage constraints
@@ -76,12 +86,153 @@ class SafetyChecker:
                 violations['line_loading'].append(
                     ConstraintViolation('line_overload', i, loading, self.line_loading_limit)
                 )
-                
+        
+        # Check thermal constraints
+        if thermal_data:
+            for component, temperature in thermal_data.items():
+                component_type = component.split('_')[0]
+                if component_type in self.thermal_limits:
+                    if temperature > self.thermal_limits[component_type]:
+                        violations['thermal'].append(
+                            ConstraintViolation('thermal_overload', component, temperature, self.thermal_limits[component_type])
+                        )
+        
+        # Check rate of change constraints
+        if self._previous_state is not None:
+            voltage_change = np.max(np.abs(bus_voltages - self._previous_state['voltages']) / timestep)
+            if voltage_change > self.rate_of_change_limits['voltage']:
+                violations['rate_of_change'].append(
+                    ConstraintViolation('voltage_rate', 'system', voltage_change, self.rate_of_change_limits['voltage'])
+                )
+            
+            freq_change = abs(frequency - self._previous_state['frequency']) / timestep
+            if freq_change > self.rate_of_change_limits['frequency']:
+                violations['rate_of_change'].append(
+                    ConstraintViolation('frequency_rate', 'system', freq_change, self.rate_of_change_limits['frequency'])
+                )
+        
+        # Store current state for next iteration
+        self._previous_state = {
+            'voltages': bus_voltages.copy(),
+            'frequency': frequency
+        }
+        
+        # Update violation history
+        total_violations = sum(len(v) for v in violations.values())
+        if total_violations > 0:
+            self._violation_history.append({
+                'timestamp': None,  # Will be set externally
+                'violations': violations,
+                'total': total_violations
+            })
+        
         return violations
         
     def is_safe(self, violations: Dict[str, List[ConstraintViolation]]) -> bool:
         """Check if system is in safe state."""
         return all(len(v) == 0 for v in violations.values())
+    
+    def get_violation_severity(self, violations: Dict[str, List[ConstraintViolation]]) -> str:
+        """Get overall violation severity level."""
+        thermal_violations = len(violations.get('thermal', []))
+        rate_violations = len(violations.get('rate_of_change', []))
+        total_violations = sum(len(v) for v in violations.values())
+        
+        if thermal_violations > 0 or rate_violations > 2:
+            return 'critical'
+        elif total_violations > 5:
+            return 'high'
+        elif total_violations > 2:
+            return 'medium'
+        elif total_violations > 0:
+            return 'low'
+        else:
+            return 'safe'
+
+
+class SafetyShield:
+    """Advanced safety shield with predictive intervention."""
+    
+    def __init__(
+        self,
+        safety_checker: SafetyChecker,
+        intervention_threshold: float = 0.95,
+        prediction_horizon: int = 3,
+        backup_controller = None
+    ):
+        self.safety_checker = safety_checker
+        self.intervention_threshold = intervention_threshold
+        self.prediction_horizon = prediction_horizon
+        self.backup_controller = backup_controller
+        self.intervention_count = 0
+        self.intervention_history = []
+        
+    def should_intervene(
+        self,
+        current_state: Dict[str, Any],
+        proposed_action: np.ndarray,
+        confidence: float = 1.0
+    ) -> Tuple[bool, str]:
+        """Determine if safety intervention is needed."""
+        
+        # Check current violations
+        violations = self.safety_checker.check_constraints(
+            current_state['bus_voltages'],
+            current_state['frequency'],
+            current_state['line_loadings'],
+            current_state.get('thermal_data'),
+            current_state.get('timestep', 1.0)
+        )
+        
+        severity = self.safety_checker.get_violation_severity(violations)
+        
+        # Immediate intervention for critical violations
+        if severity == 'critical':
+            return True, 'Critical violations detected'
+        
+        # Predictive intervention based on confidence
+        if confidence < self.intervention_threshold and severity in ['high', 'medium']:
+            return True, f'Low confidence ({confidence:.3f}) with {severity} violations'
+        
+        # Rate-based intervention
+        total_violations = sum(len(v) for v in violations.values())
+        if total_violations > 3 and confidence < 0.8:
+            return True, f'Multiple violations ({total_violations}) with low confidence'
+        
+        return False, 'Safe to proceed'
+    
+    def get_safe_action(
+        self,
+        current_state: Dict[str, Any],
+        proposed_action: np.ndarray,
+        confidence: float = 1.0
+    ) -> Tuple[np.ndarray, bool]:
+        """Get safe action, potentially overriding proposed action."""
+        
+        should_intervene, reason = self.should_intervene(current_state, proposed_action, confidence)
+        
+        if should_intervene:
+            self.intervention_count += 1
+            logger.warning(f"Safety intervention #{self.intervention_count}: {reason}")
+            
+            # Record intervention
+            self.intervention_history.append({
+                'timestamp': None,  # Will be set externally
+                'reason': reason,
+                'original_action': proposed_action.copy(),
+                'confidence': confidence
+            })
+            
+            # Use backup controller if available
+            if self.backup_controller is not None:
+                safe_action = self.backup_controller.get_action(current_state)
+                return safe_action, True
+            else:
+                # Conservative fallback: reduce action magnitude
+                safe_action = proposed_action * 0.1
+                return safe_action, True
+        
+        return proposed_action, False
 
 
 class SafetyMonitor:

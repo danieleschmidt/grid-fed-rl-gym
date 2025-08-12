@@ -18,11 +18,31 @@ try:
     from .algorithms.offline import CQL, IQL
     from .federated.core import FederatedOfflineRL
     _IMPORTS_AVAILABLE = True
-except ImportError:
+except ImportError as e:
     # Graceful degradation if dependencies missing
+    import warnings
+    warnings.warn(f"Failed to import core components: {e}. Some functionality may be limited.")
     _IMPORTS_AVAILABLE = False
-    GridEnvironment = None
-    BaseGridEnvironment = None
+    
+    # Create dummy classes for basic functionality
+    class GridEnvironment:
+        def __init__(self, *args, **kwargs):
+            raise ImportError("GridEnvironment requires numpy and other dependencies")
+    
+    class BaseGridEnvironment:
+        def __init__(self, *args, **kwargs):
+            raise ImportError("BaseGridEnvironment requires numpy and other dependencies")
+    
+    class IEEE13Bus:
+        def __init__(self, *args, **kwargs):
+            raise ImportError("IEEE13Bus requires numpy and other dependencies")
+    
+    IEEE34Bus = IEEE13Bus
+    IEEE123Bus = IEEE13Bus
+    CustomFeeder = IEEE13Bus
+    CQL = IEEE13Bus
+    IQL = IEEE13Bus
+    FederatedOfflineRL = IEEE13Bus
 
 __all__ = [
     "__version__",
