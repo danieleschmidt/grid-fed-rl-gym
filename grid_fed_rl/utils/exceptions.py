@@ -1,4 +1,8 @@
-"""Custom exceptions for grid-fed-rl-gym with advanced error handling."""
+"""
+Custom exceptions for Grid-Fed-RL-Gym with enhanced error handling.
+Includes context-aware exceptions, retry mechanisms, and error recovery.
+Features circuit breakers, exponential backoff, and predictive error analysis.
+"""
 
 import time
 import random

@@ -1,0 +1,438 @@
+# Production Configuration for Grid-Fed-RL-Gym
+# Autonomous deployment with auto-scaling, monitoring, and security
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grid-fed-rl-config
+  namespace: grid-fed-rl
+data:
+  # Application Configuration
+  app_config.yaml: |
+    # Grid-Fed-RL Application Configuration
+    application:
+      name: "grid-fed-rl-gym"
+      version: "0.1.0"
+      environment: "production"
+      debug: false
+      log_level: "INFO"
+      
+    # Server Configuration
+    server:
+      host: "0.0.0.0"
+      port: 8080
+      workers: 4
+      timeout: 300
+      keepalive: 2
+      max_requests: 1000
+      max_requests_jitter: 100
+      
+    # Performance Configuration
+    performance:
+      enable_caching: true
+      cache_ttl: 3600
+      max_concurrent_requests: 100
+      request_timeout: 30
+      enable_compression: true
+      compression_level: 6
+      
+    # Security Configuration
+    security:
+      enable_cors: true
+      cors_origins: ["*"]
+      enable_rate_limiting: true
+      rate_limit: "100/minute"
+      enable_authentication: true
+      jwt_secret: "${JWT_SECRET}"
+      session_timeout: 3600
+      
+    # Database Configuration (if applicable)
+    database:
+      host: "${DB_HOST}"
+      port: 5432
+      name: "${DB_NAME}"
+      user: "${DB_USER}"
+      password: "${DB_PASSWORD}"
+      pool_size: 10
+      max_overflow: 20
+      pool_timeout: 30
+      
+    # Redis Configuration
+    redis:
+      host: "${REDIS_HOST}"
+      port: 6379
+      password: "${REDIS_PASSWORD}"
+      db: 0
+      max_connections: 10
+      
+    # Monitoring Configuration
+    monitoring:
+      enable_metrics: true
+      metrics_port: 9090
+      enable_health_checks: true
+      health_check_path: "/health"
+      enable_distributed_tracing: true
+      jaeger_endpoint: "${JAEGER_ENDPOINT}"
+      
+    # Grid-Specific Configuration
+    grid:
+      default_solver: "newton_raphson"
+      max_iterations: 50
+      tolerance: 1e-6
+      enable_safety_constraints: true
+      constraint_penalty: 1000.0
+      
+    # Federated Learning Configuration
+    federated:
+      aggregation_method: "fedavg"
+      min_clients: 3
+      max_clients: 10
+      rounds: 100
+      local_epochs: 5
+      privacy_budget: 10.0
+      enable_differential_privacy: true
+      
+    # Scaling Configuration
+    scaling:
+      enable_auto_scaling: true
+      min_replicas: 2
+      max_replicas: 10
+      target_cpu_utilization: 70
+      target_memory_utilization: 80
+      scale_up_cooldown: 300
+      scale_down_cooldown: 600
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grid-fed-rl-app
+  namespace: grid-fed-rl
+  labels:
+    app: grid-fed-rl
+    version: v1
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: grid-fed-rl
+  template:
+    metadata:
+      labels:
+        app: grid-fed-rl
+        version: v1
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9090"
+        prometheus.io/path: "/metrics"
+    spec:
+      serviceAccountName: grid-fed-rl-service-account
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
+      containers:
+      - name: grid-fed-rl
+        image: terragonlabs/grid-fed-rl-gym:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        - containerPort: 9090
+          name: metrics
+          protocol: TCP
+        env:
+        - name: ENVIRONMENT
+          value: "production"
+        - name: LOG_LEVEL
+          value: "INFO"
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: grid-fed-rl-secrets
+              key: jwt-secret
+        - name: DB_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: grid-fed-rl-config
+              key: db-host
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: grid-fed-rl-secrets
+              key: db-user
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: grid-fed-rl-secrets
+              key: db-password
+        - name: REDIS_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: grid-fed-rl-config
+              key: redis-host
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: grid-fed-rl-secrets
+              key: redis-password
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "2Gi"
+            cpu: "1000m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+        volumeMounts:
+        - name: config-volume
+          mountPath: /app/config
+          readOnly: true
+        - name: data-volume
+          mountPath: /app/data
+        - name: logs-volume
+          mountPath: /app/logs
+      volumes:
+      - name: config-volume
+        configMap:
+          name: grid-fed-rl-config
+      - name: data-volume
+        persistentVolumeClaim:
+          claimName: grid-fed-rl-data-pvc
+      - name: logs-volume
+        emptyDir: {}
+      nodeSelector:
+        kubernetes.io/arch: amd64
+      tolerations:
+      - key: "node.kubernetes.io/not-ready"
+        operator: "Exists"
+        effect: "NoExecute"
+        tolerationSeconds: 300
+      - key: "node.kubernetes.io/unreachable"
+        operator: "Exists"
+        effect: "NoExecute"
+        tolerationSeconds: 300
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: grid-fed-rl-service
+  namespace: grid-fed-rl
+  labels:
+    app: grid-fed-rl
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "http"
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: 8080
+    protocol: TCP
+    name: http
+  - port: 9090
+    targetPort: 9090
+    protocol: TCP
+    name: metrics
+  selector:
+    app: grid-fed-rl
+
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: grid-fed-rl-hpa
+  namespace: grid-fed-rl
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: grid-fed-rl-app
+  minReplicas: 2
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 300
+      policies:
+      - type: Percent
+        value: 100
+        periodSeconds: 15
+      - type: Pods
+        value: 2
+        periodSeconds: 60
+    scaleDown:
+      stabilizationWindowSeconds: 600
+      policies:
+      - type: Percent
+        value: 50
+        periodSeconds: 60
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: grid-fed-rl-data-pvc
+  namespace: grid-fed-rl
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: fast-ssd
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: grid-fed-rl-ingress
+  namespace: grid-fed-rl
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/rate-limit: "100"
+    nginx.ingress.kubernetes.io/rate-limit-window: "1m"
+spec:
+  tls:
+  - hosts:
+    - api.grid-fed-rl.com
+    secretName: grid-fed-rl-tls
+  rules:
+  - host: api.grid-fed-rl.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: grid-fed-rl-service
+            port:
+              number: 80
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: grid-fed-rl-service-account
+  namespace: grid-fed-rl
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::ACCOUNT:role/grid-fed-rl-pod-role
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: grid-fed-rl
+  name: grid-fed-rl-role
+rules:
+- apiGroups: [""]
+  resources: ["pods", "services", "configmaps", "secrets"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["apps"]
+  resources: ["deployments", "replicasets"]
+  verbs: ["get", "list", "watch"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: grid-fed-rl-rolebinding
+  namespace: grid-fed-rl
+subjects:
+- kind: ServiceAccount
+  name: grid-fed-rl-service-account
+  namespace: grid-fed-rl
+roleRef:
+  kind: Role
+  name: grid-fed-rl-role
+  apiGroup: rbac.authorization.k8s.io
+
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: grid-fed-rl-pdb
+  namespace: grid-fed-rl
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: grid-fed-rl
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: grid-fed-rl-network-policy
+  namespace: grid-fed-rl
+spec:
+  podSelector:
+    matchLabels:
+      app: grid-fed-rl
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: ingress-nginx
+    - namespaceSelector:
+        matchLabels:
+          name: monitoring
+    ports:
+    - protocol: TCP
+      port: 8080
+    - protocol: TCP
+      port: 9090
+  egress:
+  - to: []
+    ports:
+    - protocol: TCP
+      port: 53
+    - protocol: UDP
+      port: 53
+    - protocol: TCP
+      port: 443
+    - protocol: TCP
+      port: 5432
+    - protocol: TCP
+      port: 6379
