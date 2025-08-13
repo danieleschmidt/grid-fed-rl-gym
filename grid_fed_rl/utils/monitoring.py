@@ -1,4 +1,8 @@
-"""Monitoring, telemetry, and observability utilities for grid operations."""
+"""
+Advanced monitoring and observability for Grid-Fed-RL-Gym.
+Enhanced with autonomous reliability features and real-time anomaly detection.
+Supports multi-tier alerting, predictive health checks, and auto-scaling.
+"""
 
 import time
 import psutil
@@ -1061,5 +1065,259 @@ def create_monitoring_dashboard(
 
 
 # Global monitor instances
+class CircuitBreaker:
+    """Circuit breaker for fault tolerance."""
+    
+    def __init__(
+        self,
+        failure_threshold: int = 5,
+        recovery_timeout: float = 60.0,
+        expected_exception: type = Exception
+    ):
+        self.failure_threshold = failure_threshold
+        self.recovery_timeout = recovery_timeout
+        self.expected_exception = expected_exception
+        
+        self.failure_count = 0
+        self.last_failure_time = None
+        self.state = "CLOSED"  # CLOSED, OPEN, HALF_OPEN
+        
+    def call(self, func, *args, **kwargs):
+        """Execute function with circuit breaker protection."""
+        if self.state == "OPEN":
+            if time.time() - self.last_failure_time > self.recovery_timeout:
+                self.state = "HALF_OPEN"
+            else:
+                raise Exception(f"Circuit breaker OPEN - function {func.__name__} unavailable")
+        
+        try:
+            result = func(*args, **kwargs)
+            self._on_success()
+            return result
+        except self.expected_exception as e:
+            self._on_failure()
+            raise
+    
+    def _on_success(self):
+        """Reset failure count on success."""
+        self.failure_count = 0
+        self.state = "CLOSED"
+    
+    def _on_failure(self):
+        """Increment failure count and open circuit if threshold exceeded."""
+        self.failure_count += 1
+        self.last_failure_time = time.time()
+        
+        if self.failure_count >= self.failure_threshold:
+            self.state = "OPEN"
+
+
+class PredictiveHealthChecker(HealthChecker):
+    """Enhanced health checker with predictive capabilities."""
+    
+    def __init__(self):
+        super().__init__()
+        self.trend_windows = {
+            'short': deque(maxlen=10),   # Last 10 checks
+            'medium': deque(maxlen=50),  # Last 50 checks
+            'long': deque(maxlen=200)    # Last 200 checks
+        }
+        
+    def run_predictive_check(self, system_state: Dict[str, Any]) -> Dict[str, Any]:
+        """Run health check with trend analysis and predictions."""
+        standard_result = self.run_health_check(system_state)
+        
+        # Add trend analysis
+        self._update_trends(system_state)
+        trends = self._analyze_trends()
+        
+        # Predict potential issues
+        predictions = self._predict_issues(trends)
+        
+        result = {
+            **standard_result,
+            'trends': trends,
+            'predictions': predictions,
+            'predictive_score': self._calculate_health_score(trends, predictions)
+        }
+        
+        return result
+    
+    def _update_trends(self, state: Dict[str, Any]):
+        """Update trend data with current state."""
+        key_metrics = {
+            'voltage_deviation': np.std(state.get('bus_voltages', [1.0])),
+            'frequency_deviation': abs(state.get('frequency', 60.0) - 60.0),
+            'power_flow_iterations': state.get('power_flow_iterations', 1),
+            'max_loading': np.max(state.get('line_loadings', [0.5]))
+        }
+        
+        for window in self.trend_windows.values():
+            window.append(key_metrics)
+    
+    def _analyze_trends(self) -> Dict[str, Dict[str, float]]:
+        """Analyze trends across different time windows."""
+        trends = {}
+        
+        for window_name, data in self.trend_windows.items():
+            if len(data) < 5:  # Need minimum data for trends
+                continue
+                
+            window_trends = {}
+            for metric in data[0].keys():
+                values = [d[metric] for d in data]
+                
+                # Calculate trend slope
+                x = np.arange(len(values))
+                slope = np.polyfit(x, values, 1)[0]
+                
+                window_trends[metric] = {
+                    'slope': slope,
+                    'mean': np.mean(values),
+                    'std': np.std(values),
+                    'latest': values[-1]
+                }
+            
+            trends[window_name] = window_trends
+        
+        return trends
+    
+    def _predict_issues(self, trends: Dict) -> List[Dict]:
+        """Predict potential issues based on trends."""
+        predictions = []
+        
+        if 'medium' not in trends:
+            return predictions
+        
+        medium_trends = trends['medium']
+        
+        # Voltage degradation prediction
+        voltage_trend = medium_trends.get('voltage_deviation', {})
+        if voltage_trend.get('slope', 0) > 0.001:  # Increasing voltage deviation
+            time_to_violation = self._estimate_time_to_threshold(
+                voltage_trend.get('latest', 0),
+                voltage_trend.get('slope', 0),
+                0.1  # 10% voltage deviation threshold
+            )
+            
+            if time_to_violation < 3600:  # Less than 1 hour
+                predictions.append({
+                    'type': 'voltage_degradation',
+                    'estimated_time_seconds': time_to_violation,
+                    'confidence': min(0.9, voltage_trend.get('slope', 0) * 100),
+                    'recommendation': 'Monitor voltage control devices and reactive power dispatch'
+                })
+        
+        # Frequency instability prediction
+        freq_trend = medium_trends.get('frequency_deviation', {})
+        if freq_trend.get('slope', 0) > 0.01:  # Increasing frequency deviation
+            predictions.append({
+                'type': 'frequency_instability',
+                'confidence': min(0.8, freq_trend.get('slope', 0) * 50),
+                'recommendation': 'Check generation/load balance and governor settings'
+            })
+        
+        return predictions
+    
+    def _estimate_time_to_threshold(self, current: float, slope: float, threshold: float) -> float:
+        """Estimate time to reach threshold given current trend."""
+        if slope <= 0:
+            return float('inf')
+        
+        return (threshold - current) / slope
+    
+    def _calculate_health_score(self, trends: Dict, predictions: List) -> float:
+        """Calculate overall health score (0-100)."""
+        base_score = 100.0
+        
+        # Deduct points for negative trends
+        for window_name, window_trends in trends.items():
+            weight = {'short': 0.5, 'medium': 0.3, 'long': 0.2}.get(window_name, 0.1)
+            
+            for metric, trend_data in window_trends.items():
+                slope = trend_data.get('slope', 0)
+                if slope > 0 and metric in ['voltage_deviation', 'frequency_deviation']:
+                    base_score -= abs(slope) * 100 * weight
+        
+        # Deduct points for predictions
+        for prediction in predictions:
+            confidence = prediction.get('confidence', 0)
+            severity_map = {
+                'voltage_degradation': 20,
+                'frequency_instability': 15,
+                'performance_degradation': 10
+            }
+            severity = severity_map.get(prediction['type'], 5)
+            base_score -= severity * confidence
+        
+        return max(0.0, min(100.0, base_score))
+
+
+class AdvancedAutoScaler(AutoScaler):
+    """Enhanced auto-scaler with ML-based predictions."""
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.prediction_window = deque(maxlen=100)
+        self.load_predictions = deque(maxlen=50)
+        
+    def predict_load_trend(self) -> Dict[str, float]:
+        """Predict future load trends using simple moving average."""
+        if len(self.prediction_window) < 10:
+            return {'predicted_load': 50.0, 'confidence': 0.0}
+        
+        recent_loads = list(self.prediction_window)[-10:]
+        trend = np.polyfit(range(len(recent_loads)), recent_loads, 1)[0]
+        
+        # Simple linear extrapolation
+        predicted_load = recent_loads[-1] + trend * 5  # 5 steps ahead
+        confidence = min(1.0, max(0.0, 1.0 - abs(trend) * 10))
+        
+        return {
+            'predicted_load': predicted_load,
+            'trend_slope': trend,
+            'confidence': confidence
+        }
+    
+    def smart_scale_decision(self) -> Dict[str, Any]:
+        """Make scaling decision based on current and predicted load."""
+        current_stats = self.grid_monitor.get_summary_stats()
+        load_prediction = self.predict_load_trend()
+        
+        decision = {
+            'action': 'maintain',
+            'target_workers': self.current_workers,
+            'reasoning': 'Conditions stable',
+            'confidence': 0.8
+        }
+        
+        if not current_stats:
+            return decision
+        
+        current_cpu = current_stats.get('cpu_percent', {}).get('mean', 50)
+        predicted_load = load_prediction['predicted_load']
+        
+        # Proactive scaling based on predictions
+        if predicted_load > 85 and self.current_workers < self.max_workers:
+            decision = {
+                'action': 'scale_up',
+                'target_workers': min(self.current_workers + 1, self.max_workers),
+                'reasoning': f'Predicted high load: {predicted_load:.1f}%',
+                'confidence': load_prediction['confidence']
+            }
+        elif predicted_load < 25 and self.current_workers > self.min_workers:
+            decision = {
+                'action': 'scale_down',
+                'target_workers': max(self.current_workers - 1, self.min_workers),
+                'reasoning': f'Predicted low load: {predicted_load:.1f}%',
+                'confidence': load_prediction['confidence']
+            }
+        
+        return decision
+
+
+# Global enhanced monitor instances
 global_monitor = GridMonitor()
-global_health_checker = HealthChecker()
+global_health_checker = PredictiveHealthChecker()
+global_auto_scaler = AdvancedAutoScaler()
+global_circuit_breaker = CircuitBreaker()
