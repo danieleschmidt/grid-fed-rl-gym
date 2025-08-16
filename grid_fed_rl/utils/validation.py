@@ -1,8 +1,30 @@
 """Input validation and sanitization utilities."""
 
-import numpy as np
 from typing import Any, Dict, List, Optional, Union
-from .exceptions import DataValidationError, InvalidActionError
+
+# Minimal NumPy replacement for basic functionality
+try:
+    import numpy as np
+except ImportError:
+    # Minimal numpy-like functionality for basic operation
+    class MinimalNumPy:
+        ndarray = list
+        def array(self, data, dtype=None):
+            return list(data) if hasattr(data, '__iter__') else [data]
+        def isnan(self, x): return str(x).lower() == 'nan'
+        def isinf(self, x): return str(x).lower() in ['inf', '-inf']
+        def clip(self, x, low, high): return max(low, min(high, x))
+        float32 = float
+    np = MinimalNumPy()
+
+try:
+    from .exceptions import DataValidationError, InvalidActionError
+except ImportError:
+    # Create stub exception classes
+    class DataValidationError(Exception):
+        pass
+    class InvalidActionError(Exception):
+        pass
 
 
 def validate_action(action: np.ndarray, action_space) -> np.ndarray:

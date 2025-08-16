@@ -2,7 +2,30 @@
 
 from abc import ABC, abstractmethod
 from typing import Any, Dict, List, Optional, Tuple, Union
-import numpy as np
+# Minimal NumPy replacement for basic functionality
+try:
+    import numpy as np
+except ImportError:
+    # Minimal numpy-like functionality for basic operation
+    class MinimalNumPy:
+        ndarray = list  # Use list as ndarray replacement
+        
+        def array(self, data, dtype=None):
+            if isinstance(data, list):
+                return data
+            return [data] if not hasattr(data, '__iter__') else list(data)
+        def random(self):
+            import random
+            return type('obj', (object,), {
+                'uniform': lambda low, high: random.uniform(low, high),
+                'normal': lambda mean, std: random.gauss(mean, std),
+                'random': lambda: random.random()
+            })()
+        def any(self, x): return any(x)
+        def tan(self, x): import math; return math.tan(x)
+        def arccos(self, x): import math; return math.acos(x)
+        float32 = float
+    np = MinimalNumPy()
 
 # Minimal gym-like interface for testing without gymnasium
 class Space:
@@ -12,15 +35,32 @@ class Space:
         return np.array([0.0])
         
 class Box(Space):
-    def __init__(self, low, high, shape=None, dtype=np.float32):
+    def __init__(self, low, high, shape=None, dtype=None):
         super().__init__()
-        self.low = np.array(low)
-        self.high = np.array(high)
-        self.shape = shape if shape is not None else self.low.shape
-        self.dtype = dtype
+        self.low = np.array(low) if hasattr(low, '__iter__') else [low]
+        self.high = np.array(high) if hasattr(high, '__iter__') else [high]
+        if shape is not None:
+            self.shape = shape
+        elif hasattr(self.low, 'shape'):
+            self.shape = self.low.shape
+        else:
+            self.shape = (len(self.low),) if hasattr(self.low, '__len__') else (1,)
+        self.dtype = dtype or float
         
     def sample(self):
-        return np.random.uniform(self.low, self.high)
+        import random
+        if hasattr(self, 'shape') and self.shape and len(self.shape) > 0 and self.shape[0] > 1:
+            # Multiple dimensions
+            return [random.uniform(
+                self.low[i] if i < len(self.low) else -1, 
+                self.high[i] if i < len(self.high) else 1
+            ) for i in range(self.shape[0])]
+        else:
+            # Single dimension
+            return random.uniform(
+                self.low[0] if self.low else -1, 
+                self.high[0] if self.high else 1
+            )
         
 class Env:
     def __init__(self):
@@ -115,8 +155,8 @@ class BaseGridEnvironment(Env, ABC):
         # Voltage constraints
         if "bus_voltages" in state:
             voltages = state["bus_voltages"]
-            violations["voltage_high"] = np.any(voltages > self.voltage_limits[1])
-            violations["voltage_low"] = np.any(voltages < self.voltage_limits[0])
+            violations["voltage_high"] = any(v > self.voltage_limits[1] for v in voltages)
+            violations["voltage_low"] = any(v < self.voltage_limits[0] for v in voltages)
             
         # Frequency constraints
         if "frequency" in state:

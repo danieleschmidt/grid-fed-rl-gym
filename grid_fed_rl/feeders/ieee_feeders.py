@@ -1,7 +1,19 @@
 """IEEE standard test feeders implementation."""
 
 from typing import Dict, List, Optional, Tuple, Any
-import numpy as np
+
+# Minimal NumPy replacement for basic functionality
+try:
+    import numpy as np
+except ImportError:
+    # Minimal numpy-like functionality for basic operation
+    class MinimalNumPy:
+        ndarray = list
+        def array(self, data, dtype=None):
+            return list(data) if hasattr(data, '__iter__') else [data]
+        def sqrt(self, x): import math; return math.sqrt(x)
+        float32 = float
+    np = MinimalNumPy()
 
 from .base import BaseFeeder, FeederParameters
 from ..environments.base import Bus, Line, Load
