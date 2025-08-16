@@ -1,0 +1,121 @@
+{
+  "experimental_config": {
+    "algorithms": [
+      {
+        "name": "NovelFedRL",
+        "description": "Novel federated RL with privacy preservation",
+        "is_baseline": false,
+        "hyperparameters": {
+          "learning_rate": 0.001,
+          "batch_size": 64
+        }
+      },
+      {
+        "name": "PPOBaseline",
+        "description": "Proximal Policy Optimization baseline",
+        "is_baseline": true,
+        "hyperparameters": {
+          "learning_rate": 0.0003
+        }
+      }
+    ],
+    "environments": [
+      {
+        "name": "IEEE13Bus",
+        "description": "IEEE 13-bus distribution test feeder",
+        "episode_length": 1000
+      }
+    ],
+    "n_trials": 20,
+    "n_episodes_per_trial": 5
+  },
+  "statistical_config": {
+    "alpha": 0.05,
+    "power": 0.8
+  },
+  "benchmark_analysis": {
+    "benchmark_metadata": {
+      "novel_algorithms": [
+        {
+          "name": "NovelFedRL",
+          "description": "Novel federated RL with privacy preservation",
+          "is_baseline": false,
+          "hyperparameters": {
+            "learning_rate": 0.001,
+            "batch_size": 64
+          }
+        }
+      ],
+      "baseline_algorithms": [
+        {
+          "name": "PPOBaseline",
+          "description": "Proximal Policy Optimization baseline",
+          "is_baseline": true,
+          "hyperparameters": {
+            "learning_rate": 0.0003
+          }
+        }
+      ]
+    },
+    "performance_categories": {
+      "state_of_the_art": [
+        [
+          "NovelFedRL",
+          0.85
+        ]
+      ],
+      "competitive": [],
+      "baseline_level": [],
+      "below_baseline": [],
+      "summary": {
+        "total_novel_algorithms": 1,
+        "state_of_the_art_count": 1,
+        "competitive_count": 0,
+        "success_rate": 1.0,
+        "best_baseline_score": 0.75
+      }
+    },
+    "algorithm_rankings": {
+      "overall_performance": [
+        [
+          "NovelFedRL",
+          0.85
+        ],
+        [
+          "PPOBaseline",
+          0.75
+        ]
+      ],
+      "safety": [
+        [
+          "NovelFedRL",
+          2.1
+        ],
+        [
+          "PPOBaseline",
+          3.5
+        ]
+      ],
+      "efficiency": [
+        [
+          "NovelFedRL",
+          120.5
+        ],
+        [
+          "PPOBaseline",
+          150.2
+        ]
+      ]
+    },
+    "performance_matrix": {
+      "NovelFedRL": {
+        "PPOBaseline": {
+          "performance_ratio": 1.13,
+          "statistical_significance": true,
+          "effect_size": 0.8,
+          "p_value": 0.002
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,1180 @@
+{
+  "study_metadata": {
+    "algorithms": [
+      {
+        "name": "NovelFedRL",
+        "class_name": "NovelFederatedRL",
+        "hyperparameters": {
+          "learning_rate": 0.001,
+          "batch_size": 64
+        },
+        "description": "Novel federated RL with privacy preservation",
+        "is_baseline": false
+      },
+      {
+        "name": "AdvancedFedRL",
+        "class_name": "AdvancedFederatedRL",
+        "hyperparameters": {
+          "learning_rate": 0.0005,
+          "batch_size": 32
+        },
+        "description": "Advanced federated RL with adaptive aggregation",
+        "is_baseline": false
+      },
+      {
+        "name": "RandomPolicy",
+        "class_name": "RandomPolicy",
+        "hyperparameters": {},
+        "description": "Random action baseline",
+        "is_baseline": true
+      },
+      {
+        "name": "PIDController",
+        "class_name": "PIDController",
+        "hyperparameters": {
+          "kp": 1.0,
+          "ki": 0.1,
+          "kd": 0.01
+        },
+        "description": "Classic PID controller",
+        "is_baseline": true
+      },
+      {
+        "name": "DQNBaseline",
+        "class_name": "DQNBaseline",
+        "hyperparameters": {
+          "learning_rate": 0.001,
+          "epsilon": 0.1
+        },
+        "description": "Deep Q-Network baseline",
+        "is_baseline": true
+      },
+      {
+        "name": "PPOBaseline",
+        "class_name": "PPOBaseline",
+        "hyperparameters": {
+          "learning_rate": 0.0003
+        },
+        "description": "Proximal Policy Optimization baseline",
+        "is_baseline": true
+      }
+    ],
+    "environments": [
+      {
+        "name": "IEEE13Bus",
+        "feeder_type": "IEEE13Bus",
+        "episode_length": 400,
+        "safety_constraints": {},
+        "disturbances": []
+      }
+    ],
+    "total_experiments": 30,
+    "analysis_timestamp": 1755367794.245807
+  },
+  "algorithm_comparisons": {
+    "NovelFedRL_vs_AdvancedFedRL": {
+      "comparison": "NovelFedRL vs AdvancedFedRL",
+      "metric": "episode_reward",
+      "descriptive_stats": {
+        "NovelFedRL": {
+          "count": 5,
+          "mean": 33.96993000923518,
+          "std": 0.24789584833026732,
+          "min": 33.64899593516713,
+          "max": 34.32451861119464,
+          "median": 34.00488844903574,
+          "q25": 33.85346000623681,
+          "q75": 34.01778704454159,
+          "iqr": 0.16432703830478346,
+          "skewness": 0.2762531464770989,
+          "kurtosis": 0.8074454712674832
+        },
+        "AdvancedFedRL": {
+          "count": 5,
+          "mean": 32.92503747544455,
+          "std": 0.4767372994549398,
+          "min": 32.36050052163974,
+          "max": 33.56463669009368,
+          "median": 32.73256135429983,
+          "q25": 32.72165222842312,
+          "q75": 33.24583658276637,
+          "iqr": 0.5241843543432552,
+          "skewness": 0.38148410510866715,
+          "kurtosis": -1.161479360670362
+        }
+      },
+      "statistical_tests": {
+        "parametric": "Welch's t-test: statistic=4.3482, p=0.0011 (significant), effect_size=2.7500",
+        "non_parametric": "Mann-Whitney U test: statistic=0.0000, p=0.0090 (not significant), effect_size=0.8257"
+      },
+      "confidence_intervals": {
+        "NovelFedRL": {
+          "lower": 33.66217600448695,
+          "mean": 33.96993000923518,
+          "upper": 34.277684013983404
+        },
+        "AdvancedFedRL": {
+          "lower": 32.33318483205279,
+          "mean": 32.92503747544455,
+          "upper": 33.51689011883631
+        }
+      },
+      "power_analysis": {
+        "observed_power": 0.0,
+        "recommended_sample_size": 267,
+        "current_sample_sizes": [
+          5,
+          5
+        ]
+      },
+      "recommendation": "Results are mixed - one test shows significance while the other doesn't. Large effect size detected - difference is practically significant. Statistical power is low (0.00). Consider collecting more data. Recommended sample size: 267 per group (current: 5)"
+    },
+    "NovelFedRL_vs_RandomPolicy": {
+      "comparison": "NovelFedRL vs RandomPolicy",
+      "metric": "episode_reward",
+      "descriptive_stats": {
+        "NovelFedRL": {
+          "count": 5,
+          "mean": 33.96993000923518,
+          "std": 0.24789584833026732,
+          "min": 33.64899593516713,
+          "max": 34.32451861119464,
+          "median": 34.00488844903574,
+          "q25": 33.85346000623681,
+          "q75": 34.01778704454159,
+          "iqr": 0.16432703830478346,
+          "skewness": 0.2762531464770989,
+          "kurtosis": 0.8074454712674832
+        },
+        "RandomPolicy": {
+          "count": 5,
+          "mean": 39.95171362995901,
+          "std": 0.38637584191029534,
+          "min": 39.55438704074182,
+          "max": 40.43510013820852,
+          "median": 39.85120043574079,
+          "q25": 39.646364773313216,
+          "q75": 40.27151576179071,
+          "iqr": 0.6251509884774933,
+          "skewness": 0.3860747541645657,
+          "kurtosis": -2.459858267673008
+        }
+      },
+      "statistical_tests": {
+        "parametric": "Welch's t-test: statistic=-29.1369, p=0.0000 (significant), effect_size=-18.4278",
+        "non_parametric": "Mann-Whitney U test: statistic=0.0000, p=0.0090 (not significant), effect_size=0.8257"
+      },
+      "confidence_intervals": {
+        "NovelFedRL": {
+          "lower": 33.66217600448695,
+          "mean": 33.96993000923518,
+          "upper": 34.277684013983404
+        },
+        "RandomPolicy": {
+          "lower": 39.47204156813633,
+          "mean": 39.95171362995901,
+          "upper": 40.431385691781685
+        }
+      },
+      "power_analysis": {
+        "observed_power": 1.0,
+        "recommended_sample_size": 6,
+        "current_sample_sizes": [
+          5,
+          5
+        ]
+      },
+      "recommendation": "Results are mixed - one test shows significance while the other doesn't. Large effect size detected - difference is practically significant."
+    },
+    "NovelFedRL_vs_PIDController": {
+      "comparison": "NovelFedRL vs PIDController",
+      "metric": "episode_reward",
+      "descriptive_stats": {
+        "NovelFedRL": {
+          "count": 5,
+          "mean": 33.96993000923518,
+          "std": 0.24789584833026732,
+          "min": 33.64899593516713,
+          "max": 34.32451861119464,
+          "median": 34.00488844903574,
+          "q25": 33.85346000623681,
+          "q75": 34.01778704454159,
+          "iqr": 0.16432703830478346,
+          "skewness": 0.2762531464770989,
+          "kurtosis": 0.8074454712674832
+        },
+        "PIDController": {
+          "count": 5,
+          "mean": 39.305917497943504,
+          "std": 0.6157679655564373,
+          "min": 38.735230730498124,
+          "max": 40.16444503090643,
+          "median": 39.13738280024122,
+          "q25": 38.788876813901425,
+          "q75": 39.70365211417032,
+          "iqr": 0.914775300268893,
+          "skewness": 0.6546610204088618,
+          "kurtosis": -1.508393214838133
+        }
+      },
+      "statistical_tests": {
+        "parametric": "Welch's t-test: statistic=-17.9749, p=0.0000 (significant), effect_size=-11.3683",
+        "non_parametric": "Mann-Whitney U test: statistic=0.0000, p=0.0090 (not significant), effect_size=0.8257"
+      },
+      "confidence_intervals": {
+        "NovelFedRL": {
+          "lower": 33.66217600448695,
+          "mean": 33.96993000923518,
+          "upper": 34.277684013983404
+        },
+        "PIDController": {
+          "lower": 38.54146315684786,
+          "mean": 39.305917497943504,
+          "upper": 40.07037183903915
+        }
+      },
+      "power_analysis": {
+        "observed_power": 0.005849755812153967,
+        "recommended_sample_size": 16,
+        "current_sample_sizes": [
+          5,
+          5
+        ]
+      },
+      "recommendation": "Results are mixed - one test shows significance while the other doesn't. Large effect size detected - difference is practically significant. Statistical power is low (0.01). Consider collecting more data. Recommended sample size: 16 per group (current: 5)"
+    },
+    "NovelFedRL_vs_DQNBaseline": {
+      "comparison": "NovelFedRL vs DQNBaseline",
+      "metric": "episode_reward",
+      "descriptive_stats": {
+        "NovelFedRL": {
+          "count": 5,
+          "mean": 33.96993000923518,
+          "std": 0.24789584833026732,
+          "min": 33.64899593516713,
+          "max": 34.32451861119464,
+          "median": 34.00488844903574,
+          "q25": 33.85346000623681,
+          "q75": 34.01778704454159,
+          "iqr": 0.16432703830478346,
+          "skewness": 0.2762531464770989,
+          "kurtosis": 0.8074454712674832
+        },
+        "DQNBaseline": {
+          "count": 5,
+          "mean": 28.170556391715827,
+          "std": 0.2916248316071839,
+          "min": 27.821201533055362,
+          "max": 28.575403929178094,
+          "median": 28.194514074180518,
+          "q25": 27.971929239290265,
+          "q75": 28.289733182874894,
+          "iqr": 0.3178039435846287,
+          "skewness": 0.29546277741361415,
+          "kurtosis": -0.47887252049983786
+        }
+      },
+      "statistical_tests": {
+        "parametric": "Welch's t-test: statistic=33.8806, p=0.0000 (significant), effect_size=21.4280",
+        "non_parametric": "Mann-Whitney U test: statistic=0.0000, p=0.0090 (not significant), effect_size=0.8257"
+      },
+      "confidence_intervals": {
+        "NovelFedRL": {
+          "lower": 33.66217600448695,
+          "mean": 33.96993000923518,
+          "upper": 34.277684013983404
+        },
+        "DQNBaseline": {
+          "lower": 27.80851438731902,
+          "mean": 28.170556391715827,
+          "upper": 28.532598396112636
+        }
+      },
+      "power_analysis": {
+        "observed_power": 1.0,
+        "recommended_sample_size": 5,
+        "current_sample_sizes": [
+          5,
+          5
+        ]
+      },
+      "recommendation": "Results are mixed - one test shows significance while the other doesn't. Large effect size detected - difference is practically significant."
+    },
+    "NovelFedRL_vs_PPOBaseline": {
+      "comparison": "NovelFedRL vs PPOBaseline",
+      "metric": "episode_reward",
+      "descriptive_stats": {
+        "NovelFedRL": {
+          "count": 5,
+          "mean": 33.96993000923518,
+          "std": 0.24789584833026732,
+          "min": 33.64899593516713,
+          "max": 34.32451861119464,
+          "median": 34.00488844903574,
+          "q25": 33.85346000623681,
+          "q75": 34.01778704454159,
+          "iqr": 0.16432703830478346,
+          "skewness": 0.2762531464770989,
+          "kurtosis": 0.8074454712674832
+        },
+        "PPOBaseline": {
+          "count": 5,
+          "mean": 30.966746451139393,
+          "std": 0.5736998217370036,
+          "min": 30.24367098073166,
+          "max": 31.662523228780955,
+          "median": 31.119859210248446,
+          "q25": 30.530861955520958,
+          "q75": 31.27681688041493,
+          "iqr": 0.7459549248939723,
+          "skewness": -0.20000550879720286,
+          "kurtosis": -1.6118607985552504
+        }
+      },
+      "statistical_tests": {
+        "parametric": "Welch's t-test: statistic=10.7451, p=0.0000 (significant), effect_size=6.7958",
+        "non_parametric": "Mann-Whitney U test: statistic=0.0000, p=0.0090 (not significant), effect_size=0.8257"
+      },
+      "confidence_intervals": {
+        "NovelFedRL": {
+          "lower": 33.66217600448695,
+          "mean": 33.96993000923518,
+          "upper": 34.277684013983404
+        },
+        "PPOBaseline": {
+          "lower": 30.254518235733062,
+          "mean": 30.966746451139393,
+          "upper": 31.678974666545724
+        }
+      },
+      "power_analysis": {
+        "observed_power": 0.0,
+        "recommended_sample_size": 44,
+        "current_sample_sizes": [
+          5,
+          5
+        ]
+      },
+      "recommendation": "Results are mixed - one test shows significance while the other doesn't. Large effect size detected - difference is practically significant. Statistical power is low (0.00). Consider collecting more data. Recommended sample size: 44 per group (current: 5)"
+    },
+    "AdvancedFedRL_vs_RandomPolicy": {
+      "comparison": "AdvancedFedRL vs RandomPolicy",
+      "metric": "episode_reward",
+      "descriptive_stats": {
+        "AdvancedFedRL": {
+          "count": 5,
+          "mean": 32.92503747544455,
+          "std": 0.4767372994549398,
+          "min": 32.36050052163974,
+          "max": 33.56463669009368,
+          "median": 32.73256135429983,
+          "q25": 32.72165222842312,
+          "q75": 33.24583658276637,
+          "iqr": 0.5241843543432552,
+          "skewness": 0.38148410510866715,
+          "kurtosis": -1.161479360670362
+        },
+        "RandomPolicy": {
+          "count": 5,
+          "mean": 39.95171362995901,
+          "std": 0.38637584191029534,
+          "min": 39.55438704074182,
+          "max": 40.43510013820852,
+          "median": 39.85120043574079,
+          "q25": 39.646364773313216,
+          "q75": 40.27151576179071,
+          "iqr": 0.6251509884774933,
+          "skewness": 0.3860747541645657,
+          "kurtosis": -2.459858267673008
+        }
+      },
+      "statistical_tests": {
+        "parametric": "Welch's t-test: statistic=-25.6044, p=0.0000 (significant), effect_size=-16.1937",
+        "non_parametric": "Mann-Whitney U test: statistic=0.0000, p=0.0090 (not significant), effect_size=0.8257"
+      },
+      "confidence_intervals": {
+        "AdvancedFedRL": {
+          "lower": 32.33318483205279,
+          "mean": 32.92503747544455,
+          "upper": 33.51689011883631
+        },
+        "RandomPolicy": {
+          "lower": 39.47204156813633,
+          "mean": 39.95171362995901,
+          "upper": 40.431385691781685
+        }
+      },
+      "power_analysis": {
+        "observed_power": 0.9999998373087708,
+        "recommended_sample_size": 8,
+        "current_sample_sizes": [
+          5,
+          5
+        ]
+      },
+      "recommendation": "Results are mixed - one test shows significance while the other doesn't. Large effect size detected - difference is practically significant."
+    },
+    "AdvancedFedRL_vs_PIDController": {
+      "comparison": "AdvancedFedRL vs PIDController",
+      "metric": "episode_reward",
+      "descriptive_stats": {
+        "AdvancedFedRL": {
+          "count": 5,
+          "mean": 32.92503747544455,
+          "std": 0.4767372994549398,
+          "min": 32.36050052163974,
+          "max": 33.56463669009368,
+          "median": 32.73256135429983,
+          "q25": 32.72165222842312,
+          "q75": 33.24583658276637,
+          "iqr": 0.5241843543432552,
+          "skewness": 0.38148410510866715,
+          "kurtosis": -1.161479360670362
+        },
+        "PIDController": {
+          "count": 5,
+          "mean": 39.305917497943504,
+          "std": 0.6157679655564373,
+          "min": 38.735230730498124,
+          "max": 40.16444503090643,
+          "median": 39.13738280024122,
+          "q25": 38.788876813901425,
+          "q75": 39.70365211417032,
+          "iqr": 0.914775300268893,
+          "skewness": 0.6546610204088618,
+          "kurtosis": -1.508393214838133
+        }
+      },
+      "statistical_tests": {
+        "parametric": "Welch's t-test: statistic=-18.3218, p=0.0000 (significant), effect_size=-11.5877",
+        "non_parametric": "Mann-Whitney U test: statistic=0.0000, p=0.0090 (not significant), effect_size=0.8257"
+      },
+      "confidence_intervals": {
+        "AdvancedFedRL": {
+          "lower": 32.33318483205279,
+          "mean": 32.92503747544455,
+          "upper": 33.51689011883631
+        },
+        "PIDController": {
+          "lower": 38.54146315684786,
+          "mean": 39.305917497943504,
+          "upper": 40.07037183903915
+        }
+      },
+      "power_analysis": {
+        "observed_power": 0.014846430157355983,
+        "recommended_sample_size": 15,
+        "current_sample_sizes": [
+          5,
+          5
+        ]
+      },
+      "recommendation": "Results are mixed - one test shows significance while the other doesn't. Large effect size detected - difference is practically significant. Statistical power is low (0.01). Consider collecting more data. Recommended sample size: 15 per group (current: 5)"
+    },
+    "AdvancedFedRL_vs_DQNBaseline": {
+      "comparison": "AdvancedFedRL vs DQNBaseline",
+      "metric": "episode_reward",
+      "descriptive_stats": {
+        "AdvancedFedRL": {
+          "count": 5,
+          "mean": 32.92503747544455,
+          "std": 0.4767372994549398,
+          "min": 32.36050052163974,
+          "max": 33.56463669009368,
+          "median": 32.73256135429983,
+          "q25": 32.72165222842312,
+          "q75": 33.24583658276637,
+          "iqr": 0.5241843543432552,
+          "skewness": 0.38148410510866715,
+          "kurtosis": -1.161479360670362
+        },
+        "DQNBaseline": {
+          "count": 5,
+          "mean": 28.170556391715827,
+          "std": 0.2916248316071839,
+          "min": 27.821201533055362,
+          "max": 28.575403929178094,
+          "median": 28.194514074180518,
+          "q25": 27.971929239290265,
+          "q75": 28.289733182874894,
+          "iqr": 0.3178039435846287,
+          "skewness": 0.29546277741361415,
+          "kurtosis": -0.47887252049983786
+        }
+      },
+      "statistical_tests": {
+        "parametric": "Welch's t-test: statistic=19.0233, p=0.0000 (significant), effect_size=12.0314",
+        "non_parametric": "Mann-Whitney U test: statistic=0.0000, p=0.0090 (not significant), effect_size=0.8257"
+      },
+      "confidence_intervals": {
+        "AdvancedFedRL": {
+          "lower": 32.33318483205279,
+          "mean": 32.92503747544455,
+          "upper": 33.51689011883631
+        },
+        "DQNBaseline": {
+          "lower": 27.80851438731902,
+          "mean": 28.170556391715827,
+          "upper": 28.532598396112636
+        }
+      },
+      "power_analysis": {
+        "observed_power": 0.07041833271696296,
+        "recommended_sample_size": 14,
+        "current_sample_sizes": [
+          5,
+          5
+        ]
+      },
+      "recommendation": "Results are mixed - one test shows significance while the other doesn't. Large effect size detected - difference is practically significant. Statistical power is low (0.07). Consider collecting more data. Recommended sample size: 14 per group (current: 5)"
+    },
+    "AdvancedFedRL_vs_PPOBaseline": {
+      "comparison": "AdvancedFedRL vs PPOBaseline",
+      "metric": "episode_reward",
+      "descriptive_stats": {
+        "AdvancedFedRL": {
+          "count": 5,
+          "mean": 32.92503747544455,
+          "std": 0.4767372994549398,
+          "min": 32.36050052163974,
+          "max": 33.56463669009368,
+          "median": 32.73256135429983,
+          "q25": 32.72165222842312,
+          "q75": 33.24583658276637,
+          "iqr": 0.5241843543432552,
+          "skewness": 0.38148410510866715,
+          "kurtosis": -1.161479360670362
+        },
+        "PPOBaseline": {
+          "count": 5,
+          "mean": 30.966746451139393,
+          "std": 0.5736998217370036,
+          "min": 30.24367098073166,
+          "max": 31.662523228780955,
+          "median": 31.119859210248446,
+          "q25": 30.530861955520958,
+          "q75": 31.27681688041493,
+          "iqr": 0.7459549248939723,
+          "skewness": -0.20000550879720286,
+          "kurtosis": -1.6118607985552504
+        }
+      },
+      "statistical_tests": {
+        "parametric": "Welch's t-test: statistic=5.8704, p=0.0001 (significant), effect_size=3.7127",
+        "non_parametric": "Mann-Whitney U test: statistic=0.0000, p=0.0090 (not significant), effect_size=0.8257"
+      },
+      "confidence_intervals": {
+        "AdvancedFedRL": {
+          "lower": 32.33318483205279,
+          "mean": 32.92503747544455,
+          "upper": 33.51689011883631
+        },
+        "PPOBaseline": {
+          "lower": 30.254518235733062,
+          "mean": 30.966746451139393,
+          "upper": 31.678974666545724
+        }
+      },
+      "power_analysis": {
+        "observed_power": 0.0,
+        "recommended_sample_size": 147,
+        "current_sample_sizes": [
+          5,
+          5
+        ]
+      },
+      "recommendation": "Results are mixed - one test shows significance while the other doesn't. Large effect size detected - difference is practically significant. Statistical power is low (0.00). Consider collecting more data. Recommended sample size: 147 per group (current: 5)"
+    },
+    "RandomPolicy_vs_PIDController": {
+      "comparison": "RandomPolicy vs PIDController",
+      "metric": "episode_reward",
+      "descriptive_stats": {
+        "RandomPolicy": {
+          "count": 5,
+          "mean": 39.95171362995901,
+          "std": 0.38637584191029534,
+          "min": 39.55438704074182,
+          "max": 40.43510013820852,
+          "median": 39.85120043574079,
+          "q25": 39.646364773313216,
+          "q75": 40.27151576179071,
+          "iqr": 0.6251509884774933,
+          "skewness": 0.3860747541645657,
+          "kurtosis": -2.459858267673008
+        },
+        "PIDController": {
+          "count": 5,
+          "mean": 39.305917497943504,
+          "std": 0.6157679655564373,
+          "min": 38.735230730498124,
+          "max": 40.16444503090643,
+          "median": 39.13738280024122,
+          "q25": 38.788876813901425,
+          "q75": 39.70365211417032,
+          "iqr": 0.914775300268893,
+          "skewness": 0.6546610204088618,
+          "kurtosis": -1.508393214838133
+        }
+      },
+      "statistical_tests": {
+        "parametric": "Welch's t-test: statistic=1.9864, p=0.0636 (not significant), effect_size=1.2563",
+        "non_parametric": "Mann-Whitney U test: statistic=5.0000, p=0.1172 (not significant), effect_size=0.4954"
+      },
+      "confidence_intervals": {
+        "RandomPolicy": {
+          "lower": 39.47204156813633,
+          "mean": 39.95171362995901,
+          "upper": 40.431385691781685
+        },
+        "PIDController": {
+          "lower": 38.54146315684786,
+          "mean": 39.305917497943504,
+          "upper": 40.07037183903915
+        }
+      },
+      "power_analysis": {
+        "observed_power": 0.0,
+        "recommended_sample_size": 1276,
+        "current_sample_sizes": [
+          5,
+          5
+        ]
+      },
+      "recommendation": "No significant difference detected by either test. Large effect size detected - difference is practically significant. Statistical power is low (0.00). Consider collecting more data. Recommended sample size: 1276 per group (current: 5)"
+    },
+    "RandomPolicy_vs_DQNBaseline": {
+      "comparison": "RandomPolicy vs DQNBaseline",
+      "metric": "episode_reward",
+      "descriptive_stats": {
+        "RandomPolicy": {
+          "count": 5,
+          "mean": 39.95171362995901,
+          "std": 0.38637584191029534,
+          "min": 39.55438704074182,
+          "max": 40.43510013820852,
+          "median": 39.85120043574079,
+          "q25": 39.646364773313216,
+          "q75": 40.27151576179071,
+          "iqr": 0.6251509884774933,
+          "skewness": 0.3860747541645657,
+          "kurtosis": -2.459858267673008
+        },
+        "DQNBaseline": {
+          "count": 5,
+          "mean": 28.170556391715827,
+          "std": 0.2916248316071839,
+          "min": 27.821201533055362,
+          "max": 28.575403929178094,
+          "median": 28.194514074180518,
+          "q25": 27.971929239290265,
+          "q75": 28.289733182874894,
+          "iqr": 0.3178039435846287,
+          "skewness": 0.29546277741361415,
+          "kurtosis": -0.47887252049983786
+        }
+      },
+      "statistical_tests": {
+        "parametric": "Welch's t-test: statistic=54.4199, p=0.0000 (significant), effect_size=34.4182",
+        "non_parametric": "Mann-Whitney U test: statistic=0.0000, p=0.0090 (not significant), effect_size=0.8257"
+      },
+      "confidence_intervals": {
+        "RandomPolicy": {
+          "lower": 39.47204156813633,
+          "mean": 39.95171362995901,
+          "upper": 40.431385691781685
+        },
+        "DQNBaseline": {
+          "lower": 27.80851438731902,
+          "mean": 28.170556391715827,
+          "upper": 28.532598396112636
+        }
+      },
+      "power_analysis": {
+        "observed_power": 1.0,
+        "recommended_sample_size": 2,
+        "current_sample_sizes": [
+          5,
+          5
+        ]
+      },
+      "recommendation": "Results are mixed - one test shows significance while the other doesn't. Large effect size detected - difference is practically significant."
+    },
+    "RandomPolicy_vs_PPOBaseline": {
+      "comparison": "RandomPolicy vs PPOBaseline",
+      "metric": "episode_reward",
+      "descriptive_stats": {
+        "RandomPolicy": {
+          "count": 5,
+          "mean": 39.95171362995901,
+          "std": 0.38637584191029534,
+          "min": 39.55438704074182,
+          "max": 40.43510013820852,
+          "median": 39.85120043574079,
+          "q25": 39.646364773313216,
+          "q75": 40.27151576179071,
+          "iqr": 0.6251509884774933,
+          "skewness": 0.3860747541645657,
+          "kurtosis": -2.459858267673008
+        },
+        "PPOBaseline": {
+          "count": 5,
+          "mean": 30.966746451139393,
+          "std": 0.5736998217370036,
+          "min": 30.24367098073166,
+          "max": 31.662523228780955,
+          "median": 31.119859210248446,
+          "q25": 30.530861955520958,
+          "q75": 31.27681688041493,
+          "iqr": 0.7459549248939723,
+          "skewness": -0.20000550879720286,
+          "kurtosis": -1.6118607985552504
+        }
+      },
+      "statistical_tests": {
+        "parametric": "Welch's t-test: statistic=29.0468, p=0.0000 (significant), effect_size=18.3708",
+        "non_parametric": "Mann-Whitney U test: statistic=0.0000, p=0.0090 (not significant), effect_size=0.8257"
+      },
+      "confidence_intervals": {
+        "RandomPolicy": {
+          "lower": 39.47204156813633,
+          "mean": 39.95171362995901,
+          "upper": 40.431385691781685
+        },
+        "PPOBaseline": {
+          "lower": 30.254518235733062,
+          "mean": 30.966746451139393,
+          "upper": 31.678974666545724
+        }
+      },
+      "power_analysis": {
+        "observed_power": 1.0,
+        "recommended_sample_size": 6,
+        "current_sample_sizes": [
+          5,
+          5
+        ]
+      },
+      "recommendation": "Results are mixed - one test shows significance while the other doesn't. Large effect size detected - difference is practically significant."
+    },
+    "PIDController_vs_DQNBaseline": {
+      "comparison": "PIDController vs DQNBaseline",
+      "metric": "episode_reward",
+      "descriptive_stats": {
+        "PIDController": {
+          "count": 5,
+          "mean": 39.305917497943504,
+          "std": 0.6157679655564373,
+          "min": 38.735230730498124,
+          "max": 40.16444503090643,
+          "median": 39.13738280024122,
+          "q25": 38.788876813901425,
+          "q75": 39.70365211417032,
+          "iqr": 0.914775300268893,
+          "skewness": 0.6546610204088618,
+          "kurtosis": -1.508393214838133
+        },
+        "DQNBaseline": {
+          "count": 5,
+          "mean": 28.170556391715827,
+          "std": 0.2916248316071839,
+          "min": 27.821201533055362,
+          "max": 28.575403929178094,
+          "median": 28.194514074180518,
+          "q25": 27.971929239290265,
+          "q75": 28.289733182874894,
+          "iqr": 0.3178039435846287,
+          "skewness": 0.29546277741361415,
+          "kurtosis": -0.47887252049983786
+        }
+      },
+      "statistical_tests": {
+        "parametric": "Welch's t-test: statistic=36.5451, p=0.0000 (significant), effect_size=23.1132",
+        "non_parametric": "Mann-Whitney U test: statistic=0.0000, p=0.0090 (not significant), effect_size=0.8257"
+      },
+      "confidence_intervals": {
+        "PIDController": {
+          "lower": 38.54146315684786,
+          "mean": 39.305917497943504,
+          "upper": 40.07037183903915
+        },
+        "DQNBaseline": {
+          "lower": 27.80851438731902,
+          "mean": 28.170556391715827,
+          "upper": 28.532598396112636
+        }
+      },
+      "power_analysis": {
+        "observed_power": 1.0,
+        "recommended_sample_size": 4,
+        "current_sample_sizes": [
+          5,
+          5
+        ]
+      },
+      "recommendation": "Results are mixed - one test shows significance while the other doesn't. Large effect size detected - difference is practically significant."
+    },
+    "PIDController_vs_PPOBaseline": {
+      "comparison": "PIDController vs PPOBaseline",
+      "metric": "episode_reward",
+      "descriptive_stats": {
+        "PIDController": {
+          "count": 5,
+          "mean": 39.305917497943504,
+          "std": 0.6157679655564373,
+          "min": 38.735230730498124,
+          "max": 40.16444503090643,
+          "median": 39.13738280024122,
+          "q25": 38.788876813901425,
+          "q75": 39.70365211417032,
+          "iqr": 0.914775300268893,
+          "skewness": 0.6546610204088618,
+          "kurtosis": -1.508393214838133
+        },
+        "PPOBaseline": {
+          "count": 5,
+          "mean": 30.966746451139393,
+          "std": 0.5736998217370036,
+          "min": 30.24367098073166,
+          "max": 31.662523228780955,
+          "median": 31.119859210248446,
+          "q25": 30.530861955520958,
+          "q75": 31.27681688041493,
+          "iqr": 0.7459549248939723,
+          "skewness": -0.20000550879720286,
+          "kurtosis": -1.6118607985552504
+        }
+      },
+      "statistical_tests": {
+        "parametric": "Welch's t-test: statistic=22.1564, p=0.0000 (significant), effect_size=14.0129",
+        "non_parametric": "Mann-Whitney U test: statistic=0.0000, p=0.0090 (not significant), effect_size=0.8257"
+      },
+      "confidence_intervals": {
+        "PIDController": {
+          "lower": 38.54146315684786,
+          "mean": 39.305917497943504,
+          "upper": 40.07037183903915
+        },
+        "PPOBaseline": {
+          "lower": 30.254518235733062,
+          "mean": 30.966746451139393,
+          "upper": 31.678974666545724
+        }
+      },
+      "power_analysis": {
+        "observed_power": 0.951582715147772,
+        "recommended_sample_size": 11,
+        "current_sample_sizes": [
+          5,
+          5
+        ]
+      },
+      "recommendation": "Results are mixed - one test shows significance while the other doesn't. Large effect size detected - difference is practically significant."
+    },
+    "DQNBaseline_vs_PPOBaseline": {
+      "comparison": "DQNBaseline vs PPOBaseline",
+      "metric": "episode_reward",
+      "descriptive_stats": {
+        "DQNBaseline": {
+          "count": 5,
+          "mean": 28.170556391715827,
+          "std": 0.2916248316071839,
+          "min": 27.821201533055362,
+          "max": 28.575403929178094,
+          "median": 28.194514074180518,
+          "q25": 27.971929239290265,
+          "q75": 28.289733182874894,
+          "iqr": 0.3178039435846287,
+          "skewness": 0.29546277741361415,
+          "kurtosis": -0.47887252049983786
+        },
+        "PPOBaseline": {
+          "count": 5,
+          "mean": 30.966746451139393,
+          "std": 0.5736998217370036,
+          "min": 30.24367098073166,
+          "max": 31.662523228780955,
+          "median": 31.119859210248446,
+          "q25": 30.530861955520958,
+          "q75": 31.27681688041493,
+          "iqr": 0.7459549248939723,
+          "skewness": -0.20000550879720286,
+          "kurtosis": -1.6118607985552504
+        }
+      },
+      "statistical_tests": {
+        "parametric": "Welch's t-test: statistic=-9.7154, p=0.0000 (significant), effect_size=-6.1445",
+        "non_parametric": "Mann-Whitney U test: statistic=0.0000, p=0.0090 (not significant), effect_size=0.8257"
+      },
+      "confidence_intervals": {
+        "DQNBaseline": {
+          "lower": 27.80851438731902,
+          "mean": 28.170556391715827,
+          "upper": 28.532598396112636
+        },
+        "PPOBaseline": {
+          "lower": 30.254518235733062,
+          "mean": 30.966746451139393,
+          "upper": 31.678974666545724
+        }
+      },
+      "power_analysis": {
+        "observed_power": 0.0,
+        "recommended_sample_size": 54,
+        "current_sample_sizes": [
+          5,
+          5
+        ]
+      },
+      "recommendation": "Results are mixed - one test shows significance while the other doesn't. Large effect size detected - difference is practically significant. Statistical power is low (0.00). Consider collecting more data. Recommended sample size: 54 per group (current: 5)"
+    }
+  },
+  "environment_analysis": {
+    "IEEE13Bus": {
+      "NovelFedRL": {
+        "mean_reward": 33.96993000923518,
+        "std_reward": 0.2217247872825822,
+        "mean_safety_violations": 596.8,
+        "n_experiments": 5
+      },
+      "AdvancedFedRL": {
+        "mean_reward": 32.92503747544455,
+        "std_reward": 0.42640680359636757,
+        "mean_safety_violations": 598.0,
+        "n_experiments": 5
+      },
+      "RandomPolicy": {
+        "mean_reward": 39.95171362995901,
+        "std_reward": 0.34558505895005304,
+        "mean_safety_violations": 611.4,
+        "n_experiments": 5
+      },
+      "PIDController": {
+        "mean_reward": 39.305917497943504,
+        "std_reward": 0.5507596117403771,
+        "mean_safety_violations": 604.4,
+        "n_experiments": 5
+      },
+      "DQNBaseline": {
+        "mean_reward": 28.170556391715827,
+        "std_reward": 0.260837178960237,
+        "mean_safety_violations": 599.4,
+        "n_experiments": 5
+      },
+      "PPOBaseline": {
+        "mean_reward": 30.966746451139393,
+        "std_reward": 0.5131327200333807,
+        "mean_safety_violations": 608.2,
+        "n_experiments": 5
+      }
+    }
+  },
+  "overall_rankings": {
+    "by_composite_score": [
+      [
+        "PIDController",
+        {
+          "mean_reward": 39.305917497943504,
+          "std_reward": 0.5507596117403771,
+          "mean_safety_violations": 604.4,
+          "mean_convergence_time": 0.003178962071736654,
+          "composite_score": -21.13411429167721,
+          "n_experiments": 5,
+          "is_baseline": true
+        }
+      ],
+      [
+        "RandomPolicy",
+        {
+          "mean_reward": 39.95171362995901,
+          "std_reward": 0.34558505895005304,
+          "mean_safety_violations": 611.4,
+          "mean_convergence_time": 0.0013645807902018228,
+          "composite_score": -21.188300015848892,
+          "n_experiments": 5,
+          "is_baseline": true
+        }
+      ],
+      [
+        "NovelFedRL",
+        {
+          "mean_reward": 33.96993000923518,
+          "std_reward": 0.2217247872825822,
+          "mean_safety_violations": 596.8,
+          "mean_convergence_time": 0.001591536733839247,
+          "composite_score": -25.71008590613216,
+          "n_experiments": 5,
+          "is_baseline": false
+        }
+      ],
+      [
+        "AdvancedFedRL",
+        {
+          "mean_reward": 32.92503747544455,
+          "std_reward": 0.42640680359636757,
+          "mean_safety_violations": 598.0,
+          "mean_convergence_time": 0.0017363085891261246,
+          "composite_score": -26.87497988764135,
+          "n_experiments": 5,
+          "is_baseline": false
+        }
+      ],
+      [
+        "PPOBaseline",
+        {
+          "mean_reward": 30.966746451139393,
+          "std_reward": 0.5131327200333807,
+          "mean_safety_violations": 608.2,
+          "mean_convergence_time": 0.0030429204305013023,
+          "composite_score": -29.85328397806492,
+          "n_experiments": 5,
+          "is_baseline": true
+        }
+      ],
+      [
+        "DQNBaseline",
+        {
+          "mean_reward": 28.170556391715827,
+          "std_reward": 0.260837178960237,
+          "mean_safety_violations": 599.4,
+          "mean_convergence_time": 0.002701473236083984,
+          "composite_score": -31.76947062301653,
+          "n_experiments": 5,
+          "is_baseline": true
+        }
+      ]
+    ],
+    "performance_details": {
+      "NovelFedRL": {
+        "mean_reward": 33.96993000923518,
+        "std_reward": 0.2217247872825822,
+        "mean_safety_violations": 596.8,
+        "mean_convergence_time": 0.001591536733839247,
+        "composite_score": -25.71008590613216,
+        "n_experiments": 5,
+        "is_baseline": false
+      },
+      "AdvancedFedRL": {
+        "mean_reward": 32.92503747544455,
+        "std_reward": 0.42640680359636757,
+        "mean_safety_violations": 598.0,
+        "mean_convergence_time": 0.0017363085891261246,
+        "composite_score": -26.87497988764135,
+        "n_experiments": 5,
+        "is_baseline": false
+      },
+      "RandomPolicy": {
+        "mean_reward": 39.95171362995901,
+        "std_reward": 0.34558505895005304,
+        "mean_safety_violations": 611.4,
+        "mean_convergence_time": 0.0013645807902018228,
+        "composite_score": -21.188300015848892,
+        "n_experiments": 5,
+        "is_baseline": true
+      },
+      "PIDController": {
+        "mean_reward": 39.305917497943504,
+        "std_reward": 0.5507596117403771,
+        "mean_safety_violations": 604.4,
+        "mean_convergence_time": 0.003178962071736654,
+        "composite_score": -21.13411429167721,
+        "n_experiments": 5,
+        "is_baseline": true
+      },
+      "DQNBaseline": {
+        "mean_reward": 28.170556391715827,
+        "std_reward": 0.260837178960237,
+        "mean_safety_violations": 599.4,
+        "mean_convergence_time": 0.002701473236083984,
+        "composite_score": -31.76947062301653,
+        "n_experiments": 5,
+        "is_baseline": true
+      },
+      "PPOBaseline": {
+        "mean_reward": 30.966746451139393,
+        "std_reward": 0.5131327200333807,
+        "mean_safety_violations": 608.2,
+        "mean_convergence_time": 0.0030429204305013023,
+        "composite_score": -29.85328397806492,
+        "n_experiments": 5,
+        "is_baseline": true
+      }
+    }
+  },
+  "statistical_significance": {
+    "NovelFedRL_vs_AdvancedFedRL": {
+      "is_significant": true,
+      "p_value": 0.001138508427572571,
+      "effect_size": 2.7500466657467846
+    },
+    "NovelFedRL_vs_RandomPolicy": {
+      "is_significant": true,
+      "p_value": 2.758126598223498e-07,
+      "effect_size": -18.427804985895083
+    },
+    "NovelFedRL_vs_PIDController": {
+      "is_significant": true,
+      "p_value": 8.762136221696082e-06,
+      "effect_size": -11.368324091661897
+    },
+    "NovelFedRL_vs_DQNBaseline": {
+      "is_significant": true,
+      "p_value": 3.5864690550724276e-08,
+      "effect_size": 21.42797528156653
+    },
+    "NovelFedRL_vs_PPOBaseline": {
+      "is_significant": true,
+      "p_value": 1.8698331654798395e-05,
+      "effect_size": 6.795786738542399
+    },
+    "AdvancedFedRL_vs_RandomPolicy": {
+      "is_significant": true,
+      "p_value": 6.175860489676666e-08,
+      "effect_size": -16.19366339933266
+    },
+    "AdvancedFedRL_vs_PIDController": {
+      "is_significant": true,
+      "p_value": 1.4698838612936527e-07,
+      "effect_size": -11.587735229888647
+    },
+    "AdvancedFedRL_vs_DQNBaseline": {
+      "is_significant": true,
+      "p_value": 6.726774148813064e-07,
+      "effect_size": 12.031389692073292
+    },
+    "AdvancedFedRL_vs_PPOBaseline": {
+      "is_significant": true,
+      "p_value": 5.383070325737371e-05,
+      "effect_size": 3.7127421796691533
+    },
+    "RandomPolicy_vs_PIDController": {
+      "is_significant": false,
+      "p_value": 0.06358553957946222,
+      "effect_size": 1.2563360564534365
+    },
+    "RandomPolicy_vs_DQNBaseline": {
+      "is_significant": true,
+      "p_value": 5.701024052839898e-08,
+      "effect_size": 34.41816942733678
+    },
+    "RandomPolicy_vs_PPOBaseline": {
+      "is_significant": true,
+      "p_value": 1.8998826845084693e-07,
+      "effect_size": 18.370790250588506
+    },
+    "PIDController_vs_DQNBaseline": {
+      "is_significant": true,
+      "p_value": 2.159727340078632e-06,
+      "effect_size": 23.113175173560638
+    },
+    "PIDController_vs_PPOBaseline": {
+      "is_significant": true,
+      "p_value": 4.556282862111516e-08,
+      "effect_size": 14.012923333195536
+    },
+    "DQNBaseline_vs_PPOBaseline": {
+      "is_significant": true,
+      "p_value": 1.324702651928078e-05,
+      "effect_size": -6.144533888112013
+    }
+  }
+}

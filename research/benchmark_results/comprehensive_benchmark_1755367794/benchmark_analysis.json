@@ -1,0 +1,265 @@
+{
+  "benchmark_metadata": {
+    "novel_algorithms": [
+      {
+        "name": "NovelFedRL",
+        "class_name": "NovelFederatedRL",
+        "hyperparameters": {
+          "learning_rate": 0.001,
+          "batch_size": 64
+        },
+        "description": "Novel federated RL with privacy preservation",
+        "is_baseline": false
+      },
+      {
+        "name": "AdvancedFedRL",
+        "class_name": "AdvancedFederatedRL",
+        "hyperparameters": {
+          "learning_rate": 0.0005,
+          "batch_size": 32
+        },
+        "description": "Advanced federated RL with adaptive aggregation",
+        "is_baseline": false
+      }
+    ],
+    "baseline_algorithms": [
+      {
+        "name": "RandomPolicy",
+        "class_name": "RandomPolicy",
+        "hyperparameters": {},
+        "description": "Random action baseline",
+        "is_baseline": true
+      },
+      {
+        "name": "PIDController",
+        "class_name": "PIDController",
+        "hyperparameters": {
+          "kp": 1.0,
+          "ki": 0.1,
+          "kd": 0.01
+        },
+        "description": "Classic PID controller",
+        "is_baseline": true
+      },
+      {
+        "name": "DQNBaseline",
+        "class_name": "DQNBaseline",
+        "hyperparameters": {
+          "learning_rate": 0.001,
+          "epsilon": 0.1
+        },
+        "description": "Deep Q-Network baseline",
+        "is_baseline": true
+      },
+      {
+        "name": "PPOBaseline",
+        "class_name": "PPOBaseline",
+        "hyperparameters": {
+          "learning_rate": 0.0003
+        },
+        "description": "Proximal Policy Optimization baseline",
+        "is_baseline": true
+      }
+    ],
+    "timestamp": 1755367794.2504725
+  },
+  "performance_matrix": {
+    "NovelFedRL": {
+      "RandomPolicy": {
+        "performance_ratio": 0.8502746671612551,
+        "statistical_significance": true,
+        "effect_size": -18.427804985895083,
+        "p_value": 2.758126598223498e-07
+      },
+      "PIDController": {
+        "performance_ratio": 0.8642446779422588,
+        "statistical_significance": true,
+        "effect_size": -11.368324091661897,
+        "p_value": 8.762136221696082e-06
+      },
+      "DQNBaseline": {
+        "performance_ratio": 1.2058664918391453,
+        "statistical_significance": true,
+        "effect_size": 21.42797528156653,
+        "p_value": 3.5864690550724276e-08
+      },
+      "PPOBaseline": {
+        "performance_ratio": 1.0969809199308145,
+        "statistical_significance": true,
+        "effect_size": 6.795786738542399,
+        "p_value": 1.8698331654798395e-05
+      }
+    },
+    "AdvancedFedRL": {
+      "RandomPolicy": {
+        "performance_ratio": 0.8241207819119605,
+        "statistical_significance": true,
+        "effect_size": -16.19366339933266,
+        "p_value": 6.175860489676666e-08
+      },
+      "PIDController": {
+        "performance_ratio": 0.8376610844198509,
+        "statistical_significance": true,
+        "effect_size": -11.587735229888647,
+        "p_value": 1.4698838612936527e-07
+      },
+      "DQNBaseline": {
+        "performance_ratio": 1.168774837728334,
+        "statistical_significance": true,
+        "effect_size": 12.031389692073292,
+        "p_value": 6.726774148813064e-07
+      },
+      "PPOBaseline": {
+        "performance_ratio": 1.0632385138488807,
+        "statistical_significance": true,
+        "effect_size": 3.7127421796691533,
+        "p_value": 5.383070325737371e-05
+      }
+    }
+  },
+  "statistical_comparisons": {},
+  "algorithm_rankings": {
+    "overall_performance": [
+      [
+        "PIDController",
+        -21.13411429167721
+      ],
+      [
+        "RandomPolicy",
+        -21.188300015848892
+      ],
+      [
+        "NovelFedRL",
+        -25.71008590613216
+      ],
+      [
+        "AdvancedFedRL",
+        -26.87497988764135
+      ],
+      [
+        "PPOBaseline",
+        -29.85328397806492
+      ],
+      [
+        "DQNBaseline",
+        -31.76947062301653
+      ]
+    ],
+    "safety": [
+      [
+        "NovelFedRL",
+        596.8
+      ],
+      [
+        "AdvancedFedRL",
+        598.0
+      ],
+      [
+        "DQNBaseline",
+        599.4
+      ],
+      [
+        "PIDController",
+        604.4
+      ],
+      [
+        "PPOBaseline",
+        608.2
+      ],
+      [
+        "RandomPolicy",
+        611.4
+      ]
+    ],
+    "efficiency": [
+      [
+        "RandomPolicy",
+        0.0013645807902018228
+      ],
+      [
+        "NovelFedRL",
+        0.001591536733839247
+      ],
+      [
+        "AdvancedFedRL",
+        0.0017363085891261246
+      ],
+      [
+        "DQNBaseline",
+        0.002701473236083984
+      ],
+      [
+        "PPOBaseline",
+        0.0030429204305013023
+      ],
+      [
+        "PIDController",
+        0.003178962071736654
+      ]
+    ],
+    "stability": [
+      [
+        "NovelFedRL",
+        0.2217247872825822
+      ],
+      [
+        "DQNBaseline",
+        0.260837178960237
+      ],
+      [
+        "RandomPolicy",
+        0.34558505895005304
+      ],
+      [
+        "AdvancedFedRL",
+        0.42640680359636757
+      ],
+      [
+        "PPOBaseline",
+        0.5131327200333807
+      ],
+      [
+        "PIDController",
+        0.5507596117403771
+      ]
+    ]
+  },
+  "performance_categories": {
+    "state_of_the_art": [],
+    "competitive": [],
+    "baseline_level": [],
+    "below_baseline": [
+      [
+        "NovelFedRL",
+        -25.71008590613216
+      ],
+      [
+        "AdvancedFedRL",
+        -26.87497988764135
+      ]
+    ],
+    "summary": {
+      "total_novel_algorithms": 2,
+      "state_of_the_art_count": 0,
+      "competitive_count": 0,
+      "baseline_level_count": 0,
+      "below_baseline_count": 2,
+      "best_baseline_score": -21.13411429167721,
+      "success_rate": 0.0
+    }
+  },
+  "recommendations": {
+    "deployment": [],
+    "research": [
+      "Low success rate suggests need for algorithmic improvements or different approaches",
+      "Investigate why some algorithms underperform baselines - check hyperparameters and implementation"
+    ],
+    "improvements": [
+      "Improve safety mechanisms in RandomPolicy - highest violation rate"
+    ],
+    "next_steps": [
+      "Conduct extended evaluation on additional environments and scenarios",
+      "Perform ablation studies to identify key algorithmic components"
+    ]
+  }
+}

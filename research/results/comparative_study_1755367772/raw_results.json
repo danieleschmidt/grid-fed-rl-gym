@@ -1,0 +1,1778 @@
+[
+  {
+    "algorithm_name": "PPOBaseline",
+    "performance_metrics": {
+      "episode_reward": 31.113897890320946,
+      "convergence_time": 0.0027376810709635415,
+      "safety_violations": 196.33333333333334,
+      "power_loss": 0.039687293867301354,
+      "voltage_deviation": 0.017418564847254448
+    },
+    "execution_time": 0.008230209350585938,
+    "convergence_steps": 400,
+    "safety_violations": 589,
+    "hyperparameters": {
+      "learning_rate": 0.0003
+    },
+    "random_seed": 303446,
+    "timestamp": 1755367771.4522948
+  },
+  {
+    "algorithm_name": "PIDController",
+    "performance_metrics": {
+      "episode_reward": 60.64568550008253,
+      "convergence_time": 0.003975709279378255,
+      "safety_violations": 275.3333333333333,
+      "power_loss": 0.03498133069303302,
+      "voltage_deviation": 0.027707371947892495
+    },
+    "execution_time": 0.011942386627197266,
+    "convergence_steps": 600,
+    "safety_violations": 826,
+    "hyperparameters": {
+      "kp": 1.0,
+      "ki": 0.1,
+      "kd": 0.01
+    },
+    "random_seed": 846336,
+    "timestamp": 1755367771.4643202
+  },
+  {
+    "algorithm_name": "PIDController",
+    "performance_metrics": {
+      "episode_reward": 60.21348660858726,
+      "convergence_time": 0.004056374231974284,
+      "safety_violations": 297.0,
+      "power_loss": 0.03765506166321326,
+      "voltage_deviation": 0.026859684374889475
+    },
+    "execution_time": 0.01218271255493164,
+    "convergence_steps": 600,
+    "safety_violations": 891,
+    "hyperparameters": {
+      "kp": 1.0,
+      "ki": 0.1,
+      "kd": 0.01
+    },
+    "random_seed": 481742,
+    "timestamp": 1755367771.4765754
+  },
+  {
+    "algorithm_name": "NovelFedRL",
+    "performance_metrics": {
+      "episode_reward": 51.725798752728686,
+      "convergence_time": 0.0024122662014431427,
+      "safety_violations": 305.0,
+      "power_loss": 0.05732564765552687,
+      "voltage_deviation": 0.020775885299409214
+    },
+    "execution_time": 0.008701086044311523,
+    "convergence_steps": 600,
+    "safety_violations": 915,
+    "hyperparameters": {
+      "learning_rate": 0.001,
+      "batch_size": 64
+    },
+    "random_seed": 107474,
+    "timestamp": 1755367771.4853346
+  },
+  {
+    "algorithm_name": "RandomPolicy",
+    "performance_metrics": {
+      "episode_reward": 39.67202653447416,
+      "convergence_time": 0.0011435349782307942,
+      "safety_violations": 205.0,
+      "power_loss": 0.07365356126299867,
+      "voltage_deviation": 0.063512814160831
+    },
+    "execution_time": 0.003443479537963867,
+    "convergence_steps": 400,
+    "safety_violations": 615,
+    "hyperparameters": {},
+    "random_seed": 471030,
+    "timestamp": 1755367771.488862
+  },
+  {
+    "algorithm_name": "AdvancedFedRL",
+    "performance_metrics": {
+      "episode_reward": 48.79506672992631,
+      "convergence_time": 0.0027461485429243608,
+      "safety_violations": 293.6666666666667,
+      "power_loss": 0.052721863148263354,
+      "voltage_deviation": 0.02082294516323487
+    },
+    "execution_time": 0.0090789794921875,
+    "convergence_steps": 600,
+    "safety_violations": 881,
+    "hyperparameters": {
+      "learning_rate": 0.0005,
+      "batch_size": 32
+    },
+    "random_seed": 208497,
+    "timestamp": 1755367771.4979842
+  },
+  {
+    "algorithm_name": "NovelFedRL",
+    "performance_metrics": {
+      "episode_reward": 34.32451861119464,
+      "convergence_time": 0.001644028557671441,
+      "safety_violations": 201.66666666666666,
+      "power_loss": 0.055300864620282796,
+      "voltage_deviation": 0.023430061143859576
+    },
+    "execution_time": 0.0059299468994140625,
+    "convergence_steps": 400,
+    "safety_violations": 605,
+    "hyperparameters": {
+      "learning_rate": 0.001,
+      "batch_size": 64
+    },
+    "random_seed": 116740,
+    "timestamp": 1755367771.5039694
+  },
+  {
+    "algorithm_name": "DQNBaseline",
+    "performance_metrics": {
+      "episode_reward": 27.912662339730982,
+      "convergence_time": 0.0028254191080729165,
+      "safety_violations": 193.66666666666666,
+      "power_loss": 0.05990973159546323,
+      "voltage_deviation": 0.02562950536223264
+    },
+    "execution_time": 0.008493185043334961,
+    "convergence_steps": 400,
+    "safety_violations": 581,
+    "hyperparameters": {
+      "learning_rate": 0.001,
+      "epsilon": 0.1
+    },
+    "random_seed": 578857,
+    "timestamp": 1755367771.512544
+  },
+  {
+    "algorithm_name": "NovelFedRL",
+    "performance_metrics": {
+      "episode_reward": 50.73389441982613,
+      "convergence_time": 0.0023412042193942605,
+      "safety_violations": 296.3333333333333,
+      "power_loss": 0.05389384131644381,
+      "voltage_deviation": 0.022670367166475015
+    },
+    "execution_time": 0.00844120979309082,
+    "convergence_steps": 600,
+    "safety_violations": 889,
+    "hyperparameters": {
+      "learning_rate": 0.001,
+      "batch_size": 64
+    },
+    "random_seed": 619177,
+    "timestamp": 1755367771.5210392
+  },
+  {
+    "algorithm_name": "PIDController",
+    "performance_metrics": {
+      "episode_reward": 59.65405504265024,
+      "convergence_time": 0.004372596740722656,
+      "safety_violations": 294.3333333333333,
+      "power_loss": 0.035183677629101136,
+      "voltage_deviation": 0.02929510518973731
+    },
+    "execution_time": 0.013131380081176758,
+    "convergence_steps": 600,
+    "safety_violations": 883,
+    "hyperparameters": {
+      "kp": 1.0,
+      "ki": 0.1,
+      "kd": 0.01
+    },
+    "random_seed": 45562,
+    "timestamp": 1755367771.5342546
+  },
+  {
+    "algorithm_name": "PIDController",
+    "performance_metrics": {
+      "episode_reward": 59.379287780517984,
+      "convergence_time": 0.004144986470540364,
+      "safety_violations": 310.6666666666667,
+      "power_loss": 0.042719809866531615,
+      "voltage_deviation": 0.02462637328617975
+    },
+    "execution_time": 0.012447595596313477,
+    "convergence_steps": 600,
+    "safety_violations": 932,
+    "hyperparameters": {
+      "kp": 1.0,
+      "ki": 0.1,
+      "kd": 0.01
+    },
+    "random_seed": 562276,
+    "timestamp": 1755367771.5467963
+  },
+  {
+    "algorithm_name": "NovelFedRL",
+    "performance_metrics": {
+      "episode_reward": 50.85492192561167,
+      "convergence_time": 0.002506640222337511,
+      "safety_violations": 294.6666666666667,
+      "power_loss": 0.04938516834943873,
+      "voltage_deviation": 0.018164080494277358
+    },
+    "execution_time": 0.00903940200805664,
+    "convergence_steps": 600,
+    "safety_violations": 884,
+    "hyperparameters": {
+      "learning_rate": 0.001,
+      "batch_size": 64
+    },
+    "random_seed": 709571,
+    "timestamp": 1755367771.5559003
+  },
+  {
+    "algorithm_name": "PIDController",
+    "performance_metrics": {
+      "episode_reward": 39.934201376364186,
+      "convergence_time": 0.0028405984242757163,
+      "safety_violations": 204.0,
+      "power_loss": 0.047821433608340014,
+      "voltage_deviation": 0.0326947258581757
+    },
+    "execution_time": 0.008533954620361328,
+    "convergence_steps": 400,
+    "safety_violations": 612,
+    "hyperparameters": {
+      "kp": 1.0,
+      "ki": 0.1,
+      "kd": 0.01
+    },
+    "random_seed": 398383,
+    "timestamp": 1755367771.5645285
+  },
+  {
+    "algorithm_name": "DQNBaseline",
+    "performance_metrics": {
+      "episode_reward": 41.57739601511249,
+      "convergence_time": 0.004171927769978841,
+      "safety_violations": 295.6666666666667,
+      "power_loss": 0.045464766522029194,
+      "voltage_deviation": 0.026297932951979155
+    },
+    "execution_time": 0.012529134750366211,
+    "convergence_steps": 600,
+    "safety_violations": 887,
+    "hyperparameters": {
+      "learning_rate": 0.001,
+      "epsilon": 0.1
+    },
+    "random_seed": 903566,
+    "timestamp": 1755367771.577158
+  },
+  {
+    "algorithm_name": "PIDController",
+    "performance_metrics": {
+      "episode_reward": 40.99546712336814,
+      "convergence_time": 0.0029572645823160806,
+      "safety_violations": 201.33333333333334,
+      "power_loss": 0.045033466329949555,
+      "voltage_deviation": 0.0368413717736863
+    },
+    "execution_time": 0.008885622024536133,
+    "convergence_steps": 400,
+    "safety_violations": 604,
+    "hyperparameters": {
+      "kp": 1.0,
+      "ki": 0.1,
+      "kd": 0.01
+    },
+    "random_seed": 97252,
+    "timestamp": 1755367771.5861378
+  },
+  {
+    "algorithm_name": "PPOBaseline",
+    "performance_metrics": {
+      "episode_reward": 47.23270441991237,
+      "convergence_time": 0.004211823145548503,
+      "safety_violations": 299.0,
+      "power_loss": 0.03482143827323932,
+      "voltage_deviation": 0.020128714226245153
+    },
+    "execution_time": 0.012647628784179688,
+    "convergence_steps": 600,
+    "safety_violations": 897,
+    "hyperparameters": {
+      "learning_rate": 0.0003
+    },
+    "random_seed": 105908,
+    "timestamp": 1755367771.5988798
+  },
+  {
+    "algorithm_name": "PIDController",
+    "performance_metrics": {
+      "episode_reward": 40.299528289796825,
+      "convergence_time": 0.002797683080037435,
+      "safety_violations": 206.33333333333334,
+      "power_loss": 0.04293940499240007,
+      "voltage_deviation": 0.017555260703451717
+    },
+    "execution_time": 0.00840449333190918,
+    "convergence_steps": 400,
+    "safety_violations": 619,
+    "hyperparameters": {
+      "kp": 1.0,
+      "ki": 0.1,
+      "kd": 0.01
+    },
+    "random_seed": 352945,
+    "timestamp": 1755367771.6074033
+  },
+  {
+    "algorithm_name": "RandomPolicy",
+    "performance_metrics": {
+      "episode_reward": 60.554768816633704,
+      "convergence_time": 0.0017278989156087239,
+      "safety_violations": 291.0,
+      "power_loss": 0.060704487253890826,
+      "voltage_deviation": 0.046781674859696976
+    },
+    "execution_time": 0.005216836929321289,
+    "convergence_steps": 600,
+    "safety_violations": 873,
+    "hyperparameters": {},
+    "random_seed": 167415,
+    "timestamp": 1755367771.612688
+  },
+  {
+    "algorithm_name": "DQNBaseline",
+    "performance_metrics": {
+      "episode_reward": 28.020955747334114,
+      "convergence_time": 0.0027245680491129556,
+      "safety_violations": 198.33333333333334,
+      "power_loss": 0.03213840914981651,
+      "voltage_deviation": 0.017921608922482977
+    },
+    "execution_time": 0.008185148239135742,
+    "convergence_steps": 400,
+    "safety_violations": 595,
+    "hyperparameters": {
+      "learning_rate": 0.001,
+      "epsilon": 0.1
+    },
+    "random_seed": 967097,
+    "timestamp": 1755367771.6209333
+  },
+  {
+    "algorithm_name": "AdvancedFedRL",
+    "performance_metrics": {
+      "episode_reward": 50.431545354463616,
+      "convergence_time": 0.0027016437414920692,
+      "safety_violations": 301.3333333333333,
+      "power_loss": 0.05664016432492116,
+      "voltage_deviation": 0.016999179667145096
+    },
+    "execution_time": 0.008933782577514648,
+    "convergence_steps": 600,
+    "safety_violations": 904,
+    "hyperparameters": {
+      "learning_rate": 0.0005,
+      "batch_size": 32
+    },
+    "random_seed": 571413,
+    "timestamp": 1755367771.629932
+  },
+  {
+    "algorithm_name": "PIDController",
+    "performance_metrics": {
+      "episode_reward": 39.411300810064944,
+      "convergence_time": 0.002716064453125,
+      "safety_violations": 204.0,
+      "power_loss": 0.029551495114812792,
+      "voltage_deviation": 0.028067959745103035
+    },
+    "execution_time": 0.008163690567016602,
+    "convergence_steps": 400,
+    "safety_violations": 612,
+    "hyperparameters": {
+      "kp": 1.0,
+      "ki": 0.1,
+      "kd": 0.01
+    },
+    "random_seed": 888663,
+    "timestamp": 1755367771.6381872
+  },
+  {
+    "algorithm_name": "DQNBaseline",
+    "performance_metrics": {
+      "episode_reward": 41.12144089987873,
+      "convergence_time": 0.004047314325968425,
+      "safety_violations": 293.6666666666667,
+      "power_loss": 0.04323977243617164,
+      "voltage_deviation": 0.030440994994804054
+    },
+    "execution_time": 0.012152910232543945,
+    "convergence_steps": 600,
+    "safety_violations": 881,
+    "hyperparameters": {
+      "learning_rate": 0.001,
+      "epsilon": 0.1
+    },
+    "random_seed": 648565,
+    "timestamp": 1755367771.6504045
+  },
+  {
+    "algorithm_name": "RandomPolicy",
+    "performance_metrics": {
+      "episode_reward": 60.04651311032229,
+      "convergence_time": 0.001678148905436198,
+      "safety_violations": 301.0,
+      "power_loss": 0.0960521826336138,
+      "voltage_deviation": 0.05902473762492883
+    },
+    "execution_time": 0.005044460296630859,
+    "convergence_steps": 600,
+    "safety_violations": 903,
+    "hyperparameters": {},
+    "random_seed": 291370,
+    "timestamp": 1755367771.6555104
+  },
+  {
+    "algorithm_name": "RandomPolicy",
+    "performance_metrics": {
+      "episode_reward": 40.01295995070369,
+      "convergence_time": 0.001180569330851237,
+      "safety_violations": 207.66666666666666,
+      "power_loss": 0.08384508629582506,
+      "voltage_deviation": 0.0519261357762067
+    },
+    "execution_time": 0.0035552978515625,
+    "convergence_steps": 400,
+    "safety_violations": 623,
+    "hyperparameters": {},
+    "random_seed": 231149,
+    "timestamp": 1755367771.65912
+  },
+  {
+    "algorithm_name": "PPOBaseline",
+    "performance_metrics": {
+      "episode_reward": 31.916416361566828,
+      "convergence_time": 0.0026902357737223306,
+      "safety_violations": 200.0,
+      "power_loss": 0.03511050710831374,
+      "voltage_deviation": 0.02051288061749858
+    },
+    "execution_time": 0.008082151412963867,
+    "convergence_steps": 400,
+    "safety_violations": 600,
+    "hyperparameters": {
+      "learning_rate": 0.0003
+    },
+    "random_seed": 48051,
+    "timestamp": 1755367771.6672716
+  },
+  {
+    "algorithm_name": "DQNBaseline",
+    "performance_metrics": {
+      "episode_reward": 27.988793418287088,
+      "convergence_time": 0.002707322438557943,
+      "safety_violations": 202.33333333333334,
+      "power_loss": 0.042408385345878374,
+      "voltage_deviation": 0.028860387567513166
+    },
+    "execution_time": 0.008132457733154297,
+    "convergence_steps": 400,
+    "safety_violations": 607,
+    "hyperparameters": {
+      "learning_rate": 0.001,
+      "epsilon": 0.1
+    },
+    "random_seed": 82628,
+    "timestamp": 1755367771.6754596
+  },
+  {
+    "algorithm_name": "PPOBaseline",
+    "performance_metrics": {
+      "episode_reward": 47.088205478638876,
+      "convergence_time": 0.004374265670776367,
+      "safety_violations": 291.3333333333333,
+      "power_loss": 0.04172749667012043,
+      "voltage_deviation": 0.019598006721082032
+    },
+    "execution_time": 0.013137102127075195,
+    "convergence_steps": 600,
+    "safety_violations": 874,
+    "hyperparameters": {
+      "learning_rate": 0.0003
+    },
+    "random_seed": 291477,
+    "timestamp": 1755367771.6886797
+  },
+  {
+    "algorithm_name": "NovelFedRL",
+    "performance_metrics": {
+      "episode_reward": 50.64429776862045,
+      "convergence_time": 0.0023632579379611546,
+      "safety_violations": 305.0,
+      "power_loss": 0.047537812327276885,
+      "voltage_deviation": 0.016460812433344924
+    },
+    "execution_time": 0.00852203369140625,
+    "convergence_steps": 600,
+    "safety_violations": 915,
+    "hyperparameters": {
+      "learning_rate": 0.001,
+      "batch_size": 64
+    },
+    "random_seed": 772247,
+    "timestamp": 1755367771.697261
+  },
+  {
+    "algorithm_name": "RandomPolicy",
+    "performance_metrics": {
+      "episode_reward": 38.581583940393834,
+      "convergence_time": 0.0012471675872802734,
+      "safety_violations": 205.0,
+      "power_loss": 0.07686435143732805,
+      "voltage_deviation": 0.03766777449511198
+    },
+    "execution_time": 0.0037543773651123047,
+    "convergence_steps": 400,
+    "safety_violations": 615,
+    "hyperparameters": {},
+    "random_seed": 911528,
+    "timestamp": 1755367771.7010968
+  },
+  {
+    "algorithm_name": "DQNBaseline",
+    "performance_metrics": {
+      "episode_reward": 42.07452137844849,
+      "convergence_time": 0.0041808287302653,
+      "safety_violations": 309.0,
+      "power_loss": 0.05165680847438898,
+      "voltage_deviation": 0.031303687619229074
+    },
+    "execution_time": 0.012553930282592773,
+    "convergence_steps": 600,
+    "safety_violations": 927,
+    "hyperparameters": {
+      "learning_rate": 0.001,
+      "epsilon": 0.1
+    },
+    "random_seed": 605398,
+    "timestamp": 1755367771.7137232
+  },
+  {
+    "algorithm_name": "DQNBaseline",
+    "performance_metrics": {
+      "episode_reward": 42.65857283971108,
+      "convergence_time": 0.00420832633972168,
+      "safety_violations": 314.0,
+      "power_loss": 0.04161498307992389,
+      "voltage_deviation": 0.022511339243345942
+    },
+    "execution_time": 0.012639522552490234,
+    "convergence_steps": 600,
+    "safety_violations": 942,
+    "hyperparameters": {
+      "learning_rate": 0.001,
+      "epsilon": 0.1
+    },
+    "random_seed": 72934,
+    "timestamp": 1755367771.7264335
+  },
+  {
+    "algorithm_name": "RandomPolicy",
+    "performance_metrics": {
+      "episode_reward": 60.06983990398146,
+      "convergence_time": 0.0018661022186279297,
+      "safety_violations": 305.3333333333333,
+      "power_loss": 0.06843277783528069,
+      "voltage_deviation": 0.0434545165592768
+    },
+    "execution_time": 0.005611419677734375,
+    "convergence_steps": 600,
+    "safety_violations": 916,
+    "hyperparameters": {},
+    "random_seed": 225773,
+    "timestamp": 1755367771.7321386
+  },
+  {
+    "algorithm_name": "RandomPolicy",
+    "performance_metrics": {
+      "episode_reward": 60.43585012754614,
+      "convergence_time": 0.0018431345621744792,
+      "safety_violations": 297.6666666666667,
+      "power_loss": 0.06902875301176949,
+      "voltage_deviation": 0.04769996270675975
+    },
+    "execution_time": 0.005539894104003906,
+    "convergence_steps": 600,
+    "safety_violations": 893,
+    "hyperparameters": {},
+    "random_seed": 356779,
+    "timestamp": 1755367771.7377684
+  },
+  {
+    "algorithm_name": "RandomPolicy",
+    "performance_metrics": {
+      "episode_reward": 60.066234088675486,
+      "convergence_time": 0.0018230279286702473,
+      "safety_violations": 290.0,
+      "power_loss": 0.0718137131252455,
+      "voltage_deviation": 0.05370990620143817
+    },
+    "execution_time": 0.005479574203491211,
+    "convergence_steps": 600,
+    "safety_violations": 870,
+    "hyperparameters": {},
+    "random_seed": 732053,
+    "timestamp": 1755367771.743307
+  },
+  {
+    "algorithm_name": "PPOBaseline",
+    "performance_metrics": {
+      "episode_reward": 46.35056111360624,
+      "convergence_time": 0.005459149678548177,
+      "safety_violations": 292.3333333333333,
+      "power_loss": 0.04378021580042124,
+      "voltage_deviation": 0.022532597013827583
+    },
+    "execution_time": 0.016396284103393555,
+    "convergence_steps": 600,
+    "safety_violations": 877,
+    "hyperparameters": {
+      "learning_rate": 0.0003
+    },
+    "random_seed": 874629,
+    "timestamp": 1755367771.759771
+  },
+  {
+    "algorithm_name": "PIDController",
+    "performance_metrics": {
+      "episode_reward": 40.06666168247071,
+      "convergence_time": 0.0028471151987711587,
+      "safety_violations": 202.33333333333334,
+      "power_loss": 0.03729890408766482,
+      "voltage_deviation": 0.022914923135746782
+    },
+    "execution_time": 0.008553266525268555,
+    "convergence_steps": 400,
+    "safety_violations": 607,
+    "hyperparameters": {
+      "kp": 1.0,
+      "ki": 0.1,
+      "kd": 0.01
+    },
+    "random_seed": 107176,
+    "timestamp": 1755367771.7684348
+  },
+  {
+    "algorithm_name": "PPOBaseline",
+    "performance_metrics": {
+      "episode_reward": 30.806903480444575,
+      "convergence_time": 0.0029021898905436196,
+      "safety_violations": 202.0,
+      "power_loss": 0.03325018743416378,
+      "voltage_deviation": 0.020555627053901696
+    },
+    "execution_time": 0.008719205856323242,
+    "convergence_steps": 400,
+    "safety_violations": 606,
+    "hyperparameters": {
+      "learning_rate": 0.0003
+    },
+    "random_seed": 238969,
+    "timestamp": 1755367771.7772312
+  },
+  {
+    "algorithm_name": "NovelFedRL",
+    "performance_metrics": {
+      "episode_reward": 51.547152663573456,
+      "convergence_time": 0.00255584716796875,
+      "safety_violations": 297.6666666666667,
+      "power_loss": 0.05293252616560034,
+      "voltage_deviation": 0.017389295538880058
+    },
+    "execution_time": 0.009216070175170898,
+    "convergence_steps": 600,
+    "safety_violations": 893,
+    "hyperparameters": {
+      "learning_rate": 0.001,
+      "batch_size": 64
+    },
+    "random_seed": 935519,
+    "timestamp": 1755367771.7865133
+  },
+  {
+    "algorithm_name": "RandomPolicy",
+    "performance_metrics": {
+      "episode_reward": 40.34474254063614,
+      "convergence_time": 0.0012778441111246746,
+      "safety_violations": 192.0,
+      "power_loss": 0.06314996363853258,
+      "voltage_deviation": 0.051587267358191635
+    },
+    "execution_time": 0.0038466453552246094,
+    "convergence_steps": 400,
+    "safety_violations": 576,
+    "hyperparameters": {},
+    "random_seed": 848750,
+    "timestamp": 1755367771.7904625
+  },
+  {
+    "algorithm_name": "AdvancedFedRL",
+    "performance_metrics": {
+      "episode_reward": 33.635523593271664,
+      "convergence_time": 0.001886107704856179,
+      "safety_violations": 204.33333333333334,
+      "power_loss": 0.04814245998599675,
+      "voltage_deviation": 0.023644472506740056
+    },
+    "execution_time": 0.006236553192138672,
+    "convergence_steps": 400,
+    "safety_violations": 613,
+    "hyperparameters": {
+      "learning_rate": 0.0005,
+      "batch_size": 32
+    },
+    "random_seed": 631263,
+    "timestamp": 1755367771.7967591
+  },
+  {
+    "algorithm_name": "RandomPolicy",
+    "performance_metrics": {
+      "episode_reward": 40.386177938950475,
+      "convergence_time": 0.0012969175974527996,
+      "safety_violations": 189.0,
+      "power_loss": 0.06665768717563457,
+      "voltage_deviation": 0.04162990508057042
+    },
+    "execution_time": 0.003902435302734375,
+    "convergence_steps": 400,
+    "safety_violations": 567,
+    "hyperparameters": {},
+    "random_seed": 795668,
+    "timestamp": 1755367771.8007433
+  },
+  {
+    "algorithm_name": "RandomPolicy",
+    "performance_metrics": {
+      "episode_reward": 61.4119637069501,
+      "convergence_time": 0.0018369356791178386,
+      "safety_violations": 298.6666666666667,
+      "power_loss": 0.07824848302760408,
+      "voltage_deviation": 0.05574715978640199
+    },
+    "execution_time": 0.005521535873413086,
+    "convergence_steps": 600,
+    "safety_violations": 896,
+    "hyperparameters": {},
+    "random_seed": 844963,
+    "timestamp": 1755367771.8063204
+  },
+  {
+    "algorithm_name": "AdvancedFedRL",
+    "performance_metrics": {
+      "episode_reward": 31.813816236136706,
+      "convergence_time": 0.0017834432197339604,
+      "safety_violations": 210.33333333333334,
+      "power_loss": 0.04514320234225452,
+      "voltage_deviation": 0.021751932153909886
+    },
+    "execution_time": 0.0058972835540771484,
+    "convergence_steps": 400,
+    "safety_violations": 631,
+    "hyperparameters": {
+      "learning_rate": 0.0005,
+      "batch_size": 32
+    },
+    "random_seed": 31245,
+    "timestamp": 1755367771.8122516
+  },
+  {
+    "algorithm_name": "DQNBaseline",
+    "performance_metrics": {
+      "episode_reward": 41.85946334106013,
+      "convergence_time": 0.004194180170694987,
+      "safety_violations": 296.0,
+      "power_loss": 0.06100245769004973,
+      "voltage_deviation": 0.02627931309420828
+    },
+    "execution_time": 0.012594223022460938,
+    "convergence_steps": 600,
+    "safety_violations": 888,
+    "hyperparameters": {
+      "learning_rate": 0.001,
+      "epsilon": 0.1
+    },
+    "random_seed": 201630,
+    "timestamp": 1755367771.8249083
+  },
+  {
+    "algorithm_name": "DQNBaseline",
+    "performance_metrics": {
+      "episode_reward": 27.39300675800347,
+      "convergence_time": 0.0027771790822347007,
+      "safety_violations": 191.66666666666666,
+      "power_loss": 0.036496077832131185,
+      "voltage_deviation": 0.0208819304361528
+    },
+    "execution_time": 0.008342504501342773,
+    "convergence_steps": 400,
+    "safety_violations": 575,
+    "hyperparameters": {
+      "learning_rate": 0.001,
+      "epsilon": 0.1
+    },
+    "random_seed": 869694,
+    "timestamp": 1755367771.8333194
+  },
+  {
+    "algorithm_name": "PIDController",
+    "performance_metrics": {
+      "episode_reward": 59.6981535633494,
+      "convergence_time": 0.005661408106486003,
+      "safety_violations": 293.0,
+      "power_loss": 0.03893995121780655,
+      "voltage_deviation": 0.024318243583201758
+    },
+    "execution_time": 0.017002105712890625,
+    "convergence_steps": 600,
+    "safety_violations": 879,
+    "hyperparameters": {
+      "kp": 1.0,
+      "ki": 0.1,
+      "kd": 0.01
+    },
+    "random_seed": 360664,
+    "timestamp": 1755367771.8503923
+  },
+  {
+    "algorithm_name": "NovelFedRL",
+    "performance_metrics": {
+      "episode_reward": 33.541993304038385,
+      "convergence_time": 0.001652306980556912,
+      "safety_violations": 190.66666666666666,
+      "power_loss": 0.048692192803079515,
+      "voltage_deviation": 0.020054953885236676
+    },
+    "execution_time": 0.005964040756225586,
+    "convergence_steps": 400,
+    "safety_violations": 572,
+    "hyperparameters": {
+      "learning_rate": 0.001,
+      "batch_size": 64
+    },
+    "random_seed": 146317,
+    "timestamp": 1755367771.856423
+  },
+  {
+    "algorithm_name": "RandomPolicy",
+    "performance_metrics": {
+      "episode_reward": 40.123765118440026,
+      "convergence_time": 0.0013243357340494792,
+      "safety_violations": 196.66666666666666,
+      "power_loss": 0.08644829226946459,
+      "voltage_deviation": 0.0533711884004178
+    },
+    "execution_time": 0.0039861202239990234,
+    "convergence_steps": 400,
+    "safety_violations": 590,
+    "hyperparameters": {},
+    "random_seed": 617890,
+    "timestamp": 1755367771.860518
+  },
+  {
+    "algorithm_name": "DQNBaseline",
+    "performance_metrics": {
+      "episode_reward": 41.299052579964545,
+      "convergence_time": 0.00409388542175293,
+      "safety_violations": 301.0,
+      "power_loss": 0.04835706100247807,
+      "voltage_deviation": 0.0257541175531785
+    },
+    "execution_time": 0.012294530868530273,
+    "convergence_steps": 600,
+    "safety_violations": 903,
+    "hyperparameters": {
+      "learning_rate": 0.001,
+      "epsilon": 0.1
+    },
+    "random_seed": 738798,
+    "timestamp": 1755367771.8728921
+  },
+  {
+    "algorithm_name": "RandomPolicy",
+    "performance_metrics": {
+      "episode_reward": 59.649781685788376,
+      "convergence_time": 0.001973867416381836,
+      "safety_violations": 310.3333333333333,
+      "power_loss": 0.0743083592741144,
+      "voltage_deviation": 0.06428253926321865
+    },
+    "execution_time": 0.0059356689453125,
+    "convergence_steps": 600,
+    "safety_violations": 931,
+    "hyperparameters": {},
+    "random_seed": 163033,
+    "timestamp": 1755367771.8789058
+  },
+  {
+    "algorithm_name": "NovelFedRL",
+    "performance_metrics": {
+      "episode_reward": 34.01778704454159,
+      "convergence_time": 0.0016799237993028431,
+      "safety_violations": 191.33333333333334,
+      "power_loss": 0.05044828142224522,
+      "voltage_deviation": 0.02625557454252797
+    },
+    "execution_time": 0.0060617923736572266,
+    "convergence_steps": 400,
+    "safety_violations": 574,
+    "hyperparameters": {
+      "learning_rate": 0.001,
+      "batch_size": 64
+    },
+    "random_seed": 26226,
+    "timestamp": 1755367771.8850465
+  },
+  {
+    "algorithm_name": "AdvancedFedRL",
+    "performance_metrics": {
+      "episode_reward": 32.32503918102653,
+      "convergence_time": 0.0016575148611357715,
+      "safety_violations": 194.0,
+      "power_loss": 0.049669476016811986,
+      "voltage_deviation": 0.015112181098533234
+    },
+    "execution_time": 0.005479574203491211,
+    "convergence_steps": 400,
+    "safety_violations": 582,
+    "hyperparameters": {
+      "learning_rate": 0.0005,
+      "batch_size": 32
+    },
+    "random_seed": 442418,
+    "timestamp": 1755367771.8905718
+  },
+  {
+    "algorithm_name": "RandomPolicy",
+    "performance_metrics": {
+      "episode_reward": 38.76882396290946,
+      "convergence_time": 0.0011874834696451824,
+      "safety_violations": 210.0,
+      "power_loss": 0.08262111664793893,
+      "voltage_deviation": 0.05879344587128832
+    },
+    "execution_time": 0.003574371337890625,
+    "convergence_steps": 400,
+    "safety_violations": 630,
+    "hyperparameters": {},
+    "random_seed": 6815,
+    "timestamp": 1755367771.8942168
+  },
+  {
+    "algorithm_name": "DQNBaseline",
+    "performance_metrics": {
+      "episode_reward": 27.59906526211908,
+      "convergence_time": 0.0027326742808024087,
+      "safety_violations": 209.66666666666666,
+      "power_loss": 0.04829992788871564,
+      "voltage_deviation": 0.023533319126172448
+    },
+    "execution_time": 0.008209228515625,
+    "convergence_steps": 400,
+    "safety_violations": 629,
+    "hyperparameters": {
+      "learning_rate": 0.001,
+      "epsilon": 0.1
+    },
+    "random_seed": 396923,
+    "timestamp": 1755367771.9024925
+  },
+  {
+    "algorithm_name": "AdvancedFedRL",
+    "performance_metrics": {
+      "episode_reward": 32.64988688166678,
+      "convergence_time": 0.00168388540094549,
+      "safety_violations": 193.0,
+      "power_loss": 0.049973335673765766,
+      "voltage_deviation": 0.018874911686080006
+    },
+    "execution_time": 0.005568265914916992,
+    "convergence_steps": 400,
+    "safety_violations": 579,
+    "hyperparameters": {
+      "learning_rate": 0.0005,
+      "batch_size": 32
+    },
+    "random_seed": 529904,
+    "timestamp": 1755367771.9080963
+  },
+  {
+    "algorithm_name": "PIDController",
+    "performance_metrics": {
+      "episode_reward": 61.089279275500644,
+      "convergence_time": 0.004085540771484375,
+      "safety_violations": 309.6666666666667,
+      "power_loss": 0.035999141078339444,
+      "voltage_deviation": 0.02409271995814991
+    },
+    "execution_time": 0.012268304824829102,
+    "convergence_steps": 600,
+    "safety_violations": 929,
+    "hyperparameters": {
+      "kp": 1.0,
+      "ki": 0.1,
+      "kd": 0.01
+    },
+    "random_seed": 277371,
+    "timestamp": 1755367771.920452
+  },
+  {
+    "algorithm_name": "AdvancedFedRL",
+    "performance_metrics": {
+      "episode_reward": 48.872823463954866,
+      "convergence_time": 0.002628167470296224,
+      "safety_violations": 303.3333333333333,
+      "power_loss": 0.047475972646139154,
+      "voltage_deviation": 0.01885535697879211
+    },
+    "execution_time": 0.008684635162353516,
+    "convergence_steps": 600,
+    "safety_violations": 910,
+    "hyperparameters": {
+      "learning_rate": 0.0005,
+      "batch_size": 32
+    },
+    "random_seed": 27825,
+    "timestamp": 1755367771.929185
+  },
+  {
+    "algorithm_name": "NovelFedRL",
+    "performance_metrics": {
+      "episode_reward": 33.92273276531571,
+      "convergence_time": 0.0016125705507066517,
+      "safety_violations": 204.0,
+      "power_loss": 0.04806411424107823,
+      "voltage_deviation": 0.02380234936307021
+    },
+    "execution_time": 0.005817413330078125,
+    "convergence_steps": 400,
+    "safety_violations": 612,
+    "hyperparameters": {
+      "learning_rate": 0.001,
+      "batch_size": 64
+    },
+    "random_seed": 256788,
+    "timestamp": 1755367771.9350479
+  },
+  {
+    "algorithm_name": "NovelFedRL",
+    "performance_metrics": {
+      "episode_reward": 34.78427707959522,
+      "convergence_time": 0.0017330381605360245,
+      "safety_violations": 197.66666666666666,
+      "power_loss": 0.059963797836636246,
+      "voltage_deviation": 0.018155739290736637
+    },
+    "execution_time": 0.006254911422729492,
+    "convergence_steps": 400,
+    "safety_violations": 593,
+    "hyperparameters": {
+      "learning_rate": 0.001,
+      "batch_size": 64
+    },
+    "random_seed": 234054,
+    "timestamp": 1755367771.9413536
+  },
+  {
+    "algorithm_name": "AdvancedFedRL",
+    "performance_metrics": {
+      "episode_reward": 32.67491231627674,
+      "convergence_time": 0.0018194949988162878,
+      "safety_violations": 194.66666666666666,
+      "power_loss": 0.04457978344914762,
+      "voltage_deviation": 0.01904050590806532
+    },
+    "execution_time": 0.006020307540893555,
+    "convergence_steps": 400,
+    "safety_violations": 584,
+    "hyperparameters": {
+      "learning_rate": 0.0005,
+      "batch_size": 32
+    },
+    "random_seed": 243963,
+    "timestamp": 1755367771.9474394
+  },
+  {
+    "algorithm_name": "PIDController",
+    "performance_metrics": {
+      "episode_reward": 39.74231060508681,
+      "convergence_time": 0.0026941299438476562,
+      "safety_violations": 196.33333333333334,
+      "power_loss": 0.0422411195752197,
+      "voltage_deviation": 0.02669221802097645
+    },
+    "execution_time": 0.008095502853393555,
+    "convergence_steps": 400,
+    "safety_violations": 589,
+    "hyperparameters": {
+      "kp": 1.0,
+      "ki": 0.1,
+      "kd": 0.01
+    },
+    "random_seed": 800582,
+    "timestamp": 1755367771.955629
+  },
+  {
+    "algorithm_name": "PIDController",
+    "performance_metrics": {
+      "episode_reward": 59.753073651722126,
+      "convergence_time": 0.004373470942179362,
+      "safety_violations": 297.0,
+      "power_loss": 0.04200047920824257,
+      "voltage_deviation": 0.025955092962544155
+    },
+    "execution_time": 0.013148784637451172,
+    "convergence_steps": 600,
+    "safety_violations": 891,
+    "hyperparameters": {
+      "kp": 1.0,
+      "ki": 0.1,
+      "kd": 0.01
+    },
+    "random_seed": 765180,
+    "timestamp": 1755367771.9688814
+  },
+  {
+    "algorithm_name": "PPOBaseline",
+    "performance_metrics": {
+      "episode_reward": 46.24089240585793,
+      "convergence_time": 0.004450559616088867,
+      "safety_violations": 302.0,
+      "power_loss": 0.030151703042268902,
+      "voltage_deviation": 0.023131635825616684
+    },
+    "execution_time": 0.013365745544433594,
+    "convergence_steps": 600,
+    "safety_violations": 906,
+    "hyperparameters": {
+      "learning_rate": 0.0003
+    },
+    "random_seed": 908574,
+    "timestamp": 1755367771.982343
+  },
+  {
+    "algorithm_name": "AdvancedFedRL",
+    "performance_metrics": {
+      "episode_reward": 32.826294360137766,
+      "convergence_time": 0.0017889340718587239,
+      "safety_violations": 201.66666666666666,
+      "power_loss": 0.05287500773577938,
+      "voltage_deviation": 0.02143303962345851
+    },
+    "execution_time": 0.005918979644775391,
+    "convergence_steps": 400,
+    "safety_violations": 605,
+    "hyperparameters": {
+      "learning_rate": 0.0005,
+      "batch_size": 32
+    },
+    "random_seed": 98247,
+    "timestamp": 1755367771.9883282
+  },
+  {
+    "algorithm_name": "DQNBaseline",
+    "performance_metrics": {
+      "episode_reward": 42.36252906189525,
+      "convergence_time": 0.004292011260986328,
+      "safety_violations": 290.6666666666667,
+      "power_loss": 0.04767781812140209,
+      "voltage_deviation": 0.02547876836236222
+    },
+    "execution_time": 0.012891530990600586,
+    "convergence_steps": 600,
+    "safety_violations": 872,
+    "hyperparameters": {
+      "learning_rate": 0.001,
+      "epsilon": 0.1
+    },
+    "random_seed": 928464,
+    "timestamp": 1755367772.0013275
+  },
+  {
+    "algorithm_name": "RandomPolicy",
+    "performance_metrics": {
+      "episode_reward": 60.821167203639824,
+      "convergence_time": 0.001777966817220052,
+      "safety_violations": 289.3333333333333,
+      "power_loss": 0.08945977919811447,
+      "voltage_deviation": 0.05064131034462369
+    },
+    "execution_time": 0.005345582962036133,
+    "convergence_steps": 600,
+    "safety_violations": 868,
+    "hyperparameters": {},
+    "random_seed": 443144,
+    "timestamp": 1755367772.0069954
+  },
+  {
+    "algorithm_name": "PPOBaseline",
+    "performance_metrics": {
+      "episode_reward": 30.608773982267504,
+      "convergence_time": 0.0027649402618408203,
+      "safety_violations": 203.33333333333334,
+      "power_loss": 0.03910296318579518,
+      "voltage_deviation": 0.023698271825911586
+    },
+    "execution_time": 0.008306741714477539,
+    "convergence_steps": 400,
+    "safety_violations": 610,
+    "hyperparameters": {
+      "learning_rate": 0.0003
+    },
+    "random_seed": 810621,
+    "timestamp": 1755367772.0153866
+  },
+  {
+    "algorithm_name": "AdvancedFedRL",
+    "performance_metrics": {
+      "episode_reward": 33.36952305450884,
+      "convergence_time": 0.0017538937655362215,
+      "safety_violations": 194.0,
+      "power_loss": 0.045016422115318165,
+      "voltage_deviation": 0.02179826461018092
+    },
+    "execution_time": 0.005801200866699219,
+    "convergence_steps": 400,
+    "safety_violations": 582,
+    "hyperparameters": {
+      "learning_rate": 0.0005,
+      "batch_size": 32
+    },
+    "random_seed": 229259,
+    "timestamp": 1755367772.021235
+  },
+  {
+    "algorithm_name": "NovelFedRL",
+    "performance_metrics": {
+      "episode_reward": 33.64899593516713,
+      "convergence_time": 0.0015759468078613281,
+      "safety_violations": 199.0,
+      "power_loss": 0.05108093767980194,
+      "voltage_deviation": 0.017518954220504434
+    },
+    "execution_time": 0.005683422088623047,
+    "convergence_steps": 400,
+    "safety_violations": 597,
+    "hyperparameters": {
+      "learning_rate": 0.001,
+      "batch_size": 64
+    },
+    "random_seed": 670488,
+    "timestamp": 1755367772.0269592
+  },
+  {
+    "algorithm_name": "PPOBaseline",
+    "performance_metrics": {
+      "episode_reward": 47.125596134272534,
+      "convergence_time": 0.004484097162882487,
+      "safety_violations": 298.3333333333333,
+      "power_loss": 0.034371293498753036,
+      "voltage_deviation": 0.01720882770416541
+    },
+    "execution_time": 0.01346731185913086,
+    "convergence_steps": 600,
+    "safety_violations": 895,
+    "hyperparameters": {
+      "learning_rate": 0.0003
+    },
+    "random_seed": 475436,
+    "timestamp": 1755367772.0405395
+  },
+  {
+    "algorithm_name": "PIDController",
+    "performance_metrics": {
+      "episode_reward": 60.620407035445744,
+      "convergence_time": 0.004182656606038411,
+      "safety_violations": 306.3333333333333,
+      "power_loss": 0.03180454734729156,
+      "voltage_deviation": 0.028671893400612308
+    },
+    "execution_time": 0.012561321258544922,
+    "convergence_steps": 600,
+    "safety_violations": 919,
+    "hyperparameters": {
+      "kp": 1.0,
+      "ki": 0.1,
+      "kd": 0.01
+    },
+    "random_seed": 633053,
+    "timestamp": 1755367772.0531995
+  },
+  {
+    "algorithm_name": "PPOBaseline",
+    "performance_metrics": {
+      "episode_reward": 46.68161195312124,
+      "convergence_time": 0.005397796630859375,
+      "safety_violations": 302.0,
+      "power_loss": 0.03990186127852973,
+      "voltage_deviation": 0.013549748899160566
+    },
+    "execution_time": 0.016210317611694336,
+    "convergence_steps": 600,
+    "safety_violations": 906,
+    "hyperparameters": {
+      "learning_rate": 0.0003
+    },
+    "random_seed": 398592,
+    "timestamp": 1755367772.0694988
+  },
+  {
+    "algorithm_name": "PIDController",
+    "performance_metrics": {
+      "episode_reward": 40.72828363548275,
+      "convergence_time": 0.0030678908030192056,
+      "safety_violations": 198.33333333333334,
+      "power_loss": 0.05242961218076129,
+      "voltage_deviation": 0.02639075642338805
+    },
+    "execution_time": 0.009221553802490234,
+    "convergence_steps": 400,
+    "safety_violations": 595,
+    "hyperparameters": {
+      "kp": 1.0,
+      "ki": 0.1,
+      "kd": 0.01
+    },
+    "random_seed": 101415,
+    "timestamp": 1755367772.0790312
+  },
+  {
+    "algorithm_name": "PPOBaseline",
+    "performance_metrics": {
+      "episode_reward": 30.794537362881247,
+      "convergence_time": 0.0030433336893717446,
+      "safety_violations": 211.66666666666666,
+      "power_loss": 0.04272917203468745,
+      "voltage_deviation": 0.016524064676518135
+    },
+    "execution_time": 0.00914621353149414,
+    "convergence_steps": 400,
+    "safety_violations": 635,
+    "hyperparameters": {
+      "learning_rate": 0.0003
+    },
+    "random_seed": 244099,
+    "timestamp": 1755367772.0882938
+  },
+  {
+    "algorithm_name": "AdvancedFedRL",
+    "performance_metrics": {
+      "episode_reward": 48.3587782031179,
+      "convergence_time": 0.0027974446614583335,
+      "safety_violations": 313.3333333333333,
+      "power_loss": 0.05173235940303039,
+      "voltage_deviation": 0.017228290378288328
+    },
+    "execution_time": 0.00925135612487793,
+    "convergence_steps": 600,
+    "safety_violations": 940,
+    "hyperparameters": {
+      "learning_rate": 0.0005,
+      "batch_size": 32
+    },
+    "random_seed": 588509,
+    "timestamp": 1755367772.097712
+  },
+  {
+    "algorithm_name": "DQNBaseline",
+    "performance_metrics": {
+      "episode_reward": 27.799807939958853,
+      "convergence_time": 0.0030389626820882163,
+      "safety_violations": 197.66666666666666,
+      "power_loss": 0.044384176309866526,
+      "voltage_deviation": 0.03079670705171489
+    },
+    "execution_time": 0.009134292602539062,
+    "convergence_steps": 400,
+    "safety_violations": 593,
+    "hyperparameters": {
+      "learning_rate": 0.001,
+      "epsilon": 0.1
+    },
+    "random_seed": 659177,
+    "timestamp": 1755367772.1069617
+  },
+  {
+    "algorithm_name": "PPOBaseline",
+    "performance_metrics": {
+      "episode_reward": 46.81379910995869,
+      "convergence_time": 0.004723866780598958,
+      "safety_violations": 304.0,
+      "power_loss": 0.0366022404287917,
+      "voltage_deviation": 0.026994755037910535
+    },
+    "execution_time": 0.014189481735229492,
+    "convergence_steps": 600,
+    "safety_violations": 912,
+    "hyperparameters": {
+      "learning_rate": 0.0003
+    },
+    "random_seed": 382555,
+    "timestamp": 1755367772.1212618
+  },
+  {
+    "algorithm_name": "DQNBaseline",
+    "performance_metrics": {
+      "episode_reward": 28.621946951977183,
+      "convergence_time": 0.0032498836517333984,
+      "safety_violations": 198.66666666666666,
+      "power_loss": 0.031019832782434448,
+      "voltage_deviation": 0.027948411569010363
+    },
+    "execution_time": 0.009770393371582031,
+    "convergence_steps": 400,
+    "safety_violations": 596,
+    "hyperparameters": {
+      "learning_rate": 0.001,
+      "epsilon": 0.1
+    },
+    "random_seed": 130890,
+    "timestamp": 1755367772.1311536
+  },
+  {
+    "algorithm_name": "AdvancedFedRL",
+    "performance_metrics": {
+      "episode_reward": 48.87581818697856,
+      "convergence_time": 0.0029206998420484138,
+      "safety_violations": 306.6666666666667,
+      "power_loss": 0.046227437430508396,
+      "voltage_deviation": 0.02426157782078348
+    },
+    "execution_time": 0.009662866592407227,
+    "convergence_steps": 600,
+    "safety_violations": 920,
+    "hyperparameters": {
+      "learning_rate": 0.0005,
+      "batch_size": 32
+    },
+    "random_seed": 735393,
+    "timestamp": 1755367772.140903
+  },
+  {
+    "algorithm_name": "AdvancedFedRL",
+    "performance_metrics": {
+      "episode_reward": 49.22120367098791,
+      "convergence_time": 0.002815867915297999,
+      "safety_violations": 296.3333333333333,
+      "power_loss": 0.04068095546027532,
+      "voltage_deviation": 0.01820154757480029
+    },
+    "execution_time": 0.009310483932495117,
+    "convergence_steps": 600,
+    "safety_violations": 889,
+    "hyperparameters": {
+      "learning_rate": 0.0005,
+      "batch_size": 32
+    },
+    "random_seed": 750801,
+    "timestamp": 1755367772.150338
+  },
+  {
+    "algorithm_name": "PPOBaseline",
+    "performance_metrics": {
+      "episode_reward": 31.318650850783172,
+      "convergence_time": 0.002969821294148763,
+      "safety_violations": 197.33333333333334,
+      "power_loss": 0.04522565855290833,
+      "voltage_deviation": 0.021897807528076546
+    },
+    "execution_time": 0.008926630020141602,
+    "convergence_steps": 400,
+    "safety_violations": 592,
+    "hyperparameters": {
+      "learning_rate": 0.0003
+    },
+    "random_seed": 83668,
+    "timestamp": 1755367772.159424
+  },
+  {
+    "algorithm_name": "PPOBaseline",
+    "performance_metrics": {
+      "episode_reward": 46.22570370377315,
+      "convergence_time": 0.004606167475382487,
+      "safety_violations": 311.3333333333333,
+      "power_loss": 0.04252878980175165,
+      "voltage_deviation": 0.018382286930773623
+    },
+    "execution_time": 0.013840675354003906,
+    "convergence_steps": 600,
+    "safety_violations": 934,
+    "hyperparameters": {
+      "learning_rate": 0.0003
+    },
+    "random_seed": 666564,
+    "timestamp": 1755367772.1733868
+  },
+  {
+    "algorithm_name": "NovelFedRL",
+    "performance_metrics": {
+      "episode_reward": 34.00488844903574,
+      "convergence_time": 0.0018641683790418838,
+      "safety_violations": 205.66666666666666,
+      "power_loss": 0.0444876803741639,
+      "voltage_deviation": 0.02209685322067012
+    },
+    "execution_time": 0.006730079650878906,
+    "convergence_steps": 400,
+    "safety_violations": 617,
+    "hyperparameters": {
+      "learning_rate": 0.001,
+      "batch_size": 64
+    },
+    "random_seed": 288390,
+    "timestamp": 1755367772.1802
+  },
+  {
+    "algorithm_name": "PIDController",
+    "performance_metrics": {
+      "episode_reward": 40.00018467413535,
+      "convergence_time": 0.0029833316802978516,
+      "safety_violations": 199.0,
+      "power_loss": 0.0445016607117438,
+      "voltage_deviation": 0.0349456870049083
+    },
+    "execution_time": 0.00896453857421875,
+    "convergence_steps": 400,
+    "safety_violations": 597,
+    "hyperparameters": {
+      "kp": 1.0,
+      "ki": 0.1,
+      "kd": 0.01
+    },
+    "random_seed": 376418,
+    "timestamp": 1755367772.1892676
+  },
+  {
+    "algorithm_name": "DQNBaseline",
+    "performance_metrics": {
+      "episode_reward": 41.66726718631255,
+      "convergence_time": 0.004427750905354817,
+      "safety_violations": 297.0,
+      "power_loss": 0.04685640655419846,
+      "voltage_deviation": 0.01792432862915387
+    },
+    "execution_time": 0.013298988342285156,
+    "convergence_steps": 600,
+    "safety_violations": 891,
+    "hyperparameters": {
+      "learning_rate": 0.001,
+      "epsilon": 0.1
+    },
+    "random_seed": 379202,
+    "timestamp": 1755367772.2026703
+  },
+  {
+    "algorithm_name": "NovelFedRL",
+    "performance_metrics": {
+      "episode_reward": 50.601685297060065,
+      "convergence_time": 0.002338422669304742,
+      "safety_violations": 298.0,
+      "power_loss": 0.049439060386487425,
+      "voltage_deviation": 0.014235831788509115
+    },
+    "execution_time": 0.008433818817138672,
+    "convergence_steps": 600,
+    "safety_violations": 894,
+    "hyperparameters": {
+      "learning_rate": 0.001,
+      "batch_size": 64
+    },
+    "random_seed": 776647,
+    "timestamp": 1755367772.2111924
+  },
+  {
+    "algorithm_name": "DQNBaseline",
+    "performance_metrics": {
+      "episode_reward": 27.91663982619315,
+      "convergence_time": 0.002866506576538086,
+      "safety_violations": 192.0,
+      "power_loss": 0.04748016616059066,
+      "voltage_deviation": 0.02153528861217573
+    },
+    "execution_time": 0.008613109588623047,
+    "convergence_steps": 400,
+    "safety_violations": 576,
+    "hyperparameters": {
+      "learning_rate": 0.001,
+      "epsilon": 0.1
+    },
+    "random_seed": 307420,
+    "timestamp": 1755367772.2199082
+  },
+  {
+    "algorithm_name": "PPOBaseline",
+    "performance_metrics": {
+      "episode_reward": 31.63047659156506,
+      "convergence_time": 0.0029815038045247397,
+      "safety_violations": 198.0,
+      "power_loss": 0.0430327363013055,
+      "voltage_deviation": 0.025284550942337083
+    },
+    "execution_time": 0.008959770202636719,
+    "convergence_steps": 400,
+    "safety_violations": 594,
+    "hyperparameters": {
+      "learning_rate": 0.0003
+    },
+    "random_seed": 896866,
+    "timestamp": 1755367772.2289648
+  },
+  {
+    "algorithm_name": "NovelFedRL",
+    "performance_metrics": {
+      "episode_reward": 51.380774755333626,
+      "convergence_time": 0.0023775630527072484,
+      "safety_violations": 307.0,
+      "power_loss": 0.04969414503340864,
+      "voltage_deviation": 0.024854701958154684
+    },
+    "execution_time": 0.008575439453125,
+    "convergence_steps": 600,
+    "safety_violations": 921,
+    "hyperparameters": {
+      "learning_rate": 0.001,
+      "batch_size": 64
+    },
+    "random_seed": 571859,
+    "timestamp": 1755367772.2376044
+  },
+  {
+    "algorithm_name": "AdvancedFedRL",
+    "performance_metrics": {
+      "episode_reward": 32.71778230864706,
+      "convergence_time": 0.001858075459798177,
+      "safety_violations": 195.33333333333334,
+      "power_loss": 0.0442614816860623,
+      "voltage_deviation": 0.02083569645625806
+    },
+    "execution_time": 0.0061457157135009766,
+    "convergence_steps": 400,
+    "safety_violations": 586,
+    "hyperparameters": {
+      "learning_rate": 0.0005,
+      "batch_size": 32
+    },
+    "random_seed": 33327,
+    "timestamp": 1755367772.2438688
+  },
+  {
+    "algorithm_name": "AdvancedFedRL",
+    "performance_metrics": {
+      "episode_reward": 49.991284914988775,
+      "convergence_time": 0.0025619882525819717,
+      "safety_violations": 298.6666666666667,
+      "power_loss": 0.05065133778203051,
+      "voltage_deviation": 0.013103712452478858
+    },
+    "execution_time": 0.008468389511108398,
+    "convergence_steps": 600,
+    "safety_violations": 896,
+    "hyperparameters": {
+      "learning_rate": 0.0005,
+      "batch_size": 32
+    },
+    "random_seed": 681454,
+    "timestamp": 1755367772.2523897
+  },
+  {
+    "algorithm_name": "AdvancedFedRL",
+    "performance_metrics": {
+      "episode_reward": 48.605133515301326,
+      "convergence_time": 0.0025361956972064395,
+      "safety_violations": 299.3333333333333,
+      "power_loss": 0.051576910387616144,
+      "voltage_deviation": 0.02232307340190547
+    },
+    "execution_time": 0.008382797241210938,
+    "convergence_steps": 600,
+    "safety_violations": 898,
+    "hyperparameters": {
+      "learning_rate": 0.0005,
+      "batch_size": 32
+    },
+    "random_seed": 439899,
+    "timestamp": 1755367772.2608285
+  },
+  {
+    "algorithm_name": "RandomPolicy",
+    "performance_metrics": {
+      "episode_reward": 40.529364439498366,
+      "convergence_time": 0.0012048085530598958,
+      "safety_violations": 195.0,
+      "power_loss": 0.08207508593589918,
+      "voltage_deviation": 0.05242275556581608
+    },
+    "execution_time": 0.0036270618438720703,
+    "convergence_steps": 400,
+    "safety_violations": 585,
+    "hyperparameters": {},
+    "random_seed": 291705,
+    "timestamp": 1755367772.264545
+  },
+  {
+    "algorithm_name": "NovelFedRL",
+    "performance_metrics": {
+      "episode_reward": 33.85346000623681,
+      "convergence_time": 0.0015737613042195637,
+      "safety_violations": 197.0,
+      "power_loss": 0.043707059004918995,
+      "voltage_deviation": 0.02063940384721878
+    },
+    "execution_time": 0.005678892135620117,
+    "convergence_steps": 400,
+    "safety_violations": 591,
+    "hyperparameters": {
+      "learning_rate": 0.001,
+      "batch_size": 64
+    },
+    "random_seed": 777573,
+    "timestamp": 1755367772.270278
+  },
+  {
+    "algorithm_name": "NovelFedRL",
+    "performance_metrics": {
+      "episode_reward": 49.78097848325092,
+      "convergence_time": 0.002368821038140191,
+      "safety_violations": 317.3333333333333,
+      "power_loss": 0.045846406736968465,
+      "voltage_deviation": 0.02038565451934441
+    },
+    "execution_time": 0.008544683456420898,
+    "convergence_steps": 600,
+    "safety_violations": 952,
+    "hyperparameters": {
+      "learning_rate": 0.001,
+      "batch_size": 64
+    },
+    "random_seed": 91162,
+    "timestamp": 1755367772.2788732
+  },
+  {
+    "algorithm_name": "PPOBaseline",
+    "performance_metrics": {
+      "episode_reward": 31.624082584566764,
+      "convergence_time": 0.002957900365193685,
+      "safety_violations": 195.0,
+      "power_loss": 0.04587407464519395,
+      "voltage_deviation": 0.016052589600084575
+    },
+    "execution_time": 0.008888006210327148,
+    "convergence_steps": 400,
+    "safety_violations": 585,
+    "hyperparameters": {
+      "learning_rate": 0.0003
+    },
+    "random_seed": 693385,
+    "timestamp": 1755367772.2878718
+  }
+]
