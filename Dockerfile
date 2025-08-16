@@ -4,6 +4,7 @@ FROM python:3.11-slim as base
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
+    PYTHONPATH=/app \
     PIP_NO_CACHE_DIR=1 \
     PIP_DISABLE_PIP_VERSION_CHECK=1
 
@@ -11,16 +12,9 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 RUN groupadd --gid 1000 gridrl && \
     useradd --uid 1000 --gid gridrl --shell /bin/bash --create-home gridrl
 
-# Install system dependencies
+# Install system dependencies (minimal for production)
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
-    gcc \
-    g++ \
-    gfortran \
-    libblas-dev \
-    liblapack-dev \
-    libhdf5-dev \
-    pkg-config \
+    curl \
     && rm -rf /var/lib/apt/lists/*
 
 # ==================================

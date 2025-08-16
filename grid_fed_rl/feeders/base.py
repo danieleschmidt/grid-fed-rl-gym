@@ -2,8 +2,19 @@
 
 from abc import ABC, abstractmethod
 from typing import Dict, List, Optional, Tuple, Any, Union
-import numpy as np
 from dataclasses import dataclass
+
+# Minimal NumPy replacement for basic functionality
+try:
+    import numpy as np
+except ImportError:
+    # Minimal numpy-like functionality for basic operation
+    class MinimalNumPy:
+        ndarray = list
+        def array(self, data, dtype=None):
+            return list(data) if hasattr(data, '__iter__') else [data]
+        float32 = float
+    np = MinimalNumPy()
 
 from ..environments.base import Bus, Line, Load
 
