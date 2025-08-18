@@ -38,5 +38,5 @@ def test_cli_evaluate_command():
 
 def test_cli_simulate_command():
     """Test simulate command with required arguments."""
-    result = main(["simulate", "--feeder", "IEEE13Bus", "--duration", "3600"])
+    result = main(["simulate", "--feeder", "ieee13", "--duration", "3600"])
     assert result == 0

@@ -107,6 +107,78 @@ def validate_frequency(frequency: float, min_freq: float = 55.0, max_freq: float
     return float(frequency)
 
 
+def validate_grid_state(state: Union[np.ndarray, list, dict]) -> bool:
+    """Validate grid state vector or dictionary."""
+    try:
+        if isinstance(state, dict):
+            # Validate dictionary state
+            for key, value in state.items():
+                if key.lower().startswith('voltage'):
+                    validate_voltage(value)
+                elif key.lower().startswith('power'):
+                    validate_power_value(value)
+                elif key.lower().startswith('freq'):
+                    validate_frequency(value)
+                elif isinstance(value, (int, float)):
+                    if not np.isfinite(value):
+                        raise DataValidationError(f"State value {key}={value} is not finite")
+        
+        elif isinstance(state, (np.ndarray, list)):
+            # Validate array state
+            state_array = np.array(state) if not isinstance(state, np.ndarray) else state
+            
+            if np.any(np.isnan(state_array)):
+                raise DataValidationError("State contains NaN values")
+            if np.any(np.isinf(state_array)):
+                raise DataValidationError("State contains infinite values")
+            if np.any(np.abs(state_array) > 1e6):
+                raise DataValidationError("State contains extremely large values")
+        
+        return True
+        
+    except Exception as e:
+        if isinstance(e, DataValidationError):
+            raise
+        raise DataValidationError(f"Grid state validation failed: {e}")
+
+
+def validate_action(action: Union[np.ndarray, list], action_space=None) -> bool:
+    """Validate action input with optional action space checking."""
+    try:
+        # Convert to numpy array
+        if not isinstance(action, np.ndarray):
+            action = np.array(action)
+        
+        # Check for invalid values
+        if np.any(np.isnan(action)):
+            raise InvalidActionError("Action contains NaN values")
+        if np.any(np.isinf(action)):
+            raise InvalidActionError("Action contains infinite values")
+        if np.any(np.abs(action) > 1e6):
+            raise InvalidActionError("Action contains extremely large values")
+        
+        # Check action space bounds if provided
+        if action_space is not None:
+            if hasattr(action_space, 'shape') and action.shape != action_space.shape:
+                if action.size == action_space.shape[0]:
+                    action = action.reshape(action_space.shape)
+                else:
+                    raise InvalidActionError(
+                        f"Action shape {action.shape} doesn't match action space {action_space.shape}"
+                    )
+            
+            if hasattr(action_space, 'low') and hasattr(action_space, 'high'):
+                if np.any(action < action_space.low) or np.any(action > action_space.high):
+                    raise InvalidActionError("Action outside valid bounds")
+        
+        return True
+        
+    except Exception as e:
+        if isinstance(e, InvalidActionError):
+            raise
+        raise InvalidActionError(f"Action validation failed: {e}")
+
+
 def validate_network_parameters(buses: List, lines: List, loads: List) -> None:
     """Validate network parameters."""
     if not buses:

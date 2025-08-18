@@ -92,9 +92,18 @@ class PowerFlowCache:
         key = self._hash_state(loads, generation, buses, lines)
         self.cache.put(key, solution)
         
-    def stats(self) -> Dict[str, Any]:
+    def clear(self) -> None:
+        """Clear the cache."""
+        self.cache.clear()
+        
+    def get_stats(self) -> Dict[str, Any]:
         """Get cache statistics."""
-        return self.cache.stats()
+        return {
+            'hits': self.cache.hits,
+            'misses': self.cache.misses,
+            'size': len(self.cache.cache),
+            'maxsize': self.cache.maxsize
+        }
 
 
 class PerformanceProfiler:

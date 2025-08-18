@@ -22,6 +22,59 @@ class ConstraintViolation:
         return f"{self.violation_type} violation at {self.location}: {self.value} > {self.limit}"
 
 
+class SafetyMonitor:
+    """Safety monitoring system for grid operations."""
+    
+    def __init__(self):
+        self.constraints = []
+        self.violation_history = []
+        
+    def add_constraint(self, constraint):
+        """Add a safety constraint to monitor."""
+        self.constraints.append(constraint)
+    
+    def check_violations(self, state: Dict[str, Any]) -> List[ConstraintViolation]:
+        """Check all constraints against current state."""
+        violations = []
+        for constraint in self.constraints:
+            violation = constraint.check(state)
+            if violation:
+                violations.append(violation)
+                self.violation_history.append(violation)
+        return violations
+
+
+class VoltageConstraint:
+    """Voltage constraint checker."""
+    
+    def __init__(self, min_voltage: float = 0.95, max_voltage: float = 1.05):
+        self.min_voltage = min_voltage
+        self.max_voltage = max_voltage
+    
+    def check(self, state: Dict[str, Any]) -> ConstraintViolation:
+        """Check voltage constraints."""
+        voltage = state.get('voltage', 1.0)
+        if voltage < self.min_voltage:
+            return ConstraintViolation("voltage_low", "bus", voltage, self.min_voltage)
+        elif voltage > self.max_voltage:
+            return ConstraintViolation("voltage_high", "bus", voltage, self.max_voltage)
+        return None
+
+
+class ThermalConstraint:
+    """Thermal constraint checker."""
+    
+    def __init__(self, max_current: float = 100.0):
+        self.max_current = max_current
+    
+    def check(self, state: Dict[str, Any]) -> ConstraintViolation:
+        """Check thermal constraints."""
+        current = state.get('current', 0.0)
+        if current > self.max_current:
+            return ConstraintViolation("thermal", "line", current, self.max_current)
+        return None
+
+
 class SafetyChecker:
     """Safety constraint checker for grid operations."""
     

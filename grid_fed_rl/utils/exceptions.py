@@ -168,6 +168,22 @@ class ComplianceViolationError(NonRetryableError):
         self.regulation = regulation
 
 
+class PhysicsViolationError(GridEnvironmentError):
+    """Physics laws or constraints violated in simulation."""
+    def __init__(self, message: str, violation_type: str = "unknown", physical_quantity: str = None):
+        super().__init__(message)
+        self.violation_type = violation_type
+        self.physical_quantity = physical_quantity
+
+
+class ConvergenceError(GridEnvironmentError):
+    """Numerical algorithm failed to converge."""
+    def __init__(self, message: str, algorithm: str = "unknown", max_iterations: int = None):
+        super().__init__(message)
+        self.algorithm = algorithm
+        self.max_iterations = max_iterations
+
+
 # Advanced error handling utilities
 
 class CircuitBreaker:
@@ -190,6 +206,19 @@ class CircuitBreaker:
         self.state = "closed"  # closed, open, half_open
         
         logger.info(f"Circuit breaker '{name}' initialized with threshold {failure_threshold}")
+    
+    def __enter__(self):
+        """Context manager entry."""
+        return self
+    
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        """Context manager exit."""
+        if exc_type and issubclass(exc_type, self.expected_exception):
+            self._on_failure()
+            return False  # Don't suppress the exception
+        elif exc_type is None:
+            self._on_success()
+        return False
     
     def __call__(self, func: Callable) -> Callable:
         @functools.wraps(func)
