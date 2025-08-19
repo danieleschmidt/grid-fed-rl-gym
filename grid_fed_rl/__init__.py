@@ -11,6 +11,17 @@ __email__ = "daniel@terragonlabs.com"
 
 # Core exports for basic functionality
 try:
+    # First ensure numpy is available in virtual environment
+    import sys
+    import os
+    
+    # Add virtual environment to path if activated
+    if 'VIRTUAL_ENV' in os.environ:
+        venv_path = os.environ['VIRTUAL_ENV']
+        sys.path.insert(0, os.path.join(venv_path, 'lib', 'python3.12', 'site-packages'))
+    
+    import numpy as np  # Test numpy availability
+    
     from .environments.grid_env import GridEnvironment
     from .environments.base import BaseGridEnvironment
     from .feeders.ieee_feeders import IEEE13Bus, IEEE34Bus, IEEE123Bus

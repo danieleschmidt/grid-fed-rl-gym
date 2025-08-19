@@ -48,6 +48,26 @@ class GridLogger:
         
         # Performance tracking
         self.performance_log = []
+    
+    def info(self, msg: str, **kwargs):
+        """Log info message with grid context."""
+        extra = kwargs
+        self.logger.info(msg, extra=extra)
+    
+    def warning(self, msg: str, **kwargs):
+        """Log warning message with grid context."""
+        extra = kwargs
+        self.logger.warning(msg, extra=extra)
+    
+    def error(self, msg: str, **kwargs):
+        """Log error message with grid context."""
+        extra = kwargs
+        self.logger.error(msg, extra=extra)
+    
+    def debug(self, msg: str, **kwargs):
+        """Log debug message with grid context."""
+        extra = kwargs
+        self.logger.debug(msg, extra=extra)
         self.error_log = []
         
     def log_simulation_start(self, config: Dict[str, Any]):

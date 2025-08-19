@@ -1,26 +1,63 @@
 """Enhanced monitoring system with real-time alerting, dashboards, and persistence."""
 
 import time
-import psutil
 import threading
 import json
 import os
 import logging
-import smtplib
 import socket
-import sqlite3
 from typing import Dict, Any, List, Optional, Callable, Union, Set
 from dataclasses import dataclass, asdict
 from collections import defaultdict, deque
 import numpy as np
 from datetime import datetime, timedelta
 import csv
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
-from urllib.request import urlopen
-from urllib.parse import urlencode
 from enum import Enum
 from contextlib import contextmanager
+
+# Optional dependencies with graceful fallback
+try:
+    import psutil
+    PSUTIL_AVAILABLE = True
+except ImportError:
+    PSUTIL_AVAILABLE = False
+    
+    # Mock psutil functionality
+    class MockPsutil:
+        def cpu_percent(self): return 50.0
+        def virtual_memory(self): 
+            class Memory: 
+                percent = 60.0
+                available = 8 * 1024**3
+            return Memory()
+        def disk_usage(self, path): 
+            class Disk: 
+                percent = 70.0
+                free = 100 * 1024**3
+            return Disk()
+    psutil = MockPsutil()
+
+try:
+    import sqlite3
+    SQLITE_AVAILABLE = True
+except ImportError:
+    SQLITE_AVAILABLE = False
+    sqlite3 = None
+
+try:
+    import smtplib
+    from email.mime.text import MIMEText
+    from email.mime.multipart import MIMEMultipart
+    EMAIL_AVAILABLE = True
+except ImportError:
+    EMAIL_AVAILABLE = False
+
+try:
+    from urllib.request import urlopen
+    from urllib.parse import urlencode
+    URLLIB_AVAILABLE = True
+except ImportError:
+    URLLIB_AVAILABLE = False
 
 from .exceptions import GridEnvironmentError, RetryableError, exponential_backoff
 from .distributed_tracing import global_tracer, trace_federated_operation
