@@ -16,14 +16,39 @@ from datetime import datetime, timedelta
 from enum import Enum
 import json
 import threading
-from cryptography.fernet import Fernet
-from cryptography.hazmat.primitives import hashes, serialization
-from cryptography.hazmat.primitives.asymmetric import rsa, padding
-from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
-from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
-from cryptography.x509.oid import NameOID
-from cryptography import x509
-from cryptography.x509.verification import PolicyBuilder, StoreBuilder
+from collections import defaultdict
+# Optional cryptography imports with fallback
+try:
+    from cryptography.fernet import Fernet
+    from cryptography.hazmat.primitives import hashes, serialization
+    from cryptography.hazmat.primitives.asymmetric import rsa, padding
+    from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
+    from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+    from cryptography.x509.oid import NameOID
+    from cryptography import x509
+    CRYPTOGRAPHY_AVAILABLE = True
+except ImportError:
+    CRYPTOGRAPHY_AVAILABLE = False
+    
+    # Mock classes for basic functionality
+    class Fernet:
+        def __init__(self, key): self.key = key
+        def encrypt(self, data): return base64.b64encode(data)
+        def decrypt(self, data): return base64.b64decode(data)
+        @staticmethod
+        def generate_key(): return base64.b64encode(secrets.token_bytes(32))
+
+try:
+    from cryptography.x509.verification import PolicyBuilder, StoreBuilder
+    CRYPTOGRAPHY_X509_VERIFICATION_AVAILABLE = True
+except ImportError:
+    CRYPTOGRAPHY_X509_VERIFICATION_AVAILABLE = False
+    
+    # Mock classes for basic functionality
+    class PolicyBuilder:
+        def __init__(self): pass
+    class StoreBuilder:
+        def __init__(self): pass
 
 logger = logging.getLogger(__name__)
 

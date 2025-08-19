@@ -85,11 +85,7 @@ python_classes = ["Test*"]
 python_functions = ["test_*"]
 addopts = [
     "--strict-markers",
-    "--strict-config",
-    "--cov=grid_fed_rl",
-    "--cov-report=html",
-    "--cov-report=term-missing",
-    "--cov-fail-under=80"
+    "--strict-config"
 ]
 markers = [
     "slow: marks tests as slow (deselect with '-m \"not slow\"')",

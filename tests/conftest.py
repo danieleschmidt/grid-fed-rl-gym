@@ -2,9 +2,27 @@
 
 import pytest
 import numpy as np
-import torch
 from pathlib import Path
 from typing import Dict, Any
+
+# Handle torch import gracefully for test environment
+try:
+    import torch
+    TORCH_AVAILABLE = True
+except ImportError:
+    TORCH_AVAILABLE = False
+    
+    # Mock torch for testing without PyTorch
+    class MockTorch:
+        @staticmethod
+        def device(name="cpu"):
+            return f"mock_device_{name}"
+        
+        @staticmethod
+        def cuda_is_available():
+            return False
+    
+    torch = MockTorch()
 
 
 @pytest.fixture
@@ -50,9 +68,12 @@ def mock_grid_data() -> Dict[str, np.ndarray]:
 
 
 @pytest.fixture
-def torch_device() -> torch.device:
+def torch_device():
     """Get appropriate torch device for testing."""
-    return torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    if TORCH_AVAILABLE:
+        return torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    else:
+        return torch.device("cpu")
 
 
 @pytest.fixture(scope="session")

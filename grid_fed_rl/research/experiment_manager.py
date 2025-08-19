@@ -13,7 +13,22 @@ from pathlib import Path
 from dataclasses import dataclass, field, asdict
 from datetime import datetime
 from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor, as_completed
-import git
+# Optional git import
+try:
+    import git
+    GIT_AVAILABLE = True
+except ImportError:
+    GIT_AVAILABLE = False
+    
+    # Mock git functionality
+    class MockGit:
+        class Repo:
+            def __init__(self, path):
+                self.git = MockGit.Git()
+        class Git:
+            def rev_parse(self, ref):
+                return "mock_commit_hash"
+    git = MockGit()
 
 from ..algorithms.physics_informed import PIFRL, PIFRLClient
 from ..algorithms.multi_objective import MOFRL
