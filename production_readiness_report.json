@@ -1,105 +1,53 @@
 {
-  "production_status": "NEARLY READY",
-  "readiness_score": 93.47826086956522,
-  "total_passed": 43,
-  "total_failed": 3,
-  "duration": 0.055680274963378906,
-  "timestamp": 1755364577.7374423,
-  "detailed_results": [
-    {
-      "name": "Package Structure",
-      "passed": 11,
-      "failed": 0,
-      "details": [
-        "\u2705 Directory grid_fed_rl exists",
-        "\u2705 Directory grid_fed_rl/environments exists",
-        "\u2705 Directory grid_fed_rl/feeders exists",
-        "\u2705 Directory grid_fed_rl/algorithms exists",
-        "\u2705 Directory grid_fed_rl/utils exists",
-        "\u2705 Directory grid_fed_rl/federated exists",
-        "\u2705 Directory tests exists",
-        "\u2705 File README.md exists",
-        "\u2705 File pyproject.toml exists",
-        "\u2705 File LICENSE exists",
-        "\u2705 File grid_fed_rl/__init__.py exists"
-      ]
-    },
-    {
-      "name": "Import Hierarchy",
-      "passed": 9,
-      "failed": 1,
-      "details": [
-        "\u2705 Import grid_fed_rl successful",
-        "\u2705 Import grid_fed_rl.environments successful",
-        "\u2705 Import grid_fed_rl.feeders successful",
-        "\u274c Import grid_fed_rl.algorithms failed: No module named 'numpy'",
-        "\u2705 Import grid_fed_rl.utils successful",
-        "\u2705 Class GridEnvironment from grid_fed_rl.environments.grid_env imported",
-        "\u2705 Class IEEE13Bus from grid_fed_rl.feeders.ieee_feeders imported",
-        "\u2705 Class BaseFeeder from grid_fed_rl.feeders.base imported",
-        "\u2705 Class RobustValidator from grid_fed_rl.utils.robust_validation imported",
-        "\u2705 Class AdaptiveCache from grid_fed_rl.utils.performance_optimization imported"
-      ]
-    },
-    {
-      "name": "Configuration Files",
-      "passed": 5,
-      "failed": 0,
-      "details": [
-        "\u2705 pyproject.toml has [build-system] section",
-        "\u2705 pyproject.toml has [project] section",
-        "\u2705 pyproject.toml has [tool.pytest] section",
-        "\u2705 README.md has substantial content",
-        "\u2705 LICENSE file exists"
-      ]
-    },
-    {
-      "name": "Dependencies",
-      "passed": 3,
-      "failed": 0,
-      "details": [
-        "\u2705 Package imports without NumPy (graceful degradation)",
-        "\u2705 Core functionality works without NumPy",
-        "\u2705 Version consistency between package and config"
-      ]
-    },
-    {
-      "name": "Documentation",
-      "passed": 7,
-      "failed": 0,
-      "details": [
-        "\u2705 README.md exists with substantial content",
-        "\u2705 CONTRIBUTING.md exists with substantial content",
-        "\u2705 EXAMPLES.md exists with substantial content",
-        "\u2705 TUTORIALS.md exists with substantial content",
-        "\u2705 API_REFERENCE.md exists with substantial content",
-        "\u2705 docs/ directory exists",
-        "\u2705 GridEnvironment has comprehensive docstring"
-      ]
-    },
-    {
-      "name": "Performance Benchmarks",
-      "passed": 3,
-      "failed": 1,
-      "details": [
-        "\u2705 Environment creation time: 0.001s",
-        "\u2705 Environment reset time: 0.000s",
-        "\u2705 Average step time: 0.001s",
-        "\u274c Performance benchmark failed: No module named 'psutil'"
-      ]
-    },
-    {
-      "name": "Error Handling",
-      "passed": 5,
-      "failed": 1,
-      "details": [
-        "\u2705 Gracefully handled infinity",
-        "\u2705 Gracefully handled NaN",
-        "\u2705 Gracefully handled extremely large value",
-        "\u2705 Gracefully handled extremely small value",
-        "\u2705 Gracefully handled None value",
-        "\u274c No error information in info dict"
-      ]
-    }
+  "timestamp": "2025-08-21T01:40:18.610462",
+  "readiness_level": "NOT_READY",
+  "summary": {
+    "total_checks": 36,
+    "checks_passed": 28,
+    "checks_failed": 3,
+    "warnings": 5,
+    "pass_rate": 0.7777777777777778
+  },
+  "detailed_results": {
+    "dependency_numpy": "pass",
+    "dependency_scipy": "pass",
+    "dependency_pandas": "fail",
+    "dependency_matplotlib": "fail",
+    "dependency_networkx": "pass",
+    "dependency_pydantic": "fail",
+    "optional_torch": "warning",
+    "optional_gymnasium": "warning",
+    "optional_crypten": "warning",
+    "optional_opacus": "warning",
+    "optional_flower": "warning",
+    "core_imports": "pass",
+    "network_validation": "pass",
+    "environment_operation": "pass",
+    "init_performance": "pass",
+    "step_performance": "pass",
+    "max_step_performance": "pass",
+    "input_validation": "pass",
+    "security_critical": "pass",
+    "security_high": "pass",
+    "health_check": "pass",
+    "metrics": "pass",
+    "compliance_score": "pass",
+    "compliance_violations": "pass",
+    "internationalization": "pass",
+    "file_pyproject.toml": "pass",
+    "file_requirements.txt": "pass",
+    "file_README.md": "pass",
+    "file_DEPLOYMENT.md": "pass",
+    "file_LICENSE": "pass",
+    "dir_grid_fed_rl": "pass",
+    "dir_grid_fed_rl/environments": "pass",
+    "dir_grid_fed_rl/feeders": "pass",
+    "dir_grid_fed_rl/algorithms": "pass",
+    "dir_grid_fed_rl/utils": "pass",
+    "cli_test": "pass"
+  },
+  "recommendations": [
+    "Install missing required dependencies",
+    "Review and fix all failed checks before deployment"
   ]
 }

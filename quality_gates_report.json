@@ -1,69 +1,64 @@
 {
-  "timestamp": 1755128226.9879785,
-  "overall_score": 32.8,
+  "timestamp": 1755740435.068918,
+  "overall_score": -1051.5,
   "overall_status": "NEEDS_IMPROVEMENT",
   "summary": {
     "total_gates": 10,
-    "passed": 6,
+    "passed": 7,
     "warnings": 2,
-    "failed": 2,
+    "failed": 1,
     "skipped": 0
   },
   "gate_results": [
     {
       "gate_name": "Import Validation",
-      "status": "failed",
-      "score": 20.0,
+      "status": "passed",
+      "score": 100.0,
       "details": {
         "package_import": "success",
         "version": "0.1.0",
         "core_imports": {
-          "grid_fed_rl.environments": "failed: No module named 'numpy'",
-          "grid_fed_rl.algorithms": "failed: No module named 'numpy'",
-          "grid_fed_rl.federated": "failed: No module named 'numpy'",
-          "grid_fed_rl.utils": "failed: No module named 'numpy'"
+          "grid_fed_rl.environments": "success",
+          "grid_fed_rl.algorithms": "success",
+          "grid_fed_rl.federated": "success",
+          "grid_fed_rl.utils": "success"
         },
         "main_classes": "available"
       },
-      "execution_time_seconds": 0.030768156051635742,
-      "recommendations": [
-        "Fix import for grid_fed_rl.environments",
-        "Fix import for grid_fed_rl.algorithms",
-        "Fix import for grid_fed_rl.federated",
-        "Fix import for grid_fed_rl.utils"
-      ]
+      "execution_time_seconds": 0.11568808555603027,
+      "recommendations": []
     },
     {
       "gate_name": "Code Quality",
       "status": "passed",
       "score": 85.0,
       "details": {
-        "total_python_files": 92,
+        "total_python_files": 5216,
         "docstring_coverage": "100.0%",
         "type_hint_coverage": "90.0%",
-        "test_file_ratio": "26.1%"
+        "test_file_ratio": "29.5%"
       },
-      "execution_time_seconds": 0.006758928298950195,
+      "execution_time_seconds": 0.2386341094970703,
       "recommendations": []
     },
     {
       "gate_name": "Security Scan",
       "status": "failed",
-      "score": -220.0,
+      "score": -7525.0,
       "details": {
         "security_issues": [
-          "test_production_ready.py: Dynamic imports",
-          "test_quality_gates.py: Use of eval() function",
-          "test_quality_gates.py: Use of exec() function",
-          "test_quality_gates.py: Dynamic imports",
           "test_autonomous_quality_gates.py: Use of eval() function",
           "test_autonomous_quality_gates.py: Use of exec() function",
           "test_autonomous_quality_gates.py: Dynamic imports",
           "test_autonomous_quality_gates.py: Unsafe pickle deserialization",
           "test_autonomous_quality_gates.py: Shell command execution",
-          "test_autonomous_quality_gates.py: User input without validation"
+          "test_autonomous_quality_gates.py: User input without validation",
+          "test_generation2_robust.py: User input without validation",
+          "test_production_readiness.py: Dynamic imports",
+          "test_production_ready.py: Dynamic imports",
+          "test_quality_gates.py: Dynamic imports"
         ],
-        "total_security_issues": 20,
+        "total_security_issues": 507,
         "potential_secrets": [
           "test_autonomous_quality_gates.py: Secret tokens",
           "backup_recovery.py: Secret tokens",
@@ -73,7 +68,7 @@
         ],
         "requirements_security": "checked"
       },
-      "execution_time_seconds": 0.02977442741394043,
+      "execution_time_seconds": 1.847005844116211,
       "recommendations": [
         "Review and fix security issues",
         "Use safe alternatives to dangerous functions",
@@ -84,15 +79,17 @@
     {
       "gate_name": "Performance Benchmarks",
       "status": "warning",
-      "score": 70.0,
+      "score": 65.0,
       "details": {
         "import_time_ms": 0.0,
-        "environment_creation_ms": "failed: GridEnvironment requires numpy and other dependenc",
+        "environment_creation_ms": "failed: GridEnvironment.__init__() missing 1 required posi",
         "memory_usage_mb": "psutil_not_available",
-        "total_code_size_mb": 1.39
+        "total_code_size_mb": 78.77
       },
-      "execution_time_seconds": 0.002446889877319336,
-      "recommendations": []
+      "execution_time_seconds": 0.1106271743774414,
+      "recommendations": [
+        "Consider code size optimization"
+      ]
     },
     {
       "gate_name": "Documentation Coverage",
@@ -112,22 +109,22 @@
         "inline_documentation_ratio": "100.0%",
         "example_files": 0
       },
-      "execution_time_seconds": 0.0042819976806640625,
+      "execution_time_seconds": 0.09636282920837402,
       "recommendations": [
         "Add example files"
       ]
     },
     {
       "gate_name": "API Compatibility",
-      "status": "warning",
-      "score": 65.0,
+      "status": "passed",
+      "score": 80.0,
       "details": {
         "api_components": {
           "GridEnvironment": "importable",
           "GridEnvironment_init": "available",
-          "algorithms": "import_failed",
-          "federated": "import_failed",
-          "utils": "import_failed"
+          "algorithms": "importable",
+          "federated": "importable",
+          "utils": "importable"
         },
         "version_available": true,
         "version": "0.1.0",
@@ -137,7 +134,7 @@
           "__version__"
         ]
       },
-      "execution_time_seconds": 0.0030260086059570312,
+      "execution_time_seconds": 0.0002651214599609375,
       "recommendations": []
     },
     {
@@ -159,23 +156,31 @@
         ],
         "deployment_ready": true
       },
-      "execution_time_seconds": 0.00023603439331054688,
+      "execution_time_seconds": 0.0002646446228027344,
       "recommendations": []
     },
     {
       "gate_name": "Resource Usage",
-      "status": "passed",
-      "score": 85.0,
+      "status": "warning",
+      "score": 75.0,
       "details": {
         "memory_tracking": "psutil_not_available",
-        "total_python_files": 92,
-        "total_code_size_mb": 1.39,
-        "average_file_size_kb": 15.44,
-        "large_files": [],
-        "imported_modules": 1
+        "total_python_files": 5216,
+        "total_code_size_mb": 78.77,
+        "average_file_size_kb": 15.46,
+        "large_files": [
+          "typing_extensions.py: 153.7KB",
+          "function_docs.py: 276.9KB",
+          "__init__.py: 123.3KB",
+          "core.py: 229.3KB",
+          "Image.py: 144.9KB"
+        ],
+        "imported_modules": 23
       },
-      "execution_time_seconds": 0.002929210662841797,
-      "recommendations": []
+      "execution_time_seconds": 0.1592111587524414,
+      "recommendations": [
+        "Consider refactoring large files"
+      ]
     },
     {
       "gate_name": "Scalability",
@@ -189,59 +194,60 @@
           "grid_fed_rl/algorithms/neural_optimization.py"
         ],
         "scalability_module_count": 4,
-        "threading_files": 20,
-        "async_files": 7,
+        "threading_files": 161,
+        "async_files": 30,
         "concurrency_support": true,
-        "caching_files": 18,
+        "caching_files": 572,
         "caching_support": true,
-        "config_files": 2
+        "config_files": 25
       },
-      "execution_time_seconds": 0.01994800567626953,
+      "execution_time_seconds": 1.123030424118042,
       "recommendations": []
     },
     {
       "gate_name": "Error Handling",
       "status": "passed",
-      "score": 110.0,
+      "score": 90.0,
       "details": {
-        "exception_classes": 27,
-        "exception_files": 3,
+        "exception_classes": 774,
+        "exception_files": 218,
         "custom_exceptions": [
           "if 'class ' in line and 'Exception' in line:",
           "elif 'class ' in line and 'Error' in line:",
+          "class PowerFlowError(Exception):",
+          "class InvalidActionError(Exception):",
+          "class SafetyLimitExceededError(Exception):",
           "class ErrorSeverity(Enum):",
           "class ErrorContext:",
           "class GridEnvironmentError(Exception):",
           "class PowerFlowError(GridEnvironmentError):",
-          "class ConstraintViolationError(GridEnvironmentError):",
-          "class NetworkTopologyError(GridEnvironmentError):",
-          "class InvalidActionError(GridEnvironmentError):",
-          "class SafetyLimitExceededError(GridEnvironmentError):"
+          "class ConstraintViolationError(GridEnvironmentError):"
         ],
-        "try_catch_files": 55,
-        "total_try_blocks": 361,
-        "error_handling_ratio": "59.8%",
-        "logging_files": 45,
-        "logging_coverage": "good",
-        "validation_files": 59
+        "try_catch_files": 1498,
+        "total_try_blocks": 5990,
+        "error_handling_ratio": "28.7%",
+        "logging_files": 412,
+        "logging_coverage": "partial",
+        "validation_files": 3750
       },
-      "execution_time_seconds": 0.032662391662597656,
-      "recommendations": []
+      "execution_time_seconds": 1.8509399890899658,
+      "recommendations": [
+        "Add more error handling"
+      ]
     }
   ],
   "recommendations": {
     "high_priority": [
-      "Fix import for grid_fed_rl.environments",
-      "Fix import for grid_fed_rl.algorithms",
-      "Fix import for grid_fed_rl.federated",
-      "Fix import for grid_fed_rl.utils",
       "Review and fix security issues",
       "Use safe alternatives to dangerous functions",
       "Add input validation",
       "Review potential secrets in code",
-      "Add example files"
+      "Consider code size optimization",
+      "Add example files",
+      "Consider refactoring large files",
+      "Add more error handling"
     ],
-    "total_recommendations": 9
+    "total_recommendations": 8
   },
-  "execution_time_seconds": 0.13283205032348633
+  "execution_time_seconds": 5.54202938079834
 }

@@ -20,6 +20,11 @@ try:
         venv_path = os.environ['VIRTUAL_ENV']
         sys.path.insert(0, os.path.join(venv_path, 'lib', 'python3.12', 'site-packages'))
     
+    # Also check for venv in current directory
+    venv_local = os.path.join(os.path.dirname(__file__), '..', 'venv', 'lib', 'python3.12', 'site-packages')
+    if os.path.exists(venv_local):
+        sys.path.insert(0, venv_local)
+    
     import numpy as np  # Test numpy availability
     
     from .environments.grid_env import GridEnvironment
@@ -35,25 +40,32 @@ except ImportError as e:
     warnings.warn(f"Failed to import core components: {e}. Some functionality may be limited.")
     _IMPORTS_AVAILABLE = False
     
-    # Create dummy classes for basic functionality
-    class GridEnvironment:
-        def __init__(self, *args, **kwargs):
-            raise ImportError("GridEnvironment requires numpy and other dependencies")
+    # Create working fallback classes for basic functionality
+    from .environments.grid_env import GridEnvironment as _GridEnvironment
+    from .environments.base import BaseGridEnvironment as _BaseGridEnvironment
+    from .feeders.ieee_feeders import IEEE13Bus as _IEEE13Bus, IEEE34Bus as _IEEE34Bus, IEEE123Bus as _IEEE123Bus
+    from .feeders.base import CustomFeeder as _CustomFeeder
     
-    class BaseGridEnvironment:
-        def __init__(self, *args, **kwargs):
-            raise ImportError("BaseGridEnvironment requires numpy and other dependencies")
+    # Use the working implementations with fallback
+    GridEnvironment = _GridEnvironment
+    BaseGridEnvironment = _BaseGridEnvironment
+    IEEE13Bus = _IEEE13Bus
+    IEEE34Bus = _IEEE34Bus
+    IEEE123Bus = _IEEE123Bus
+    CustomFeeder = _CustomFeeder
     
-    class IEEE13Bus:
+    # Create dummy RL algorithm classes
+    class CQL:
         def __init__(self, *args, **kwargs):
-            raise ImportError("IEEE13Bus requires numpy and other dependencies")
+            raise ImportError("CQL requires torch and other ML dependencies")
     
-    IEEE34Bus = IEEE13Bus
-    IEEE123Bus = IEEE13Bus
-    CustomFeeder = IEEE13Bus
-    CQL = IEEE13Bus
-    IQL = IEEE13Bus
-    FederatedOfflineRL = IEEE13Bus
+    class IQL:
+        def __init__(self, *args, **kwargs):
+            raise ImportError("IQL requires torch and other ML dependencies")
+    
+    class FederatedOfflineRL:
+        def __init__(self, *args, **kwargs):
+            raise ImportError("FederatedOfflineRL requires torch and other ML dependencies")
 
 __all__ = [
     "__version__",
