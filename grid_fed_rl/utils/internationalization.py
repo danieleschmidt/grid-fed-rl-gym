@@ -98,8 +98,8 @@ class TranslationManager:
             
             "simulation_started": "Simulación iniciada",
             "simulation_completed": "Simulación completada",
-            "power_flow_converged": "Flujo de potencia convergido",
-            "power_flow_failed": "Flujo de potencia no convergió",
+            "power_flow_converged": "Flujo de potencia convergió",
+            "power_flow_failed": "Flujo de potencia falló en converger",
             "constraint_violation": "Violación de restricción detectada",
             "emergency_action": "Acción de emergencia requerida",
             
@@ -108,6 +108,118 @@ class TranslationManager:
             "computation_error": "Error de cálculo ocurrido",
             "file_not_found": "Archivo no encontrado",
             "permission_denied": "Permiso denegado"
+        }
+        
+        # French
+        self.translations["fr_FR"] = {
+            "voltage": "Tension",
+            "current": "Courant",
+            "power": "Puissance",
+            "frequency": "Fréquence",
+            "energy": "Énergie", 
+            "load": "Charge",
+            "generation": "Génération",
+            "transformer": "Transformateur",
+            "line": "Ligne",
+            "bus": "Jeu de barres",
+            
+            "voltage_unit": "V",
+            "current_unit": "A",
+            "power_unit_kw": "kW",
+            "power_unit_mw": "MW", 
+            "frequency_unit": "Hz",
+            "energy_unit": "kWh",
+            
+            "simulation_started": "Simulation démarrée",
+            "simulation_completed": "Simulation terminée",
+            "power_flow_converged": "Répartition de charge convergée",
+            "power_flow_failed": "Échec de convergence de la répartition de charge",
+            "constraint_violation": "Violation de contrainte détectée",
+            "emergency_action": "Action d'urgence requise"
+        }
+        
+        # German
+        self.translations["de_DE"] = {
+            "voltage": "Spannung",
+            "current": "Strom", 
+            "power": "Leistung",
+            "frequency": "Frequenz",
+            "energy": "Energie",
+            "load": "Last",
+            "generation": "Erzeugung",
+            "transformer": "Transformator",
+            "line": "Leitung",
+            "bus": "Sammelschiene",
+            
+            "voltage_unit": "V",
+            "current_unit": "A",
+            "power_unit_kw": "kW", 
+            "power_unit_mw": "MW",
+            "frequency_unit": "Hz",
+            "energy_unit": "kWh",
+            
+            "simulation_started": "Simulation gestartet",
+            "simulation_completed": "Simulation abgeschlossen", 
+            "power_flow_converged": "Lastfluss konvergiert",
+            "power_flow_failed": "Lastfluss konvergierte nicht",
+            "constraint_violation": "Beschränkungsverletzung erkannt",
+            "emergency_action": "Notfallmaßnahme erforderlich"
+        }
+        
+        # Japanese
+        self.translations["ja_JP"] = {
+            "voltage": "電圧",
+            "current": "電流",
+            "power": "電力", 
+            "frequency": "周波数",
+            "energy": "エネルギー",
+            "load": "負荷",
+            "generation": "発電",
+            "transformer": "変圧器",
+            "line": "線路",
+            "bus": "母線",
+            
+            "voltage_unit": "V",
+            "current_unit": "A",
+            "power_unit_kw": "kW",
+            "power_unit_mw": "MW",
+            "frequency_unit": "Hz", 
+            "energy_unit": "kWh",
+            
+            "simulation_started": "シミュレーション開始",
+            "simulation_completed": "シミュレーション完了",
+            "power_flow_converged": "潮流計算が収束しました",
+            "power_flow_failed": "潮流計算が収束しませんでした",
+            "constraint_violation": "制約違反が検出されました",
+            "emergency_action": "緊急対応が必要です"
+        }
+        
+        # Simplified Chinese
+        self.translations["zh_CN"] = {
+            "voltage": "电压", 
+            "current": "电流",
+            "power": "功率",
+            "frequency": "频率",
+            "energy": "能量",
+            "load": "负荷",
+            "generation": "发电",
+            "transformer": "变压器",
+            "line": "线路",
+            "bus": "母线",
+            
+            "voltage_unit": "V",
+            "current_unit": "A",
+            "power_unit_kw": "kW",
+            "power_unit_mw": "MW",
+            "frequency_unit": "Hz",
+            "energy_unit": "kWh",
+            
+            "simulation_started": "仿真开始",
+            "simulation_completed": "仿真完成",
+            "power_flow_converged": "潮流计算收敛",
+            "power_flow_failed": "潮流计算未收敛", 
+            "constraint_violation": "检测到约束违规",
+            "emergency_action": "需要紧急行动"
         }
         
         # French

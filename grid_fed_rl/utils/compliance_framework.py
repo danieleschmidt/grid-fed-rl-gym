@@ -21,6 +21,11 @@ class ComplianceFramework(Enum):
     LGPD = "lgpd"          # Lei Geral de Proteção de Dados (Brazil)
     POPIA = "popia"        # Protection of Personal Information Act (South Africa)
     PIPEDA = "pipeda"      # Personal Information Protection and Electronic Documents Act (Canada)
+    # Additional power grid specific regulations
+    NERC_CIP = "nerc_cip"  # NERC Critical Infrastructure Protection (North America)
+    FERC = "ferc"          # Federal Energy Regulatory Commission (US)
+    IEEE_2030 = "ieee_2030" # IEEE Smart Grid Standards (International)
+    IEC_61850 = "iec_61850" # IEC Power System Communication (International)
 
 
 class DataCategory(Enum):
