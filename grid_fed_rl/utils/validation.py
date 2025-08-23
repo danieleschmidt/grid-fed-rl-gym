@@ -44,20 +44,58 @@ def validate_action(action: np.ndarray, action_space) -> np.ndarray:
                 )
         
         # Check for NaN or inf FIRST (before bounds checking)
-        if np.any(np.isnan(action)):
+        try:
+            has_nan = np.any(np.isnan(action))
+        except (ValueError, TypeError):
+            # Fallback for array truth value issues
+            has_nan = any(np.isnan(x) if hasattr(np, 'isnan') else x != x for x in np.array(action).flat)
+        if has_nan:
             raise InvalidActionError("Action contains NaN values")
-        if np.any(np.isinf(action)):
+            
+        try:
+            has_inf = np.any(np.isinf(action))
+        except (ValueError, TypeError):
+            # Fallback for array truth value issues
+            has_inf = any(np.isinf(x) if hasattr(np, 'isinf') else abs(x) == float('inf') for x in np.array(action).flat)
+        if has_inf:
             raise InvalidActionError("Action contains infinite values")
         
         # Check for extremely large values that could cause numerical issues
-        if np.any(np.abs(action) > 1e6):
+        try:
+            has_large_values = np.any(np.abs(action) > 1e6)
+        except (ValueError, TypeError):
+            # Fallback for array truth value issues
+            has_large_values = any(abs(x) > 1e6 for x in np.array(action).flat)
+        if has_large_values:
             raise InvalidActionError("Action contains extremely large values")
         
         # Check bounds
         if hasattr(action_space, 'low') and hasattr(action_space, 'high'):
-            if np.any(action < action_space.low) or np.any(action > action_space.high):
+            try:
+                out_of_bounds = np.any(action < action_space.low) or np.any(action > action_space.high)
+            except (ValueError, TypeError):
+                # Fallback for array truth value issues
+                action_arr = np.array(action).flat
+                low_arr = np.array(action_space.low).flat if hasattr(action_space.low, '__iter__') else [action_space.low]
+                high_arr = np.array(action_space.high).flat if hasattr(action_space.high, '__iter__') else [action_space.high]
+                out_of_bounds = any(
+                    x < low_arr[min(i, len(low_arr)-1)] or x > high_arr[min(i, len(high_arr)-1)] 
+                    for i, x in enumerate(action_arr)
+                )
+            if out_of_bounds:
                 # Clip to bounds with warning
-                action = np.clip(action, action_space.low, action_space.high)
+                try:
+                    action = np.clip(action, action_space.low, action_space.high)
+                except (ValueError, TypeError):
+                    # Manual clipping fallback
+                    action_list = list(np.array(action).flat)
+                    low_list = list(np.array(action_space.low).flat) if hasattr(action_space.low, '__iter__') else [action_space.low]
+                    high_list = list(np.array(action_space.high).flat) if hasattr(action_space.high, '__iter__') else [action_space.high]
+                    for i, x in enumerate(action_list):
+                        low_val = low_list[min(i, len(low_list)-1)]
+                        high_val = high_list[min(i, len(high_list)-1)]
+                        action_list[i] = max(low_val, min(high_val, x))
+                    action = np.array(action_list)
         
         return action
         

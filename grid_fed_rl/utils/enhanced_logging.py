@@ -48,6 +48,7 @@ class GridLogger:
         
         # Performance tracking
         self.performance_log = []
+        self.error_log = []
     
     def info(self, msg: str, **kwargs):
         """Log info message with grid context."""
@@ -68,7 +69,6 @@ class GridLogger:
         """Log debug message with grid context."""
         extra = kwargs
         self.logger.debug(msg, extra=extra)
-        self.error_log = []
         
     def log_simulation_start(self, config: Dict[str, Any]):
         """Log simulation initialization."""
