@@ -565,7 +565,24 @@ class GridEnvironment(BaseGridEnvironment):
         
         # Enhanced safety violation handling
         violations = self.check_constraints(self._get_grid_state())
-        if any(violations.values()):
+        # Safely check if any violations occurred
+        has_violations = False
+        try:
+            if isinstance(violations, dict):
+                for v in violations.values():
+                    if hasattr(v, '__len__'):  # List or array-like
+                        if len(v) > 0:
+                            has_violations = True
+                            break
+                    elif v:  # Simple boolean or truthy value
+                        has_violations = True
+                        break
+            else:
+                has_violations = bool(violations)
+        except (TypeError, ValueError):
+            has_violations = False
+            
+        if has_violations:
             self.constraint_violations += 1
             
             try:
