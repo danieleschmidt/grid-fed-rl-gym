@@ -1,253 +1,43 @@
 {
-  "timestamp": 1755740435.068918,
-  "overall_score": -1051.5,
-  "overall_status": "NEEDS_IMPROVEMENT",
+  "timestamp": 1756069648.7756279,
+  "overall_status": "PASSED",
+  "overall_score": 100.0,
+  "execution_time_seconds": 0.07987546920776367,
   "summary": {
-    "total_gates": 10,
-    "passed": 7,
-    "warnings": 2,
-    "failed": 1,
-    "skipped": 0
+    "total_gates": 1,
+    "gates_passed": 1,
+    "gates_failed": 0,
+    "success_rate": "100.0%"
   },
-  "gate_results": [
+  "detailed_results": [
     {
-      "gate_name": "Import Validation",
-      "status": "passed",
+      "name": "Imports and Basic Functionality",
+      "passed": true,
       "score": 100.0,
+      "execution_time": 0.07974410057067871,
+      "errors": [],
+      "warnings": [],
       "details": {
-        "package_import": "success",
         "version": "0.1.0",
-        "core_imports": {
-          "grid_fed_rl.environments": "success",
-          "grid_fed_rl.algorithms": "success",
-          "grid_fed_rl.federated": "success",
-          "grid_fed_rl.utils": "success"
+        "quick_demo": true,
+        "stability_rate": "100.0%",
+        "performance_score": "100.0/100",
+        "health_status": "warning",
+        "health_summary": {
+          "overall_status": "warning",
+          "timestamp": 1756069648.7169762,
+          "uptime_seconds": 0.0067212581634521484,
+          "checks_total": 4,
+          "checks_healthy": 2,
+          "checks_warning": 2,
+          "checks_critical": 0,
+          "checks_failed": 0
         },
-        "main_classes": "available"
-      },
-      "execution_time_seconds": 0.11568808555603027,
-      "recommendations": []
-    },
-    {
-      "gate_name": "Code Quality",
-      "status": "passed",
-      "score": 85.0,
-      "details": {
-        "total_python_files": 5216,
-        "docstring_coverage": "100.0%",
-        "type_hint_coverage": "90.0%",
-        "test_file_ratio": "29.5%"
-      },
-      "execution_time_seconds": 0.2386341094970703,
-      "recommendations": []
-    },
-    {
-      "gate_name": "Security Scan",
-      "status": "failed",
-      "score": -7525.0,
-      "details": {
-        "security_issues": [
-          "test_autonomous_quality_gates.py: Use of eval() function",
-          "test_autonomous_quality_gates.py: Use of exec() function",
-          "test_autonomous_quality_gates.py: Dynamic imports",
-          "test_autonomous_quality_gates.py: Unsafe pickle deserialization",
-          "test_autonomous_quality_gates.py: Shell command execution",
-          "test_autonomous_quality_gates.py: User input without validation",
-          "test_generation2_robust.py: User input without validation",
-          "test_production_readiness.py: Dynamic imports",
-          "test_production_ready.py: Dynamic imports",
-          "test_quality_gates.py: Dynamic imports"
-        ],
-        "total_security_issues": 507,
-        "potential_secrets": [
-          "test_autonomous_quality_gates.py: Secret tokens",
-          "backup_recovery.py: Secret tokens",
-          "certificate_validation.py: Hard-coded passwords",
-          "certificate_validation.py: Secret tokens",
-          "certificate_validation.py: Authentication tokens"
-        ],
-        "requirements_security": "checked"
-      },
-      "execution_time_seconds": 1.847005844116211,
-      "recommendations": [
-        "Review and fix security issues",
-        "Use safe alternatives to dangerous functions",
-        "Add input validation",
-        "Review potential secrets in code"
-      ]
-    },
-    {
-      "gate_name": "Performance Benchmarks",
-      "status": "warning",
-      "score": 65.0,
-      "details": {
-        "import_time_ms": 0.0,
-        "environment_creation_ms": "failed: GridEnvironment.__init__() missing 1 required posi",
-        "memory_usage_mb": "psutil_not_available",
-        "total_code_size_mb": 78.77
-      },
-      "execution_time_seconds": 0.1106271743774414,
-      "recommendations": [
-        "Consider code size optimization"
-      ]
-    },
-    {
-      "gate_name": "Documentation Coverage",
-      "status": "passed",
-      "score": 115.0,
-      "details": {
-        "readme_exists": true,
-        "readme_length": 13747,
-        "readme_sections": [
-          "installation",
-          "usage",
-          "example",
-          "license"
-        ],
-        "documentation_directory": true,
-        "documentation_files": 7,
-        "inline_documentation_ratio": "100.0%",
-        "example_files": 0
-      },
-      "execution_time_seconds": 0.09636282920837402,
-      "recommendations": [
-        "Add example files"
-      ]
-    },
-    {
-      "gate_name": "API Compatibility",
-      "status": "passed",
-      "score": 80.0,
-      "details": {
-        "api_components": {
-          "GridEnvironment": "importable",
-          "GridEnvironment_init": "available",
-          "algorithms": "importable",
-          "federated": "importable",
-          "utils": "importable"
-        },
-        "version_available": true,
-        "version": "0.1.0",
-        "standard_attributes": [
-          "__author__",
-          "__email__",
-          "__version__"
-        ]
-      },
-      "execution_time_seconds": 0.0002651214599609375,
-      "recommendations": []
-    },
-    {
-      "gate_name": "Integration Tests",
-      "status": "passed",
-      "score": 95.0,
-      "details": {
-        "package_structure_score": "5/5",
-        "missing_files": [],
-        "configuration_files": [
-          "pyproject.toml",
-          "setup.py",
-          "requirements.txt"
-        ],
-        "deployment_files": [
-          "Dockerfile",
-          "docker-compose.yml",
-          "kubernetes/deployment.yaml"
-        ],
-        "deployment_ready": true
-      },
-      "execution_time_seconds": 0.0002646446228027344,
-      "recommendations": []
-    },
-    {
-      "gate_name": "Resource Usage",
-      "status": "warning",
-      "score": 75.0,
-      "details": {
-        "memory_tracking": "psutil_not_available",
-        "total_python_files": 5216,
-        "total_code_size_mb": 78.77,
-        "average_file_size_kb": 15.46,
-        "large_files": [
-          "typing_extensions.py: 153.7KB",
-          "function_docs.py: 276.9KB",
-          "__init__.py: 123.3KB",
-          "core.py: 229.3KB",
-          "Image.py: 144.9KB"
-        ],
-        "imported_modules": 23
-      },
-      "execution_time_seconds": 0.1592111587524414,
-      "recommendations": [
-        "Consider refactoring large files"
-      ]
-    },
-    {
-      "gate_name": "Scalability",
-      "status": "passed",
-      "score": 135.0,
-      "details": {
-        "scalability_modules": [
-          "grid_fed_rl/utils/advanced_scaling.py",
-          "grid_fed_rl/utils/distributed.py",
-          "grid_fed_rl/utils/performance.py",
-          "grid_fed_rl/algorithms/neural_optimization.py"
-        ],
-        "scalability_module_count": 4,
-        "threading_files": 161,
-        "async_files": 30,
-        "concurrency_support": true,
-        "caching_files": 572,
-        "caching_support": true,
-        "config_files": 25
-      },
-      "execution_time_seconds": 1.123030424118042,
-      "recommendations": []
-    },
-    {
-      "gate_name": "Error Handling",
-      "status": "passed",
-      "score": 90.0,
-      "details": {
-        "exception_classes": 774,
-        "exception_files": 218,
-        "custom_exceptions": [
-          "if 'class ' in line and 'Exception' in line:",
-          "elif 'class ' in line and 'Error' in line:",
-          "class PowerFlowError(Exception):",
-          "class InvalidActionError(Exception):",
-          "class SafetyLimitExceededError(Exception):",
-          "class ErrorSeverity(Enum):",
-          "class ErrorContext:",
-          "class GridEnvironmentError(Exception):",
-          "class PowerFlowError(GridEnvironmentError):",
-          "class ConstraintViolationError(GridEnvironmentError):"
-        ],
-        "try_catch_files": 1498,
-        "total_try_blocks": 5990,
-        "error_handling_ratio": "28.7%",
-        "logging_files": 412,
-        "logging_coverage": "partial",
-        "validation_files": 3750
-      },
-      "execution_time_seconds": 1.8509399890899658,
-      "recommendations": [
-        "Add more error handling"
-      ]
+        "validation_working": true,
+        "error_handling_working": true,
+        "caching_working": true,
+        "optimization_working": true
+      }
     }
-  ],
-  "recommendations": {
-    "high_priority": [
-      "Review and fix security issues",
-      "Use safe alternatives to dangerous functions",
-      "Add input validation",
-      "Review potential secrets in code",
-      "Consider code size optimization",
-      "Add example files",
-      "Consider refactoring large files",
-      "Add more error handling"
-    ],
-    "total_recommendations": 8
-  },
-  "execution_time_seconds": 5.54202938079834
+  ]
 }

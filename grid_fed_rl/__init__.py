@@ -67,6 +67,9 @@ except ImportError as e:
         def __init__(self, *args, **kwargs):
             raise ImportError("FederatedOfflineRL requires torch and other ML dependencies")
 
+# Add quick start functionality
+from .quick_start import run_quick_demo, QuickStartDemo
+
 __all__ = [
     "__version__",
     "__author__", 
@@ -79,5 +82,7 @@ __all__ = [
     "CustomFeeder",
     "CQL",
     "IQL", 
-    "FederatedOfflineRL"
+    "FederatedOfflineRL",
+    "run_quick_demo",
+    "QuickStartDemo"
 ]
