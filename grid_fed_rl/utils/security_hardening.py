@@ -322,9 +322,254 @@ class SecurityMonitor:
         }
 
 
-# Global security components
+# Enhanced security hardening with validation integration
+class EnhancedSecurityHardening:
+    """Enhanced security hardening with comprehensive validation."""
+    
+    def __init__(self, policy: SecurityPolicy = None):
+        self.policy = policy or SecurityPolicy()
+        self.input_sanitizer = InputSanitizer(self.policy)
+        self.access_controller = AccessController(self.policy)
+        self.data_protector = DataProtector()
+        self.security_monitor = SecurityMonitor(self.policy)
+        
+        # Integration with security validation
+        self.validation_integrated = False
+        self._attempt_validation_integration()
+    
+    def _attempt_validation_integration(self):
+        """Attempt to integrate with comprehensive security validation."""
+        try:
+            from .security_validation import get_security_validation_suite
+            self.validation_suite = get_security_validation_suite()
+            self.validation_integrated = True
+            logger.info("Security hardening integrated with validation suite")
+        except ImportError:
+            logger.info("Security validation suite not available for hardening integration")
+            self.validation_suite = None
+        except Exception as e:
+            logger.warning(f"Failed to integrate with validation suite: {e}")
+            self.validation_suite = None
+    
+    def get_hardening_status(self) -> Dict[str, Any]:
+        """Get comprehensive hardening status."""
+        status = {
+            "policy": {
+                "max_action_deviation": self.policy.max_action_deviation,
+                "max_consecutive_errors": self.policy.max_consecutive_errors,
+                "input_validation_strict": self.policy.input_validation_strict,
+                "rate_limiting_enabled": self.policy.enable_rate_limiting,
+                "max_requests_per_minute": self.policy.max_requests_per_minute
+            },
+            "security_summary": self.access_controller.get_security_summary(),
+            "threat_summary": self.security_monitor.get_threat_summary(),
+            "validation_integrated": self.validation_integrated,
+            "timestamp": __import__('datetime').datetime.now().isoformat()
+        }
+        
+        # Add validation suite status if available
+        if self.validation_integrated and self.validation_suite:
+            try:
+                validation_status = {
+                    "security_score": self.validation_suite.metrics.security_score,
+                    "total_findings": self.validation_suite.metrics.total_findings,
+                    "critical_findings": self.validation_suite.metrics.critical_findings,
+                    "last_scan": self.validation_suite.metrics.last_scan_time.isoformat() if self.validation_suite.metrics.last_scan_time else None
+                }
+                status["validation_status"] = validation_status
+            except Exception as e:
+                logger.error(f"Error getting validation status: {e}")
+        
+        return status
+    
+    def apply_security_hardening(self, target_config: Dict[str, Any]) -> Dict[str, Any]:
+        """Apply security hardening to configuration."""
+        hardened_config = target_config.copy()
+        
+        # Sanitize configuration
+        hardened_config = self.input_sanitizer.sanitize_config(hardened_config)
+        
+        # Apply additional hardening measures
+        hardening_applied = []
+        
+        # Enforce secure defaults
+        if "session_timeout" not in hardened_config:
+            hardened_config["session_timeout"] = 3600  # 1 hour default
+            hardening_applied.append("Added default session timeout")
+        
+        if "encryption_enabled" not in hardened_config:
+            hardened_config["encryption_enabled"] = True
+            hardening_applied.append("Enabled encryption by default")
+        
+        if "audit_logging" not in hardened_config:
+            hardened_config["audit_logging"] = True
+            hardening_applied.append("Enabled audit logging")
+        
+        # Remove potentially dangerous configurations
+        dangerous_keys = ["debug_mode", "disable_auth", "allow_all_origins", "insecure_mode"]
+        for key in dangerous_keys:
+            if key in hardened_config:
+                del hardened_config[key]
+                hardening_applied.append(f"Removed dangerous configuration: {key}")
+        
+        # Log hardening actions
+        if hardening_applied:
+            self.access_controller.log_access(
+                "config_hardening", 
+                "system", 
+                True, 
+                f"Applied {len(hardening_applied)} hardening measures"
+            )
+        
+        return {
+            "hardened_config": hardened_config,
+            "hardening_applied": hardening_applied,
+            "original_keys": list(target_config.keys()),
+            "hardened_keys": list(hardened_config.keys())
+        }
+    
+    def validate_security_posture(self) -> Dict[str, Any]:
+        """Validate current security posture."""
+        validation_results = {
+            "timestamp": __import__('datetime').datetime.now().isoformat(),
+            "hardening_status": "healthy",
+            "issues": [],
+            "recommendations": []
+        }
+        
+        # Check policy configuration
+        if self.policy.max_action_deviation > 5.0:
+            validation_results["issues"].append({
+                "severity": "medium",
+                "description": f"High action deviation threshold: {self.policy.max_action_deviation}",
+                "recommendation": "Consider lowering max_action_deviation for better security"
+            })
+        
+        if self.policy.max_requests_per_minute > 10000:
+            validation_results["issues"].append({
+                "severity": "low", 
+                "description": f"High rate limit: {self.policy.max_requests_per_minute}/min",
+                "recommendation": "Consider lowering rate limits to prevent abuse"
+            })
+        
+        if not self.policy.input_validation_strict:
+            validation_results["issues"].append({
+                "severity": "high",
+                "description": "Strict input validation is disabled",
+                "recommendation": "Enable strict input validation for better security"
+            })
+        
+        # Check recent security events
+        security_summary = self.access_controller.get_security_summary()
+        if isinstance(security_summary, dict) and security_summary.get("failure_rate", 0) > 0.1:
+            validation_results["issues"].append({
+                "severity": "high",
+                "description": f"High security failure rate: {security_summary['failure_rate']:.1%}",
+                "recommendation": "Investigate recent security failures"
+            })
+        
+        # Check threat indicators
+        threat_summary = self.security_monitor.get_threat_summary()
+        if isinstance(threat_summary, dict) and threat_summary.get("total_threats", 0) > 10:
+            validation_results["issues"].append({
+                "severity": "critical",
+                "description": f"Multiple security threats detected: {threat_summary['total_threats']}",
+                "recommendation": "Immediate investigation of security threats required"
+            })
+        
+        # Set overall status
+        critical_issues = sum(1 for issue in validation_results["issues"] if issue["severity"] == "critical")
+        high_issues = sum(1 for issue in validation_results["issues"] if issue["severity"] == "high")
+        
+        if critical_issues > 0:
+            validation_results["hardening_status"] = "critical"
+        elif high_issues > 0:
+            validation_results["hardening_status"] = "warning"
+        
+        # Add validation suite results if available
+        if self.validation_integrated and self.validation_suite:
+            try:
+                benchmarks = self.validation_suite.get_security_benchmarks()
+                validation_results["security_benchmarks"] = benchmarks
+            except Exception as e:
+                logger.error(f"Error getting security benchmarks: {e}")
+        
+        return validation_results
+    
+    def get_real_time_security_metrics(self) -> Dict[str, Any]:
+        """Get real-time security metrics for monitoring."""
+        metrics = {
+            "timestamp": __import__('datetime').datetime.now().isoformat(),
+            "access_control": {
+                "total_events": len(self.access_controller.access_log),
+                "recent_failures": sum(1 for event in self.access_controller.access_log[-100:] 
+                                     if not event.get("success", True)),
+                "active_rate_limits": len(self.access_controller.rate_limits)
+            },
+            "threat_monitoring": {
+                "total_threats": len(self.security_monitor.threat_indicators),
+                "recent_threats": len([t for t in self.security_monitor.threat_indicators 
+                                     if (datetime.now() - 
+                                         datetime.fromisoformat(t.get("timestamp", "1970-01-01T00:00:00"))).days < 1]),
+                "blocked_operations": self.security_monitor.blocked_operations
+            }
+        }
+        
+        # Add validation suite metrics if available
+        if self.validation_integrated and self.validation_suite:
+            try:
+                suite_metrics = self.validation_suite.metrics
+                metrics["validation_suite"] = {
+                    "security_score": suite_metrics.security_score,
+                    "total_scans": suite_metrics.total_scans,
+                    "critical_findings": suite_metrics.critical_findings,
+                    "high_findings": suite_metrics.high_findings,
+                    "last_scan": suite_metrics.last_scan_time.isoformat() if suite_metrics.last_scan_time else None
+                }
+            except Exception as e:
+                logger.error(f"Error getting validation suite metrics: {e}")
+        
+        return metrics
+
+
+def run_security_hardening_check() -> Dict[str, Any]:
+    """Run comprehensive security hardening check."""
+    hardening = EnhancedSecurityHardening()
+    
+    results = {
+        "hardening_status": hardening.get_hardening_status(),
+        "security_posture": hardening.validate_security_posture(),
+        "real_time_metrics": hardening.get_real_time_security_metrics(),
+        "recommendations": []
+    }
+    
+    # Generate recommendations based on findings
+    security_posture = results["security_posture"]
+    if security_posture["hardening_status"] != "healthy":
+        results["recommendations"].append(
+            "Review and address security hardening issues identified in the security posture check"
+        )
+    
+    threat_count = results["real_time_metrics"]["threat_monitoring"]["total_threats"]
+    if threat_count > 0:
+        results["recommendations"].append(
+            f"Investigate {threat_count} security threats detected by the monitoring system"
+        )
+    
+    if not results["hardening_status"]["validation_integrated"]:
+        results["recommendations"].append(
+            "Consider integrating comprehensive security validation suite for enhanced security monitoring"
+        )
+    
+    return results
+
+
+# Global security components with enhanced integration
 security_policy = SecurityPolicy()
 input_sanitizer = InputSanitizer(security_policy)
 access_controller = AccessController(security_policy)
 data_protector = DataProtector()
 security_monitor = SecurityMonitor(security_policy)
+
+# Enhanced security hardening instance
+enhanced_security_hardening = EnhancedSecurityHardening(security_policy)
