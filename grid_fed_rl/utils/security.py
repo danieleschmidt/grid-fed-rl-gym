@@ -1201,6 +1201,116 @@ class EnhancedSecurityAuditor(SecurityAuditor):
         }
 
 
+# Integration with comprehensive security validation
+def integrate_security_validation():
+    """Integrate with comprehensive security validation system."""
+    try:
+        from .security_validation import get_security_validation_suite
+        from .health_monitoring import system_health
+        security_validation_suite = get_security_validation_suite()
+        
+        # Integrate security validation with health monitoring
+        security_validation_suite.integrate_with_health_monitoring(system_health)
+        
+        # Set up enhanced security auditor with communication manager
+        global_security_auditor.set_communication_manager(global_communication_manager)
+        
+        logger.info("Security validation integration completed successfully")
+        return True
+    except ImportError as e:
+        logger.warning(f"Security validation integration not available: {e}")
+        return False
+    except Exception as e:
+        logger.error(f"Failed to integrate security validation: {e}")
+        return False
+
+
+# Enhanced security audit with validation suite integration
+def run_comprehensive_security_audit(include_validation_suite: bool = True) -> Dict[str, Any]:
+    """Run comprehensive security audit including validation suite."""
+    audit_results = {}
+    
+    # Run traditional security audit
+    traditional_audit = global_security_auditor.audit_system()
+    audit_results["traditional_audit"] = traditional_audit
+    
+    # Run communication security audit
+    comm_audit = global_security_auditor.audit_communication_security()
+    audit_results["communication_audit"] = comm_audit
+    
+    # Run comprehensive validation suite if available
+    if include_validation_suite:
+        try:
+            from .security_validation import get_security_validation_suite
+            security_validation_suite = get_security_validation_suite()
+            validation_results = security_validation_suite.run_comprehensive_scan()
+            audit_results["comprehensive_validation"] = validation_results
+            
+            # Get security benchmarks
+            benchmarks = security_validation_suite.get_security_benchmarks()
+            audit_results["security_benchmarks"] = benchmarks
+            
+        except ImportError:
+            logger.warning("Comprehensive security validation suite not available")
+            audit_results["comprehensive_validation"] = {
+                "status": "not_available",
+                "message": "Security validation suite not imported"
+            }
+        except Exception as e:
+            logger.error(f"Error running comprehensive validation: {e}")
+            audit_results["comprehensive_validation"] = {
+                "status": "error",
+                "error": str(e)
+            }
+    
+    # Generate combined security score
+    combined_score = _calculate_combined_security_score(audit_results)
+    audit_results["combined_security_score"] = combined_score
+    
+    return audit_results
+
+
+def _calculate_combined_security_score(audit_results: Dict[str, Any]) -> float:
+    """Calculate combined security score from all audits."""
+    scores = []
+    weights = []
+    
+    # Traditional audit score (weight: 0.3)
+    if "traditional_audit" in audit_results:
+        trad_audit = audit_results["traditional_audit"]
+        if "summary" in trad_audit and "total_issues" in trad_audit["summary"]:
+            total_issues = trad_audit["summary"]["total_issues"]
+            trad_score = max(0, 100 - (total_issues * 5))  # 5 points per issue
+            scores.append(trad_score)
+            weights.append(0.3)
+    
+    # Communication audit score (weight: 0.2)
+    if "communication_audit" in audit_results:
+        comm_audit = audit_results["communication_audit"]
+        if "security_score" in comm_audit:
+            scores.append(comm_audit["security_score"])
+            weights.append(0.2)
+    
+    # Comprehensive validation score (weight: 0.5)
+    if "comprehensive_validation" in audit_results:
+        comp_val = audit_results["comprehensive_validation"]
+        if isinstance(comp_val, dict) and "scan_summary" in comp_val:
+            if "security_score" in comp_val["scan_summary"]:
+                scores.append(comp_val["scan_summary"]["security_score"])
+                weights.append(0.5)
+    
+    # Calculate weighted average
+    if scores and weights:
+        weighted_sum = sum(score * weight for score, weight in zip(scores, weights))
+        total_weight = sum(weights)
+        return weighted_sum / total_weight if total_weight > 0 else 0
+    
+    return 0.0
+
+
 # Global instances
 global_security_auditor = EnhancedSecurityAuditor()
 global_communication_manager = SecureCommunicationManager()
+
+# Note: Security validation integration is performed lazily to avoid circular imports
+# Call integrate_security_validation() manually when needed
