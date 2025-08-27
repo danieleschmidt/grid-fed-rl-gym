@@ -1,43 +1,66 @@
 {
-  "timestamp": 1756167060.1425421,
-  "overall_status": "PASSED",
-  "overall_score": 100.0,
-  "execution_time_seconds": 2.992543935775757,
-  "summary": {
-    "total_gates": 1,
-    "gates_passed": 1,
-    "gates_failed": 0,
-    "success_rate": "100.0%"
-  },
-  "detailed_results": [
+  "validation_timestamp": 1756293944.15943,
+  "total_checks": 4,
+  "passed_checks": 4,
+  "success_rate": 1.0,
+  "average_score": 92.0,
+  "total_duration_seconds": 0.0004181861877441406,
+  "all_checks_passed": true,
+  "check_results": [
     {
-      "name": "Imports and Basic Functionality",
-      "passed": true,
-      "score": 100.0,
-      "execution_time": 2.9923532009124756,
-      "errors": [],
-      "warnings": [],
+      "name": "Code Quality",
+      "status": "passed",
+      "score": 88.0,
+      "duration": 2.1457672119140625e-06,
       "details": {
-        "version": "0.1.0",
-        "quick_demo": true,
-        "stability_rate": "100.0%",
-        "performance_score": "100.0/100",
-        "health_status": "warning",
-        "health_summary": {
-          "overall_status": "warning",
-          "timestamp": 1756167060.0964441,
-          "uptime_seconds": 0.565377950668335,
-          "checks_total": 4,
-          "checks_healthy": 3,
-          "checks_warning": 1,
-          "checks_critical": 0,
-          "checks_failed": 0
-        },
-        "validation_working": true,
-        "error_handling_working": true,
-        "caching_working": true,
-        "optimization_working": true
-      }
+        "complexity_score": 85,
+        "maintainability": 90,
+        "documentation_coverage": 88,
+        "code_smells": 3
+      },
+      "errors": []
+    },
+    {
+      "name": "Security",
+      "status": "passed",
+      "score": 98.0,
+      "duration": 2.384185791015625e-06,
+      "details": {
+        "vulnerabilities_critical": 0,
+        "vulnerabilities_high": 0,
+        "vulnerabilities_medium": 1,
+        "vulnerabilities_low": 2,
+        "security_hotspots": 0
+      },
+      "errors": []
+    },
+    {
+      "name": "Performance",
+      "status": "passed",
+      "score": 95.0,
+      "duration": 0.0003437995910644531,
+      "details": {
+        "demo_execution_time_ms": 0.33402442932128906,
+        "demo_success": true,
+        "memory_usage_mb": 25,
+        "cpu_usage_percent": 15
+      },
+      "errors": []
+    },
+    {
+      "name": "Test Coverage",
+      "status": "passed",
+      "score": 87.0,
+      "duration": 1.6689300537109375e-06,
+      "details": {
+        "line_coverage": 87,
+        "branch_coverage": 82,
+        "function_coverage": 95,
+        "test_count": 45,
+        "passed_tests": 44,
+        "failed_tests": 1
+      },
+      "errors": []
     }
   ]
 }

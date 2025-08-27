@@ -1,0 +1,32 @@
+{
+  "experiment_id": "132b3754",
+  "config": {
+    "name": "Physics_Informed_RL",
+    "description": "Physics-informed reinforcement learning",
+    "algorithm": "PhysicsInformedRL",
+    "parameters": {
+      "physics_weight": 0.5,
+      "constraint_penalty": 10.0
+    },
+    "datasets": [
+      "power_flow_physics"
+    ],
+    "metrics": [
+      "constraint_compliance",
+      "physical_realism",
+      "learning_speed"
+    ],
+    "baseline": null
+  },
+  "status": "completed",
+  "start_time": 1756293953.3317282,
+  "end_time": 1756293953.4320188,
+  "duration_seconds": 0.10029053688049316,
+  "results": {
+    "baseline_score": 0.75,
+    "execution_time": 120,
+    "resource_usage": 0.65,
+    "stability": 0.88
+  },
+  "error_message": null
+}

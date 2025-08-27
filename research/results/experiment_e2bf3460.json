@@ -1,0 +1,36 @@
+{
+  "experiment_id": "e2bf3460",
+  "config": {
+    "name": "Federated_CQL_Study",
+    "description": "Federated Conservative Q-Learning for grid control",
+    "algorithm": "FederatedCQL",
+    "parameters": {
+      "learning_rate": 0.001,
+      "conservative_weight": 5.0
+    },
+    "datasets": [
+      "ieee13_historical",
+      "ieee34_historical"
+    ],
+    "metrics": [
+      "accuracy",
+      "communication_efficiency",
+      "privacy_preservation"
+    ],
+    "baseline": null
+  },
+  "status": "completed",
+  "start_time": 1756293953.0287275,
+  "end_time": 1756293953.1290293,
+  "duration_seconds": 0.10030174255371094,
+  "results": {
+    "accuracy": 0.99,
+    "convergence_rounds": 45,
+    "communication_efficiency": 0.88,
+    "privacy_preserved": true,
+    "client_participation": 0.95,
+    "training_loss": 0.15,
+    "validation_loss": 0.18
+  },
+  "error_message": null
+}

@@ -1,0 +1,32 @@
+{
+  "experiment_id": "8c147a7a",
+  "config": {
+    "name": "MultiAgent_QMIX",
+    "description": "Multi-agent coordination with QMIX",
+    "algorithm": "MultiAgentQMIX",
+    "parameters": {
+      "mixing_embed_dim": 32,
+      "hypernet_layers": 2
+    },
+    "datasets": [
+      "distributed_der_scenarios"
+    ],
+    "metrics": [
+      "coordination_score",
+      "scalability",
+      "communication_overhead"
+    ],
+    "baseline": null
+  },
+  "status": "completed",
+  "start_time": 1756293953.2305877,
+  "end_time": 1756293953.3308387,
+  "duration_seconds": 0.1002509593963623,
+  "results": {
+    "baseline_score": 0.75,
+    "execution_time": 120,
+    "resource_usage": 0.65,
+    "stability": 0.88
+  },
+  "error_message": null
+}
