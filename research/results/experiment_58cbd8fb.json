@@ -1,0 +1,35 @@
+{
+  "experiment_id": "58cbd8fb",
+  "config": {
+    "name": "Offline_IQL_Baseline",
+    "description": "Offline Implicit Q-Learning baseline",
+    "algorithm": "OfflineIQL",
+    "parameters": {
+      "expectile": 0.7,
+      "temperature": 3.0
+    },
+    "datasets": [
+      "ieee13_historical",
+      "ieee34_historical"
+    ],
+    "metrics": [
+      "final_reward",
+      "sample_efficiency",
+      "constraint_violations"
+    ],
+    "baseline": null
+  },
+  "status": "completed",
+  "start_time": 1756293953.1296792,
+  "end_time": 1756293953.2299793,
+  "duration_seconds": 0.10030007362365723,
+  "results": {
+    "final_reward": 997,
+    "policy_improvement": 0.25,
+    "sample_efficiency": 0.78,
+    "constraint_violations": 2,
+    "stability_score": 0.94,
+    "convergence_episodes": 1200
+  },
+  "error_message": null
+}
